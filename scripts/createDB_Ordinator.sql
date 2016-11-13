@@ -169,7 +169,7 @@ create table AbiturientPassport (
 
 	--Внешние ключи
 	foreign key (aid_abiturient) references Abiturient(aid),
-	foreign key (id_passportType) references PassportType(id),	
+	foreign key (id_passportType) references PassportType(id)	
 );
 go
 
