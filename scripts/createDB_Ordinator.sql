@@ -152,5 +152,52 @@ create table AbiturientEntranceTests (
 );
 go
 
+--Тип паспорта
+create table PassportType (
+	id int primary key, --код
+	name text,			--наименование паспорта
+	codeFIS text		--код ФИС
+);
+go
 
+--Абитуриент_паспорт
+create table AbiturientPassport (
+	series text,	--серия паспорта
+	pasNumber text,	--номер паспорта
+	givenBy text,	--кем выдан
+	givenDate Date,	--дата выдачи
+
+	--Внешние ключи
+	foreign key (aid_abiturient) references Abiturient(aid),
+	foreign key (id_passportType) references PassportType(id),	
+);
+go
+
+--Регион
+create table Region (
+	id int primary key, --код
+	name text, 			--название насленного пункта
+	codeFIS text		--код ФИС
+);
+go
+
+--Тип населенного пункта
+create table LocalityType (
+	id int primary key, --код
+	name text, 			--название насленного пункта
+	codeFIS text		--код ФИС	
+);
+go
+
+--Абитуриент_адрес
+create table AbiturientAddress (
+	indexAddress text,	--почтовый индекс
+	address text,		--адрес
+
+	--Внешние ключи
+	foreign key (aid_abiturient) references Abiturient(aid),
+	foreign key (id_region) references Region(id),
+	foreign key (id_localityType) references LocalityType(id)	
+);
+go
 
