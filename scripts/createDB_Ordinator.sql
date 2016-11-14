@@ -201,3 +201,46 @@ create table AbiturientAddress (
 );
 go
 
+--Конкурсная группа
+create table CompetitiveGroup (
+	id int primary key,	      --код
+	name text,    			  --наименование конкурсной группы
+	codeFIS text  			  --код ФИС
+);
+go
+
+--Целевая организация
+create table TargetOrganisation (
+	id int primary key,	      --код
+	name text,                --наименование целевой организации
+	codeFIS text  			  --код ФИС
+);
+go
+
+--Стандарт образования
+create table EducationStandard (
+	id int primary key,	      --код
+	name text,    --наименование стандарта образования
+	codeFIS text  --код ФИС
+);
+go
+
+--План приема
+create table AdmissionPlan (
+	specialtyCode int,		--код специальности
+	educationForm int,		--форма обучения
+	competitiveGroup int,	--конкурсная группа
+	targetOrganisation int,	--целевая организация
+	educationStandard int,	--стандарт образования
+	placeNumber int,		--количество мест
+	
+	--Внешние ключи
+	foreign key (specialtyCode) references Speciality(id) ,
+	foreign key (educationForm) references EducationForm(id),
+	foreign key (competitiveGroup) references CompetitiveGroup(id),
+	foreign key (targetOrganisation) references TargetOrganisation(id),
+	foreign key (educationStandard) references EducationStandard(id)
+);
+go
+
+
