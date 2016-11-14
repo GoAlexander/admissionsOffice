@@ -1,4 +1,4 @@
-create database Ordinator;
+﻿create database Ordinator;
 go
 
 --указываем, что все дальнейшие запросы должны быть выполнены для БД ординатор
@@ -198,6 +198,64 @@ create table AbiturientAddress (
 	foreign key (aid_abiturient) references Abiturient(aid),
 	foreign key (id_region) references Region(id),
 	foreign key (id_localityType) references LocalityType(id)	
+);
+go
+
+--Направление обучения
+create table Course(
+	id int primary key, --код
+	name text,          --наименование
+	codeFIS text		--код ФИС
+);
+go
+
+--Специальность
+create table Speciality(
+	id int primary key, --код
+	name text,          --наименование
+	codeFIS text		--код ФИС
+);
+go
+
+--Форма обучения
+create table EducationForm (
+	id int primary key, --код
+	name text,          --наименование
+	codeFIS text		--код ФИС
+);
+go
+
+--Кафедра
+create table Chair (
+	id int primary key, --код
+	name text,          --наименование
+	codeFIS text		--код ФИС
+);
+go
+
+--Абитуриент_конкурсные группы
+create table AbiturientCompetitiveGroup (
+	aid_abiturient int,                     --код/номер личного дела абитуриента
+	course int,                             --направление
+	speciality int,                         --специальность
+	educationForm int,                      --форма обучения
+	chair int,                              --кафедра
+	competitiveGroup int,                   --конкурсная группа
+	targetOrganisation int,                 --целевая организация
+	educationStandard int,                  --стандарт образования
+	competitiveBall int,                    --конкурсный балл
+	availabilityIndividualAchievements int, --наличие индивидуальных достижений
+	markEnrollment int,                     --отметка о зачислении
+	
+	--Внешние ключи
+	foreign key (aid_abiturient) references Abiturient(aid),
+	foreign key (course) references Course(id),
+	foreign key (speciality) references Speciality(id),
+	foreign key (educationForm) references EducationForm(id),
+	foreign key (chair) references Chair(id),
+	foreign key (competitiveGroup) references CompetitiveGroup(id),
+	foreign key (targetOrganisation) references TargetOrganisation(id),
+	foreign key (educationStandard) references EducationStandard(id),
 );
 go
 
