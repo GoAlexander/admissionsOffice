@@ -1,0 +1,52 @@
+1. Отправить заявку на получение доступа к Microsoft Imagine
+	Ссылка: http://www.microsoftimagine.ru/requests
+		Понадобится скан, либо фотка студенческого билета.
+		На практике присылают ключ за 1-2 рабочих(!) дня.
+
+
+2. Как только придет код доступа, делаем все, что написано в письме.
+(Лучи добра MS в честь легкости регистрации...)
+	-Регистрируем MS Account
+	-Потом регистрируемся здесь (должен подхватить учетку из MS Account), там будет в профиле кнопка accept all, нажимаем, когда он предложит подтвредить, что вы участвуете в программе, то из выпадающего списка выбираем что-то там MS Imagine и вводим ключ из письма.
+	После этого переходим по ссылке из письма: https://catalog.imagine.microsoft.com/en-us/Catalog/Product/99
+	Нажимаем Register now.
+
+	Теперь в самой Azure придется зарегистрироваться.
+
+
+3. Если все получилось и мы находимся здесь: https://portal.azure.com#dashboard
+Выполняем:
+	-Слева выбираем sql databases и создаем ДБ + там сервак свой нужно будет создать
+	(немного описания: https://azure.microsoft.com/en-us/documentation/articles/sql-database-get-started/)
+
+
+4. Открываем доступ к БД извне
+	-По этому гайду прописываем свой адрес (т.к. у большинства из нас адрес динамический, поэтому время от времени придется обновлять его).
+	https://azure.microsoft.com/ru-ru/documentation/articles/sql-database-configure-firewall-settings/
+	Узнать свой IP-адрес:
+	http://myip.ru
+
+	Просто пропишите в двух полях свой IP.
+
+5. Проверка, что все работает 
+	-Используем класс TestConnection из нашего репозитория
+	-Подключаем библиотеку: https://yadi.sk/d/dSA0qpScybqC6
+
+	-В разделе вашей ДБ в Overview смотрим поле и нажимаем на нее:
+		Connection strings
+		Show database connection strings - JDBC (SQL authentication)
+
+		Либо:
+		Ваша ДБ - раздел settings - quickStart - database connection strings for popular platforms and APIS - копируем для JDBC (SQL authentication)
+
+	-И вставляем это в переменную connectionUrl (не забываем прописать там свой пароль, вместо {your_password_here}).
+
+	-Запускаем программу, немного ждем, пока пошлет запрос.
+	-Запускаем еще раз. При втором запуске программы должен вернуть что-то типа:
+	com.microsoft.sqlserver.jdbc.SQLServerException: There is already an object named 'Abiturient' in the database.
+	Значит, что все работает :)
+
+
+---
+В гайде могут быть небольшие неточности или были пропущены небольшие шаги, так что читаем , думаем, в принципе, там не сложно. Пишем мне, если что :)
+
