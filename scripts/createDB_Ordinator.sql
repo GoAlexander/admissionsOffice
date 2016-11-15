@@ -309,6 +309,7 @@ create table AbiturientCompetitiveGroup (
 	educationStandard int,                  --стандарт образования
 	competitiveBall int,                    --конкурсный балл
 	availabilityIndividualAchievements int, --наличие индивидуальных достижений
+	originalsReceivedDate Date,             --дата предоставления оригиналов документов
 	markEnrollment int,                     --отметка о зачислении
 	
 	--Внешние ключи
