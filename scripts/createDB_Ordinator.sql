@@ -1,9 +1,42 @@
-﻿create database Ordinator;
+﻿--Удаляем существующую БД
+drop database Ordinator;
+
+--Создаем новую БД
+create database Ordinator;
 go
 
 --указываем, что все дальнейшие запросы должны быть выполнены для БД ординатор
 use Ordinator;
 go
+
+--Удаление существующих таблиц для универсальности скрипта
+drop table /*if exists*/ AbiturientPassport;
+drop table /*if exists*/ AbiturientAddress;
+drop table /*if exists*/ AbiturientCompetitiveGroup;
+drop table /*if exists*/ AbiturientEntranceTests;
+drop table /*if exists*/ AbiturientIndividualAchievement;
+drop table /*if exists*/ AbiturientPostgraduateEducation;
+drop table /*if exists*/ AbiturientHigherEducation;
+drop table /*if exists*/ Abiturient;
+drop table /*if exists*/ Gender;
+drop table /*if exists*/ Nationality;
+drop table /*if exists*/ ReturnReasons;
+drop table /*if exists*/ IndividualAchievement;
+drop table /*if exists*/ EntranceTest;
+drop table /*if exists*/ TestBox;
+drop table /*if exists*/ AssessmentBase;
+drop table /*if exists*/ PassportType;
+drop table /*if exists*/ Region;
+drop table /*if exists*/ LocalityType;
+drop table /*if exists*/ AdmissionPlan;
+drop table /*if exists*/ Course;
+drop table /*if exists*/ Speciality;
+drop table /*if exists*/ EducationForm;
+drop table /*if exists*/ Chair;
+drop table /*if exists*/ CompetitiveGroup;
+drop table /*if exists*/ TargetOrganisation;
+drop table /*if exists*/ EducationStandard;
+drop table /*if exists*/ Users;
 
 --Пол
 create table Gender (
@@ -39,6 +72,7 @@ create table Abiturient (
 	Birthplace text,		--Место рождения
 	id_gender int,			--код пола
 	id_nationality int,		--код страны гражданства
+	email text,				--e-mail
 	phoneNumbers text,		--телефоны
 	needHostel int,			--метка "Нуждается в общежитии"
 	registrationDate Date,	--дата подачи заявления
@@ -67,6 +101,7 @@ go
 create table AbiturientIndividualAchievement (
 	aid_abiturient int,					--код/номер личного дела абитуриента
 	id_individual_achievement int,		--код индивидуального достижения
+	score int,							--фактический балл за индивидуальное достижение
 	documentName text,					--название документа
 	documentSeries text,				--серия документа
 	documentNumber text,				--номер документа
@@ -162,10 +197,12 @@ go
 
 --Абитуриент_паспорт
 create table AbiturientPassport (
-	series text,	--серия паспорта
-	pasNumber text,	--номер паспорта
-	givenBy text,	--кем выдан
-	givenDate Date,	--дата выдачи
+	aid_abiturient int,	--код/номер личного дела абитуриента
+	id_passportType int, --тип паспорта
+	paspSeries text,		--серия паспорта
+	paspNumber text,		--номер паспорта
+	paspGivenBy text,		--кем выдан
+	paspGivenDate Date,		--дата выдачи
 
 	--Внешние ключи
 	foreign key (aid_abiturient) references Abiturient(aid),
@@ -191,8 +228,11 @@ go
 
 --Абитуриент_адрес
 create table AbiturientAddress (
-	indexAddress text,	--почтовый индекс
-	address text,		--адрес
+	aid_abiturient int,		--код/номер личного дела абитуриента
+	id_region int,			--код региона
+	id_localityType int,	--тип населенного пункта
+	indexAddress text,		--почтовый индекс
+	factAddress text,		--адрес
 
 	--Внешние ключи
 	foreign key (aid_abiturient) references Abiturient(aid),
@@ -233,6 +273,30 @@ create table Chair (
 );
 go
 
+--Конкурсная группа
+create table CompetitiveGroup (
+	id int primary key,	      --код
+	name text,    			  --наименование конкурсной группы
+	codeFIS text  			  --код ФИС
+);
+go
+
+--Целевая организация
+create table TargetOrganisation (
+	id int primary key,	      --код
+	name text,                --наименование целевой организации
+	codeFIS text  			  --код ФИС
+);
+go
+
+--Стандарт образования
+create table EducationStandard (
+	id int primary key,		--код
+	name text,				--наименование стандарта образования
+	codeFIS text			--код ФИС
+);
+go
+
 --Абитуриент_конкурсные группы
 create table AbiturientCompetitiveGroup (
 	aid_abiturient int,                     --код/номер личного дела абитуриента
@@ -259,30 +323,6 @@ create table AbiturientCompetitiveGroup (
 );
 go
 
---Конкурсная группа
-create table CompetitiveGroup (
-	id int primary key,	      --код
-	name text,    			  --наименование конкурсной группы
-	codeFIS text  			  --код ФИС
-);
-go
-
---Целевая организация
-create table TargetOrganisation (
-	id int primary key,	      --код
-	name text,                --наименование целевой организации
-	codeFIS text  			  --код ФИС
-);
-go
-
---Стандарт образования
-create table EducationStandard (
-	id int primary key,	      --код
-	name text,    --наименование стандарта образования
-	codeFIS text  --код ФИС
-);
-go
-
 --План приема
 create table AdmissionPlan (
 	specialtyCode int,		--код специальности
@@ -290,7 +330,7 @@ create table AdmissionPlan (
 	competitiveGroup int,	--конкурсная группа
 	targetOrganisation int,	--целевая организация
 	educationStandard int,	--стандарт образования
-	placeNumber int,		--количество мест
+	placeCount int,		--количество мест
 	
 	--Внешние ключи
 	foreign key (specialtyCode) references Speciality(id) ,
@@ -301,4 +341,10 @@ create table AdmissionPlan (
 );
 go
 
-
+--Пользователи
+create table Users (
+	userLogin text,			--логин
+	userPassword text,		--пароль
+	userSignature text,		--подпись (будет отражаться в ряде документов)
+);
+go
