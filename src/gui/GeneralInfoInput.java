@@ -1,4 +1,4 @@
-package gui;
+п»їpackage gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -39,7 +39,7 @@ public class GeneralInfoInput extends JFrame {
 	private JTextField textSurname, textName, textPatronymic, textID, textDateReturn, textSeria, textNum, textDate, textIssuedBy;
 	private GridBagConstraints gbc;
 
-	private String[] columnNames = { "№", "Имя", "Фамилия", "Отчество" };
+	private String[] columnNames = { "в„–", "РРјСЏ", "Р¤Р°РјРёР»РёСЏ", "РћС‚С‡РµСЃС‚РІРѕ" };
 	private GUITableModel currentTM = new GUITableModel();
 	private JTable dataTable;
 	private JCheckBox checkBackDoc;
@@ -49,10 +49,10 @@ public class GeneralInfoInput extends JFrame {
 	private JComboBox comboSexList, comboNationality, comboReturnReason, comboDocType;
 	private JDateChooser calendar;
 	
-	private String[] arrSex = { "Женский", "Мужской" };
-	private String[] arrNationality = { "РФ", "Украина", "Белорусь", "Казахстан" };
+	private String[] arrSex = { "Р–РµРЅСЃРєРёР№", "РњСѓР¶СЃРєРѕР№" };
+	private String[] arrNationality = { "Р Р¤", "РЈРєСЂР°РёРЅР°", "Р‘РµР»РѕСЂСѓСЃСЊ", "РљР°Р·Р°С…СЃС‚Р°РЅ" };
 	private String[] arrReturnReason = { "1                               ", "2      ", "3      " };
-	private String[] arrDocType = {"паспорт РФ", "паспорт Украина"};
+	private String[] arrDocType = {"РїР°СЃРїРѕСЂС‚ Р Р¤", "РїР°СЃРїРѕСЂС‚ РЈРєСЂР°РёРЅР°"};
 	
 	private JMenuBar menuBar;
 	private JMenu directoryMenu, docMenu, reportMenu, compMenu, expMenu;
@@ -80,105 +80,105 @@ public class GeneralInfoInput extends JFrame {
 		getContentPane().add(mainPanel);
 		
 		menuBar = new JMenuBar();
-		directoryMenu = new JMenu("Справочники");
+		directoryMenu = new JMenu("РЎРїСЂР°РІРѕС‡РЅРёРєРё");
 		menuBar.add(directoryMenu);
-		directoryMenuEntranceTest = new JMenuItem("Вступительные испытания");
+		directoryMenuEntranceTest = new JMenuItem("Р’СЃС‚СѓРїРёС‚РµР»СЊРЅС‹Рµ РёСЃРїС‹С‚Р°РЅРёСЏ");
 		directoryMenu.add(directoryMenuEntranceTest);
-		directoryMenuBlockTest = new JMenuItem("Блоки испытаний");
+		directoryMenuBlockTest = new JMenuItem("Р‘Р»РѕРєРё РёСЃРїС‹С‚Р°РЅРёР№");
 		directoryMenu.add(directoryMenuBlockTest);
-		directoryMenuBaseMark = new JMenuItem("Основания для оценки");
+		directoryMenuBaseMark = new JMenuItem("РћСЃРЅРѕРІР°РЅРёСЏ РґР»СЏ РѕС†РµРЅРєРё");
 		directoryMenu.add(directoryMenuBaseMark);
 		directoryMenu.addSeparator();
-		directoryMenuTypePasport = new JMenuItem("Типы паспортов");
+		directoryMenuTypePasport = new JMenuItem("РўРёРїС‹ РїР°СЃРїРѕСЂС‚РѕРІ");
 		directoryMenu.add(directoryMenuTypePasport);
-		directoryMenuRegion = new JMenuItem("Регионы");
+		directoryMenuRegion = new JMenuItem("Р РµРіРёРѕРЅС‹");
 		directoryMenu.add(directoryMenuRegion);
-		directoryMenuTypeSettlements = new JMenuItem("Типы населенных пунктов");
+		directoryMenuTypeSettlements = new JMenuItem("РўРёРїС‹ РЅР°СЃРµР»РµРЅРЅС‹С… РїСѓРЅРєС‚РѕРІ");
 		directoryMenu.add(directoryMenuTypeSettlements);
 		directoryMenu.addSeparator();
-		directoryMenuSex = new JMenuItem("Пол");
+		directoryMenuSex = new JMenuItem("РџРѕР»");
 		directoryMenu.add(directoryMenuSex);
-		directoryMenuNationality = new JMenuItem("Гражданство");
+		directoryMenuNationality = new JMenuItem("Р“СЂР°Р¶РґР°РЅСЃС‚РІРѕ");
 		directoryMenu.add(directoryMenuNationality);
 		directoryMenu.addSeparator();
-		directoryMenuReturnReason = new JMenuItem("Причины возврата");
+		directoryMenuReturnReason = new JMenuItem("РџСЂРёС‡РёРЅС‹ РІРѕР·РІСЂР°С‚Р°");
 		directoryMenu.add(directoryMenuReturnReason);
 		directoryMenu.addSeparator();
-		directoryMenuIndividual = new JMenuItem("Индивидуальные");
+		directoryMenuIndividual = new JMenuItem("РРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Рµ");
 		directoryMenu.add(directoryMenuIndividual);
 		directoryMenu.addSeparator();
-		directoryMenuStudyFields = new JMenuItem("Направления обучения");
+		directoryMenuStudyFields = new JMenuItem("РќР°РїСЂР°РІР»РµРЅРёСЏ РѕР±СѓС‡РµРЅРёСЏ");
 		directoryMenu.add(directoryMenuStudyFields);
-		directoryMenuEducForm = new JMenuItem("Формы обучения");
+		directoryMenuEducForm = new JMenuItem("Р¤РѕСЂРјС‹ РѕР±СѓС‡РµРЅРёСЏ");
 		directoryMenu.add(directoryMenuEducForm);
-		directoryMenuSpeciality = new JMenuItem("Специальности");
+		directoryMenuSpeciality = new JMenuItem("РЎРїРµС†РёР°Р»СЊРЅРѕСЃС‚Рё");
 		directoryMenu.add(directoryMenuSpeciality);
-		directoryMenuDepartments = new JMenuItem("Кафедры");
+		directoryMenuDepartments = new JMenuItem("РљР°С„РµРґСЂС‹");
 		directoryMenu.add(directoryMenuDepartments);
-		directoryMenuCompetitiveGroup = new JMenuItem("Конкурсные группы");
+		directoryMenuCompetitiveGroup = new JMenuItem("РљРѕРЅРєСѓСЂСЃРЅС‹Рµ РіСЂСѓРїРїС‹");
 		directoryMenu.add(directoryMenuCompetitiveGroup);
-		directoryMenuOrganisations = new JMenuItem("Целевые организации");
+		directoryMenuOrganisations = new JMenuItem("Р¦РµР»РµРІС‹Рµ РѕСЂРіР°РЅРёР·Р°С†РёРё");
 		directoryMenu.add(directoryMenuOrganisations);
-		directoryMenuEducStandard = new JMenuItem("Стандарты образования");
+		directoryMenuEducStandard = new JMenuItem("РЎС‚Р°РЅРґР°СЂС‚С‹ РѕР±СЂР°Р·РѕРІР°РЅРёСЏ");
 		directoryMenu.add(directoryMenuEducStandard);
 		directoryMenu.addSeparator();
-		directoryMenuPlan = new JMenuItem("План приема");
+		directoryMenuPlan = new JMenuItem("РџР»Р°РЅ РїСЂРёРµРјР°");
 		directoryMenu.add(directoryMenuPlan);
 		directoryMenu.addSeparator();
-		directoryMenuUsers = new JMenuItem("Пользователи");
+		directoryMenuUsers = new JMenuItem("РџРѕР»СЊР·РѕРІР°С‚РµР»Рё");
 		directoryMenu.add(directoryMenuUsers);
 		
-		docMenu = new JMenu("Документы");
+		docMenu = new JMenu("Р”РѕРєСѓРјРµРЅС‚С‹");
 		menuBar.add(docMenu);
-		docMenuApplication = new JMenuItem("Заявление");
+		docMenuApplication = new JMenuItem("Р—Р°СЏРІР»РµРЅРёРµ");
 		docMenu.add(docMenuApplication);
-		docMenuOpRasp = new JMenuItem("Опись/расписка");
+		docMenuOpRasp = new JMenuItem("РћРїРёСЃСЊ/СЂР°СЃРїРёСЃРєР°");
 		docMenu.add(docMenuOpRasp);
-		docMenuListEntranceExam = new JMenuItem("Лист вступительных испытаний");
+		docMenuListEntranceExam = new JMenuItem("Р›РёСЃС‚ РІСЃС‚СѓРїРёС‚РµР»СЊРЅС‹С… РёСЃРїС‹С‚Р°РЅРёР№");
 		docMenu.add(docMenuListEntranceExam);
 		
-		reportMenu = new JMenu("Отчетность");
+		reportMenu = new JMenu("РћС‚С‡РµС‚РЅРѕСЃС‚СЊ");
 		menuBar.add(reportMenu);
-		reportMenuListCandidates = new JMenuItem("Список подавших документы");
+		reportMenuListCandidates = new JMenuItem("РЎРїРёСЃРѕРє РїРѕРґР°РІС€РёС… РґРѕРєСѓРјРµРЅС‚С‹");
 		reportMenu.add(reportMenuListCandidates);
-		reportMenuListGroups = new JMenuItem("Списки групп на вступительные");
+		reportMenuListGroups = new JMenuItem("РЎРїРёСЃРєРё РіСЂСѓРїРї РЅР° РІСЃС‚СѓРїРёС‚РµР»СЊРЅС‹Рµ");
 		reportMenu.add(reportMenuListGroups);
-		reportMenuResults = new JMenuItem("Результаты вступительных");
+		reportMenuResults = new JMenuItem("Р РµР·СѓР»СЊС‚Р°С‚С‹ РІСЃС‚СѓРїРёС‚РµР»СЊРЅС‹С…");
 		reportMenu.add(reportMenuResults);
 		reportMenu.addSeparator();
-		reportMenuStatistics = new JMenuItem("Статистика");
+		reportMenuStatistics = new JMenuItem("РЎС‚Р°С‚РёСЃС‚РёРєР°");
 		reportMenu.add(reportMenuStatistics);
 		
-		compMenu = new JMenu("Конкурс");
+		compMenu = new JMenu("РљРѕРЅРєСѓСЂСЃ");
 		menuBar.add(compMenu);
-		compMenuCalculation = new JMenuItem("Предварительные расчеты");
+		compMenuCalculation = new JMenuItem("РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Рµ СЂР°СЃС‡РµС‚С‹");
 		compMenu.add(compMenuCalculation);
 		compMenu.addSeparator();
-		compMenuPlayCompet = new JMenuItem("Сыграть конкурс");
+		compMenuPlayCompet = new JMenuItem("РЎС‹РіСЂР°С‚СЊ РєРѕРЅРєСѓСЂСЃ");
 		compMenu.add(compMenuPlayCompet);
 		compMenu.addSeparator();
-		compMenuInternalRating = new JMenuItem("Внутренний рейтинг");
+		compMenuInternalRating = new JMenuItem("Р’РЅСѓС‚СЂРµРЅРЅРёР№ СЂРµР№С‚РёРЅРі");
 		compMenu.add(compMenuInternalRating);
-		compMenuRankedList = new JMenuItem("Ранжированный список");
+		compMenuRankedList = new JMenuItem("Р Р°РЅР¶РёСЂРѕРІР°РЅРЅС‹Р№ СЃРїРёСЃРѕРє");
 		compMenu.add(compMenuRankedList);
 		compMenu.addSeparator();
-		compMenuCompetList = new JMenuItem("Конкурсный список");
+		compMenuCompetList = new JMenuItem("РљРѕРЅРєСѓСЂСЃРЅС‹Р№ СЃРїРёСЃРѕРє");
 		compMenu.add(compMenuCompetList);
 		compMenu.addSeparator();
-		compMenuResetCompetResults = new JMenuItem("Сброс результатов конкурса");
+		compMenuResetCompetResults = new JMenuItem("РЎР±СЂРѕСЃ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РєРѕРЅРєСѓСЂСЃР°");
 		compMenu.add(compMenuResetCompetResults);
 		
-		expMenu = new JMenu("Экспорт");
+		expMenu = new JMenu("Р­РєСЃРїРѕСЂС‚");
 		menuBar.add(expMenu);
-		expMenuOrganisations = new JMenuItem("Целевые организации");
+		expMenuOrganisations = new JMenuItem("Р¦РµР»РµРІС‹Рµ РѕСЂРіР°РЅРёР·Р°С†РёРё");
 		expMenu.add(expMenuOrganisations);
-		expMenuCompetGroup = new JMenuItem("Конкурсные группы");
+		expMenuCompetGroup = new JMenuItem("РљРѕРЅРєСѓСЂСЃРЅС‹Рµ РіСЂСѓРїРїС‹");
 		expMenu.add(expMenuCompetGroup);
-		expMenuPlan = new JMenuItem("План приема");
+		expMenuPlan = new JMenuItem("РџР»Р°РЅ РїСЂРёРµРјР°");
 		expMenu.add(expMenuPlan);
-		expMenuApplications = new JMenuItem("Заявления абитуриентов");
+		expMenuApplications = new JMenuItem("Р—Р°СЏРІР»РµРЅРёСЏ Р°Р±РёС‚СѓСЂРёРµРЅС‚РѕРІ");
 		expMenu.add(expMenuApplications);
-		expMenuResults = new JMenuItem("Результаты конкурса");
+		expMenuResults = new JMenuItem("Р РµР·СѓР»СЊС‚Р°С‚С‹ РєРѕРЅРєСѓСЂСЃР°");
 		expMenu.add(expMenuResults);
 		
 		mainPanel.add(menuBar, BorderLayout.PAGE_START);
@@ -193,9 +193,9 @@ public class GeneralInfoInput extends JFrame {
 		
 		btnTablePanel = new JPanel();
 		btnTablePanel.setLayout(new FlowLayout());
-		addButton = new JButton("Добавить");
-		editButton = new JButton("Редактировать");
-		deleteButton = new JButton("Удалить");
+		addButton = new JButton("Р”РѕР±Р°РІРёС‚СЊ");
+		editButton = new JButton("Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ");
+		deleteButton = new JButton("РЈРґР°Р»РёС‚СЊ");
 		btnTablePanel.add(addButton);
 		btnTablePanel.add(editButton);
 		btnTablePanel.add(deleteButton);
@@ -212,7 +212,7 @@ public class GeneralInfoInput extends JFrame {
 		JPanel GIPanelMain = new JPanel();
 		GIPanelMain.setLayout(new BoxLayout(GIPanelMain, BoxLayout.Y_AXIS));
 		GIPanelMain.setBorder(
-				new TitledBorder(null, "Основная информация", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				new TitledBorder(null, "РћСЃРЅРѕРІРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		centralPanel.add(GIPanelMain);
 
 		
@@ -232,7 +232,7 @@ public class GeneralInfoInput extends JFrame {
 		panelID.setLayout(new FlowLayout());
 		panelID.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelID.setMaximumSize(dimPanel);
-		JLabel idLabel = new JLabel("№:  ");
+		JLabel idLabel = new JLabel("в„–:  ");
 		panelID.add(idLabel);
 		textID = new JTextField();
 		textID.setPreferredSize(new Dimension(60, 25));
@@ -245,7 +245,7 @@ public class GeneralInfoInput extends JFrame {
 		panelSurname.setLayout(new FlowLayout());
 		panelSurname.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelSurname.setMaximumSize(dimPanel);
-		JLabel surnameLabel = new JLabel("Фамилия:     ");
+		JLabel surnameLabel = new JLabel("Р¤Р°РјРёР»РёСЏ:     ");
 		panelSurname.add(surnameLabel);
 		textSurname = new JTextField();
 		textSurname.setPreferredSize(dimText);
@@ -257,7 +257,7 @@ public class GeneralInfoInput extends JFrame {
 		panelName.setLayout(new FlowLayout());
 		panelName.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelName.setMaximumSize(dimPanel);
-		JLabel nameLabel = new JLabel("Имя:                ");
+		JLabel nameLabel = new JLabel("РРјСЏ:                ");
 		panelName.add(nameLabel);
 		textName = new JTextField();
 		textName.setPreferredSize(dimText);
@@ -269,7 +269,7 @@ public class GeneralInfoInput extends JFrame {
 		panelPatronymic.setLayout(new FlowLayout());
 		panelPatronymic.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelPatronymic.setMaximumSize(dimPanel);
-		JLabel patronymicLabel = new JLabel("Отчество:      ");
+		JLabel patronymicLabel = new JLabel("РћС‚С‡РµСЃС‚РІРѕ:      ");
 		panelPatronymic.add(patronymicLabel);
 		textPatronymic = new JTextField();
 		textPatronymic.setPreferredSize(dimText);
@@ -281,7 +281,7 @@ public class GeneralInfoInput extends JFrame {
 		panelSex.setLayout(new FlowLayout());
 		panelSex.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelSex.setMaximumSize(dimPanel);
-		JLabel sexLabel = new JLabel("Пол:                        ");
+		JLabel sexLabel = new JLabel("РџРѕР»:                        ");
 		panelSex.add(sexLabel);
 		comboSexList = new JComboBox(arrSex);
 		comboSexList.setSelectedIndex(0);
@@ -294,7 +294,7 @@ public class GeneralInfoInput extends JFrame {
 		panelDB.setLayout(new FlowLayout());
 		panelDB.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelDB.setMaximumSize(dimPanel);
-		JLabel dbLabel = new JLabel("Дата Рождения:  ");
+		JLabel dbLabel = new JLabel("Р”Р°С‚Р° Р РѕР¶РґРµРЅРёСЏ:  ");
 		panelDB.add(dbLabel);
 		calendar = new JDateChooser();
 		calendar.setFont(new Font("Dialog", Font.PLAIN, 11));
@@ -306,7 +306,7 @@ public class GeneralInfoInput extends JFrame {
 		panelNationality.setLayout(new FlowLayout());
 		panelNationality.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelNationality.setMaximumSize(dimPanel);
-		JLabel nationalityLabel = new JLabel("Гражданство:      ");
+		JLabel nationalityLabel = new JLabel("Р“СЂР°Р¶РґР°РЅСЃС‚РІРѕ:      ");
 		panelNationality.add(nationalityLabel);
 		comboNationality = new JComboBox(arrNationality);
 		comboNationality.setSelectedIndex(0);
@@ -316,7 +316,7 @@ public class GeneralInfoInput extends JFrame {
 		GIPanel.add(panelNationality, gbc);
 
 		panelInfoBackDoc = new JPanel();
-		panelInfoBackDoc.setBorder(new TitledBorder(null, "Сведения о возврате документов", TitledBorder.LEADING,
+		panelInfoBackDoc.setBorder(new TitledBorder(null, "РЎРІРµРґРµРЅРёСЏ Рѕ РІРѕР·РІСЂР°С‚Рµ РґРѕРєСѓРјРµРЅС‚РѕРІ", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
 		// panelInfoBackDoc.setBounds(10, 10, 10, 10);
 
@@ -330,7 +330,7 @@ public class GeneralInfoInput extends JFrame {
 		panelReturnReason = new JPanel();
 		panelReturnReason.setLayout(new FlowLayout());
 
-		JLabel returnReasonlbl = new JLabel("Причина возврата   ");
+		JLabel returnReasonlbl = new JLabel("РџСЂРёС‡РёРЅР° РІРѕР·РІСЂР°С‚Р°   ");
 		panelReturnReason.add(returnReasonlbl);
 
 		comboReturnReason = new JComboBox(arrReturnReason);
@@ -344,12 +344,12 @@ public class GeneralInfoInput extends JFrame {
 
 		panelDateReturn.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelDateReturn.setMaximumSize(dimPanel);
-		JLabel dateReturnLabel = new JLabel("Дата возврата документов:     ");
+		JLabel dateReturnLabel = new JLabel("Р”Р°С‚Р° РІРѕР·РІСЂР°С‚Р° РґРѕРєСѓРјРµРЅС‚РѕРІ:     ");
 		panelDateReturn.add(dateReturnLabel);
 		textDateReturn = new JTextField();
 		textDateReturn.setPreferredSize(dimText);
 		panelDateReturn.add(textDateReturn);
-		checkBackDoc = new JCheckBox("Забрал документы");
+		checkBackDoc = new JCheckBox("Р—Р°Р±СЂР°Р» РґРѕРєСѓРјРµРЅС‚С‹");
 		gbc2.gridy = 1;
 		panelInfoBackDoc.add(panelDateReturn, gbc2);
 		gbc2.gridx = 1;
@@ -364,12 +364,12 @@ public class GeneralInfoInput extends JFrame {
 		JPanel contPanel = new JPanel();
 		JPanel passportPanel = new JPanel();
 		
-		userInfoTPane.add("Конк-ные группы", contGroupPanel);
-		userInfoTPane.add("Вступ-ные испытания", entranceTestpPanel);
-		userInfoTPane.add("Инд-ные достижения", indAchivPanel);
-		userInfoTPane.add("Образование", educPanel);
-		userInfoTPane.add("Адрес и контакты", contPanel);
-		userInfoTPane.add("Паспорт", createPassportPanel());
+		userInfoTPane.add("РљРѕРЅРє-РЅС‹Рµ РіСЂСѓРїРїС‹", contGroupPanel);
+		userInfoTPane.add("Р’СЃС‚СѓРї-РЅС‹Рµ РёСЃРїС‹С‚Р°РЅРёСЏ", entranceTestpPanel);
+		userInfoTPane.add("РРЅРґ-РЅС‹Рµ РґРѕСЃС‚РёР¶РµРЅРёСЏ", indAchivPanel);
+		userInfoTPane.add("РћР±СЂР°Р·РѕРІР°РЅРёРµ", educPanel);
+		userInfoTPane.add("РђРґСЂРµСЃ Рё РєРѕРЅС‚Р°РєС‚С‹", contPanel);
+		userInfoTPane.add("РџР°СЃРїРѕСЂС‚", createPassportPanel());
 		//userInfoTPane.setPreferredSize(new Dimension(300, 250));
 		
 		centralPanel.add(userInfoTPane);
@@ -390,7 +390,7 @@ public class GeneralInfoInput extends JFrame {
 
 		JPanel docTypePanel = new JPanel(); 
 		docTypePanel.setLayout(new FlowLayout());
-		JLabel docTypeLabel = new JLabel("Тип документа");
+		JLabel docTypeLabel = new JLabel("РўРёРї РґРѕРєСѓРјРµРЅС‚Р°");
 		comboDocType = new JComboBox(arrDocType);
 		docTypePanel.add(docTypeLabel);
 		docTypePanel.add(comboDocType);
@@ -398,7 +398,7 @@ public class GeneralInfoInput extends JFrame {
 		
 		JPanel seriaPanel = new JPanel();
 		seriaPanel.setLayout(new FlowLayout());
-		JLabel seriaLabel = new JLabel("Серия ");
+		JLabel seriaLabel = new JLabel("РЎРµСЂРёСЏ ");
 		seriaPanel.add(seriaLabel);
 		textSeria = new JTextField();
 		textSeria.setPreferredSize(dimTextPassport);
@@ -408,7 +408,7 @@ public class GeneralInfoInput extends JFrame {
 		
 		JPanel numPanel = new JPanel();
 		numPanel.setLayout(new FlowLayout());
-		JLabel numLabel = new JLabel("Номер ");
+		JLabel numLabel = new JLabel("РќРѕРјРµСЂ ");
 		numPanel.add(numLabel);
 		textNum = new JTextField();
 		textNum.setPreferredSize(dimTextPassport);
@@ -418,7 +418,7 @@ public class GeneralInfoInput extends JFrame {
 		
 		JPanel datePanel = new JPanel();
 		datePanel.setLayout(new FlowLayout());
-		JLabel dateLabel = new JLabel("Дата выдачи ");
+		JLabel dateLabel = new JLabel("Р”Р°С‚Р° РІС‹РґР°С‡Рё ");
 		datePanel.add(dateLabel);
 		textDate = new JTextField();
 		textDate.setPreferredSize(dimTextPassport);
@@ -428,7 +428,7 @@ public class GeneralInfoInput extends JFrame {
 		
 		JPanel issuedByPanel = new JPanel();
 		issuedByPanel.setLayout(new FlowLayout());
-		JLabel issuedByLabel = new JLabel("Кем выдан");
+		JLabel issuedByLabel = new JLabel("РљРµРј РІС‹РґР°РЅ");
 		issuedByPanel.add(issuedByLabel);
 		textIssuedBy = new JTextField();
 		textIssuedBy.setPreferredSize(new Dimension(350, 70));

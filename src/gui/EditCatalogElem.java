@@ -1,4 +1,4 @@
-package gui;
+п»їpackage gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -18,13 +18,13 @@ public class EditCatalogElem extends JFrame{
 	private JPanel mainPanel, tablePanel;
 	private JTable dataTable;
 	private GUITableModel currentTM = new GUITableModel();
-	private String[] columnNames = { "id", "Наименование", "Код в ФИС" };
+	private String[] columnNames = { "id", "РќР°РёРјРµРЅРѕРІР°РЅРёРµ", "РљРѕРґ РІ Р¤РРЎ" };
 	
 	private JButton editBtn, saveBtn;
 	
 	public  EditCatalogElem() {
 		
-		setTitle("Редактирование элементов справочника");
+		setTitle("Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЌР»РµРјРµРЅС‚РѕРІ СЃРїСЂР°РІРѕС‡РЅРёРєР°");
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
@@ -43,8 +43,8 @@ public class EditCatalogElem extends JFrame{
 		dataTable.getColumnModel().getColumn(0).setMaxWidth(50);
 		mainPanel.add(scrPane, BorderLayout.CENTER);
 		
-		editBtn = new JButton("Редактировать");
-		saveBtn = new JButton("Сохранить");
+		editBtn = new JButton("Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ");
+		saveBtn = new JButton("РЎРѕС…СЂР°РЅРёС‚СЊ");
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel,  BoxLayout.LINE_AXIS));
