@@ -374,7 +374,7 @@ public class GeneralInfoInput extends JFrame {
 		
 		centralPanel.add(userInfoTPane);
 
-		setPreferredSize(new Dimension(1100, 500));
+		setPreferredSize(new Dimension(1100, 600));
 		pack();
 
 	}
@@ -394,6 +394,7 @@ public class GeneralInfoInput extends JFrame {
 		comboDocType = new JComboBox(arrDocType);
 		docTypePanel.add(docTypeLabel);
 		docTypePanel.add(comboDocType);
+		gbc3.gridwidth = 3;
 		passportPanel.add(docTypePanel, gbc3);
 		
 		JPanel seriaPanel = new JPanel();
@@ -404,6 +405,7 @@ public class GeneralInfoInput extends JFrame {
 		textSeria.setPreferredSize(dimTextPassport);
 		seriaPanel.add(textSeria);
 		gbc3.gridy = 1;
+		gbc3.gridwidth = 1;
 		passportPanel.add(seriaPanel, gbc3);
 		
 		JPanel numPanel = new JPanel();
@@ -431,10 +433,11 @@ public class GeneralInfoInput extends JFrame {
 		JLabel issuedByLabel = new JLabel("Кем выдан");
 		issuedByPanel.add(issuedByLabel);
 		textIssuedBy = new JTextField();
-		textIssuedBy.setPreferredSize(new Dimension(350, 70));
+		textIssuedBy.setPreferredSize(new Dimension(565, 70));
 		issuedByPanel.add(textIssuedBy);
 		gbc3.gridx = 0;
 		gbc3.gridy = 2;
+		gbc3.gridwidth = 3;
 		passportPanel.add(issuedByPanel, gbc3);
 		
 		return passportPanel;
