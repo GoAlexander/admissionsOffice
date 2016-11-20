@@ -197,8 +197,8 @@ go
 
 --Абитуриент_паспорт
 create table AbiturientPassport (
-	aid_abiturient int,	--код/номер личного дела абитуриента
-	id_passportType int, --тип паспорта
+	aid_abiturient int,		--код/номер личного дела абитуриента
+	id_passportType int,	--тип паспорта
 	paspSeries text,		--серия паспорта
 	paspNumber text,		--номер паспорта
 	paspGivenBy text,		--кем выдан
@@ -331,7 +331,7 @@ create table AdmissionPlan (
 	competitiveGroup int,	--конкурсная группа
 	targetOrganisation int,	--целевая организация
 	educationStandard int,	--стандарт образования
-	placeCount int,		--количество мест
+	placeCount int,			--количество мест
 	
 	--Внешние ключи
 	foreign key (specialtyCode) references Speciality(id) on update cascade,
