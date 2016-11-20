@@ -1,6 +1,7 @@
 ﻿package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -8,9 +9,11 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -25,26 +28,28 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import com.toedter.calendar.JDateChooser;
 
 public class GeneralInfoInput extends JFrame {
 
 	private JPanel mainPanel, centralPanel, GIPanel, panelSurname, panelName, panelPatronymic, panelID, panelSex,
-			panelDB, panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn, tablePanel, btnTablePanel, passportPanel;
+			panelDB, panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn, tablePanel, btnTablePanel,
+			passportPanel, entranceTestPanel, EntranceTestTablePanel;
 	private Dimension dimPanel, dimText;
-	private JTextField textSurname, textName, textPatronymic, textID, textDateReturn, textSeria, textNum, textDate, textIssuedBy;
+	private JTextField  textID, textDateReturn, textSeria, textNum, textDate, textIssuedBy;
 	private GridBagConstraints gbc;
 
 	private String[] columnNames = { "№", "Имя", "Фамилия", "Отчество" };
+	private String[] entranceTestColumnNames = { "Наименование", "Группа", "Блок испытаний", "Дата испытания", "Балл" };
 	private GUITableModel currentTM = new GUITableModel();
-	private JTable dataTable;
+	private GUITableModel entranceTestTM = new GUITableModel();
+	private JTable dataTable, entranceTestTable;
 	private JCheckBox checkBackDoc;
-	private JTabbedPane userInfoTPane;
-
+	private JTabbedPane userInfoTPane;	
 	
 	private JComboBox comboSexList, comboNationality, comboReturnReason, comboDocType;
 	private JDateChooser calendar;
@@ -74,6 +79,7 @@ public class GeneralInfoInput extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
+		setLocation(0,0);
 		
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
@@ -214,12 +220,10 @@ public class GeneralInfoInput extends JFrame {
 		GIPanelMain.setBorder(
 				new TitledBorder(null, "Основная информация", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		centralPanel.add(GIPanelMain);
-
 		
 		GIPanel = new JPanel();
 		GIPanel.setLayout(new GridBagLayout());
-		GIPanelMain.add(GIPanel);
-		
+		GIPanelMain.add(GIPanel);		
 
 		dimPanel = new Dimension(300, 40);
 		dimText = new Dimension(170, 25);
@@ -237,43 +241,20 @@ public class GeneralInfoInput extends JFrame {
 		textID = new JTextField();
 		textID.setPreferredSize(new Dimension(60, 25));
 		panelID.add(textID);
-		gbc.gridx = 0;
-		gbc.gridy = 0;
 		GIPanel.add(panelID, gbc);
 
 		panelSurname = new JPanel();
-		panelSurname.setLayout(new FlowLayout());
-		panelSurname.setAlignmentY(JComponent.LEFT_ALIGNMENT);
-		panelSurname.setMaximumSize(dimPanel);
-		JLabel surnameLabel = new JLabel("Фамилия:     ");
-		panelSurname.add(surnameLabel);
-		textSurname = new JTextField();
-		textSurname.setPreferredSize(dimText);
-		panelSurname.add(textSurname);
+		panelSurname = createFIOPanel("Фамилия:     ");
 		gbc.gridy = 1;
 		GIPanel.add(panelSurname, gbc);
 
 		panelName = new JPanel();
-		panelName.setLayout(new FlowLayout());
-		panelName.setAlignmentY(JComponent.LEFT_ALIGNMENT);
-		panelName.setMaximumSize(dimPanel);
-		JLabel nameLabel = new JLabel("Имя:                ");
-		panelName.add(nameLabel);
-		textName = new JTextField();
-		textName.setPreferredSize(dimText);
-		panelName.add(textName);
+		panelName = createFIOPanel("Имя:                ");
 		gbc.gridy = 2;
 		GIPanel.add(panelName, gbc);
 
 		panelPatronymic = new JPanel();
-		panelPatronymic.setLayout(new FlowLayout());
-		panelPatronymic.setAlignmentY(JComponent.LEFT_ALIGNMENT);
-		panelPatronymic.setMaximumSize(dimPanel);
-		JLabel patronymicLabel = new JLabel("Отчество:      ");
-		panelPatronymic.add(patronymicLabel);
-		textPatronymic = new JTextField();
-		textPatronymic.setPreferredSize(dimText);
-		panelPatronymic.add(textPatronymic);
+		panelPatronymic = createFIOPanel("Отчество:      ");
 		gbc.gridy = 3;
 		GIPanel.add(panelPatronymic, gbc);
 
@@ -318,8 +299,7 @@ public class GeneralInfoInput extends JFrame {
 		panelInfoBackDoc = new JPanel();
 		panelInfoBackDoc.setBorder(new TitledBorder(null, "Сведения о возврате документов", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
-		// panelInfoBackDoc.setBounds(10, 10, 10, 10);
-
+		
 		GIPanelMain.add(panelInfoBackDoc);
 		panelInfoBackDoc.setLayout(new GridBagLayout());
 
@@ -354,8 +334,7 @@ public class GeneralInfoInput extends JFrame {
 		panelInfoBackDoc.add(panelDateReturn, gbc2);
 		gbc2.gridx = 1;
 		panelInfoBackDoc.add(checkBackDoc, gbc2);
-		
-		
+				
 		userInfoTPane = new JTabbedPane();
 		JPanel contGroupPanel = new JPanel();
 		JPanel entranceTestpPanel = new JPanel();
@@ -365,7 +344,7 @@ public class GeneralInfoInput extends JFrame {
 		JPanel passportPanel = new JPanel();
 		
 		userInfoTPane.add("Конк-ные группы", contGroupPanel);
-		userInfoTPane.add("Вступ-ные испытания", entranceTestpPanel);
+		userInfoTPane.add("Вступ-ные испытания", createEntranceTestPanel());
 		userInfoTPane.add("Инд-ные достижения", indAchivPanel);
 		userInfoTPane.add("Образование", educPanel);
 		userInfoTPane.add("Адрес и контакты", contPanel);
@@ -374,9 +353,23 @@ public class GeneralInfoInput extends JFrame {
 		
 		centralPanel.add(userInfoTPane);
 
-		setPreferredSize(new Dimension(1100, 600));
+		setPreferredSize(new Dimension(1100, 700));
 		pack();
 
+	}
+	
+	private JPanel createFIOPanel(String nameLabel) {
+		JPanel panelFIO = new JPanel();
+		panelFIO.setLayout(new FlowLayout());
+		panelFIO.setAlignmentY(JComponent.LEFT_ALIGNMENT);
+		panelFIO.setMaximumSize(dimPanel);
+		JLabel FIOLabel = new JLabel(nameLabel);
+		panelFIO.add(FIOLabel);
+		JTextField textFIO = new JTextField();
+		textFIO.setPreferredSize(dimText);
+		panelFIO.add(textFIO);
+
+		return panelFIO;
 	}
 	
 	private JPanel createPassportPanel(){
@@ -394,7 +387,6 @@ public class GeneralInfoInput extends JFrame {
 		comboDocType = new JComboBox(arrDocType);
 		docTypePanel.add(docTypeLabel);
 		docTypePanel.add(comboDocType);
-		gbc3.gridwidth = 3;
 		passportPanel.add(docTypePanel, gbc3);
 		
 		JPanel seriaPanel = new JPanel();
@@ -405,7 +397,6 @@ public class GeneralInfoInput extends JFrame {
 		textSeria.setPreferredSize(dimTextPassport);
 		seriaPanel.add(textSeria);
 		gbc3.gridy = 1;
-		gbc3.gridwidth = 1;
 		passportPanel.add(seriaPanel, gbc3);
 		
 		JPanel numPanel = new JPanel();
@@ -443,6 +434,81 @@ public class GeneralInfoInput extends JFrame {
 		return passportPanel;
 	}
 	
+	private JPanel createEntranceTestPanel(){
+		entranceTestPanel = new JPanel();
+		entranceTestPanel.setLayout(new BorderLayout());
+		
+		EntranceTestTablePanel = new JPanel();
+		entranceTestTable = new JTable(entranceTestTM);
+		entranceTestTM.setDataVector(null, entranceTestColumnNames);
+		JScrollPane scrPane = new JScrollPane(entranceTestTable);
+		scrPane.setPreferredSize(new Dimension(300, 0));
+		entranceTestTable.setMaximumSize(new Dimension(100,100));
+		entranceTestPanel.add(scrPane, BorderLayout.CENTER);
+//***test data		
+		entranceTestTM.setDataVector(new Object[][]
+				{
+			{ "1", "123","123","123","123"},
+			{ "2", "123","123","123","123"},
+			{ "3", "123","123","123","123"},
+				},
+				entranceTestColumnNames);
+		
+		String[] nameEntranceTest = {"n1", "n2", "n3"};
+		createCheckboxTable(entranceTestTable, 0, nameEntranceTest);
+		
+		String[] groupEntranceTest = {"gr1", "gr2", "gr3"};
+		createCheckboxTable(entranceTestTable, 1, groupEntranceTest);
+		
+		String[] blockEntranceTest = {"bl1", "bl2", "bl3"};
+		createCheckboxTable(entranceTestTable, 2, blockEntranceTest);
+		
+		JPanel butPanel = new JPanel();
+		butPanel.setLayout(new BoxLayout(butPanel,  BoxLayout.PAGE_AXIS));
+		
+		JCheckBox specialCond = new JCheckBox("Нуждается в специальных условиях");
+		specialCond.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		butPanel.add(specialCond);
+		
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JButton editBtn = new JButton("Редактировать");
+		buttonPanel.add(editBtn);
+		JButton saveBtn = new JButton("Сохранить");
+		buttonPanel.add(saveBtn);		
+		buttonPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		
+		butPanel.add(buttonPanel);
+		entranceTestPanel.add(butPanel, BorderLayout.PAGE_END);
+		
+		return entranceTestPanel;
+	}
+
+	private void createCheckboxTable(JTable table, int numColumn, String[] dataCheck) {
+		TableColumn tmpColumn = table.getColumnModel().getColumn(numColumn);
+		JComboBox<String> comboBox = new JComboBox<String>(dataCheck);
+
+		DefaultCellEditor defaultCellEditor = new DefaultCellEditor(comboBox);
+		tmpColumn.setCellEditor(defaultCellEditor);
+		tmpColumn.setCellRenderer(new CheckBoxCellRenderer(comboBox));
+	}
+
+	class CheckBoxCellRenderer implements TableCellRenderer {
+		JComboBox combo;
+
+		public CheckBoxCellRenderer(JComboBox comboBox) {
+			this.combo = new JComboBox();
+			for (int i = 0; i < comboBox.getItemCount(); i++) {
+				combo.addItem(comboBox.getItemAt(i));
+			}
+		}
+
+		public Component getTableCellRendererComponent(JTable jtable, Object value, boolean isSelected,
+				boolean hasFocus, int row, int column) {
+			combo.setSelectedItem(value);
+			return combo;
+		}
+	}
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {

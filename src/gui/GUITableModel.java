@@ -6,7 +6,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class GUITableModel extends DefaultTableModel {
 	
-	
 	public Vector<String> getInfoByKey(int i){
 		Vector<String> info = new Vector<String>();
 		for(int j = 0; j < getColumnCount(); j++){
@@ -27,6 +26,8 @@ public class GUITableModel extends DefaultTableModel {
 
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		return false;
+		return true;
 	}
+	
+	
 }
