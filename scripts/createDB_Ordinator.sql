@@ -1,5 +1,5 @@
 ﻿--Удаляем существующую БД
-drop database Ordinator;
+--drop database Ordinator;
 
 --Создаем новую БД
 create database Ordinator;
@@ -82,9 +82,9 @@ create table Abiturient (
 	is_enrolled int,		--метка о зачислении
 	
 	--Внешние ключи
-	foreign key (id_gender) references Gender(id),
-	foreign key (id_nationality) references Nationality(id),
-	foreign key (id_returnReason) references ReturnReasons(id)
+	foreign key (id_gender) references Gender(id) on update cascade,
+	foreign key (id_nationality) references Nationality(id) on update cascade,
+	foreign key (id_returnReason) references ReturnReasons(id) on update cascade
 );
 go
 
@@ -109,8 +109,8 @@ create table AbiturientIndividualAchievement (
 	issueDate Date,						--дата выдачи
 	
 	--Внешние ключи
-	foreign key (aid_abiturient) references Abiturient(aid),
-	foreign key (id_individual_achievement) references IndividualAchievement(id)
+	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade,
+	foreign key (id_individual_achievement) references IndividualAchievement(id) on update cascade
 );
 go
 
@@ -124,7 +124,7 @@ create table AbiturientPostgraduateEducation (
 	graduationYear int,					--год окончания
 	
 	--Внешние ключи
-	foreign key (aid_abiturient) references Abiturient(aid)
+	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade
 );
 go
 
@@ -138,7 +138,7 @@ create table AbiturientHigherEducation (
 	graduationYear int,					--год окончания
 	
 	--Внешние ключи
-	foreign key (aid_abiturient) references Abiturient(aid)
+	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade
 );
 go
 
@@ -180,10 +180,10 @@ create table AbiturientEntranceTests (
 	examPassed int,						--отметка сдачи
 	
 	--Внешние ключи
-	foreign key (aid_abiturient) references Abiturient(aid),
-	foreign key (id_entranceTest) references EntranceTest(id),
-	foreign key (id_testBox) references TestBox(id),
-	foreign key (id_assessmentBase) references AssessmentBase(id)
+	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade,
+	foreign key (id_entranceTest) references EntranceTest(id) on update cascade,
+	foreign key (id_testBox) references TestBox(id) on update cascade,
+	foreign key (id_assessmentBase) references AssessmentBase(id) on update cascade
 );
 go
 
@@ -205,8 +205,8 @@ create table AbiturientPassport (
 	paspGivenDate Date,		--дата выдачи
 
 	--Внешние ключи
-	foreign key (aid_abiturient) references Abiturient(aid),
-	foreign key (id_passportType) references PassportType(id)	
+	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade,
+	foreign key (id_passportType) references PassportType(id) on update cascade	
 );
 go
 
@@ -235,9 +235,9 @@ create table AbiturientAddress (
 	factAddress text,		--адрес
 
 	--Внешние ключи
-	foreign key (aid_abiturient) references Abiturient(aid),
-	foreign key (id_region) references Region(id),
-	foreign key (id_localityType) references LocalityType(id)	
+	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade,
+	foreign key (id_region) references Region(id) on update cascade,
+	foreign key (id_localityType) references LocalityType(id) on update cascade	
 );
 go
 
@@ -313,14 +313,14 @@ create table AbiturientCompetitiveGroup (
 	markEnrollment int,                     --отметка о зачислении
 	
 	--Внешние ключи
-	foreign key (aid_abiturient) references Abiturient(aid),
-	foreign key (course) references Course(id),
-	foreign key (speciality) references Speciality(id),
-	foreign key (educationForm) references EducationForm(id),
-	foreign key (chair) references Chair(id),
-	foreign key (competitiveGroup) references CompetitiveGroup(id),
-	foreign key (targetOrganisation) references TargetOrganisation(id),
-	foreign key (educationStandard) references EducationStandard(id),
+	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade,
+	foreign key (course) references Course(id) on update cascade,
+	foreign key (speciality) references Speciality(id) on update cascade,
+	foreign key (educationForm) references EducationForm(id) on update cascade,
+	foreign key (chair) references Chair(id) on update cascade,
+	foreign key (competitiveGroup) references CompetitiveGroup(id) on update cascade,
+	foreign key (targetOrganisation) references TargetOrganisation(id) on update cascade,
+	foreign key (educationStandard) references EducationStandard(id) on update cascade
 );
 go
 
@@ -334,11 +334,11 @@ create table AdmissionPlan (
 	placeCount int,		--количество мест
 	
 	--Внешние ключи
-	foreign key (specialtyCode) references Speciality(id) ,
-	foreign key (educationForm) references EducationForm(id),
-	foreign key (competitiveGroup) references CompetitiveGroup(id),
-	foreign key (targetOrganisation) references TargetOrganisation(id),
-	foreign key (educationStandard) references EducationStandard(id)
+	foreign key (specialtyCode) references Speciality(id) on update cascade,
+	foreign key (educationForm) references EducationForm(id) on update cascade,
+	foreign key (competitiveGroup) references CompetitiveGroup(id) on update cascade,
+	foreign key (targetOrganisation) references TargetOrganisation(id) on update cascade,
+	foreign key (educationStandard) references EducationStandard(id) on update cascade
 );
 go
 
