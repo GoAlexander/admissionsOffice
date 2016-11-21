@@ -8,10 +8,13 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventObject;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -24,12 +27,18 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -46,36 +55,40 @@ public class GeneralInfoInput extends JFrame {
 	private Dimension dimTextIssuedBy = new Dimension(565, 70);
 	private Dimension dimRigidArea = new Dimension(10, 0);
 	private Dimension dimStartRigidArea = new Dimension(50, 0);
-	private JTextField  textID, textDateReturn, textSeria, textNum, textDate, textIssuedBy, textplaceBirth;
+	private JTextField textID, textDateReturn, textSeria, textNum, textDate, textplaceBirth;
 	private GridBagConstraints gbc;
+
+	private JTextArea textIssuedBy;
 
 	private String[] columnNames = { "№", "Имя", "Фамилия", "Отчество" };
 	private String[] entranceTestColumnNames = { "Наименование", "Группа", "Блок испытаний", "Дата испытания", "Балл" };
+	private String[] individAchivColumnNames = { "Наименование", "Балл", "Подтверждающий документ" };
 	private GUITableModel currentTM = new GUITableModel();
 	private GUITableModel entranceTestTM = new GUITableModel();
-	private JTable dataTable, entranceTestTable;
+	private GUITableModel individAchivTM = new GUITableModel();
+	private JTable dataTable, entranceTestTable, indAchivTable;
 	private JCheckBox checkBackDoc;
-	private JTabbedPane userInfoTPane;	
-	
+	private JTabbedPane userInfoTPane;
+
 	private JComboBox comboSexList, comboNationality, comboReturnReason, comboDocType;
 	private JDateChooser calendar;
-	
+
 	private String[] arrSex = { "Женский", "Мужской" };
 	private String[] arrNationality = { "РФ", "Украина", "Белорусь", "Казахстан" };
 	private String[] arrReturnReason = { "1                               ", "2      ", "3      " };
-	private String[] arrDocType = {"паспорт РФ", "паспорт Украина"};
-	
+	private String[] arrDocType = { "паспорт РФ", "паспорт Украина" };
+
 	private JMenuBar menuBar;
 	private JMenu directoryMenu, docMenu, reportMenu, compMenu, expMenu;
-	private JMenuItem docMenuApplication, docMenuOpRasp, docMenuListEntranceExam, directoryMenuEntranceTest, 
-	directoryMenuBlockTest, directoryMenuBaseMark, directoryMenuTypePasport, directoryMenuRegion, 
-	directoryMenuTypeSettlements, directoryMenuSex, directoryMenuNationality, directoryMenuReturnReason,
-	directoryMenuIndividual, directoryMenuStudyFields, directoryMenuEducForm, directoryMenuSpeciality,
-	directoryMenuDepartments, directoryMenuCompetitiveGroup, directoryMenuOrganisations, directoryMenuEducStandard,
-	directoryMenuPlan, directoryMenuUsers, reportMenuListCandidates, reportMenuListGroups, reportMenuResults,
-	reportMenuStatistics, compMenuCalculation, compMenuPlayCompet, compMenuInternalRating, compMenuRankedList, 
-	compMenuCompetList, compMenuResetCompetResults, expMenuOrganisations,	expMenuCompetGroup, expMenuPlan, 
-	expMenuApplications, expMenuResults;
+	private JMenuItem docMenuApplication, docMenuOpRasp, docMenuListEntranceExam, directoryMenuEntranceTest,
+			directoryMenuBlockTest, directoryMenuBaseMark, directoryMenuTypePasport, directoryMenuRegion,
+			directoryMenuTypeSettlements, directoryMenuSex, directoryMenuNationality, directoryMenuReturnReason,
+			directoryMenuIndividual, directoryMenuStudyFields, directoryMenuEducForm, directoryMenuSpeciality,
+			directoryMenuDepartments, directoryMenuCompetitiveGroup, directoryMenuOrganisations,
+			directoryMenuEducStandard, directoryMenuPlan, directoryMenuUsers, reportMenuListCandidates,
+			reportMenuListGroups, reportMenuResults, reportMenuStatistics, compMenuCalculation, compMenuPlayCompet,
+			compMenuInternalRating, compMenuRankedList, compMenuCompetList, compMenuResetCompetResults,
+			expMenuOrganisations, expMenuCompetGroup, expMenuPlan, expMenuApplications, expMenuResults;
 
 	private JButton addButton, editButton, deleteButton;
 
@@ -85,12 +98,12 @@ public class GeneralInfoInput extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
-		setLocation(0,0);
-		
+		setLocation(0, 0);
+
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
 		getContentPane().add(mainPanel);
-		
+
 		menuBar = new JMenuBar();
 		directoryMenu = new JMenu("Справочники");
 		menuBar.add(directoryMenu);
@@ -139,7 +152,7 @@ public class GeneralInfoInput extends JFrame {
 		directoryMenu.addSeparator();
 		directoryMenuUsers = new JMenuItem("Пользователи");
 		directoryMenu.add(directoryMenuUsers);
-		
+
 		docMenu = new JMenu("Документы");
 		menuBar.add(docMenu);
 		docMenuApplication = new JMenuItem("Заявление");
@@ -148,7 +161,7 @@ public class GeneralInfoInput extends JFrame {
 		docMenu.add(docMenuOpRasp);
 		docMenuListEntranceExam = new JMenuItem("Лист вступительных испытаний");
 		docMenu.add(docMenuListEntranceExam);
-		
+
 		reportMenu = new JMenu("Отчетность");
 		menuBar.add(reportMenu);
 		reportMenuListCandidates = new JMenuItem("Список подавших документы");
@@ -160,7 +173,7 @@ public class GeneralInfoInput extends JFrame {
 		reportMenu.addSeparator();
 		reportMenuStatistics = new JMenuItem("Статистика");
 		reportMenu.add(reportMenuStatistics);
-		
+
 		compMenu = new JMenu("Конкурс");
 		menuBar.add(compMenu);
 		compMenuCalculation = new JMenuItem("Предварительные расчеты");
@@ -179,7 +192,7 @@ public class GeneralInfoInput extends JFrame {
 		compMenu.addSeparator();
 		compMenuResetCompetResults = new JMenuItem("Сброс результатов конкурса");
 		compMenu.add(compMenuResetCompetResults);
-		
+
 		expMenu = new JMenu("Экспорт");
 		menuBar.add(expMenu);
 		expMenuOrganisations = new JMenuItem("Целевые организации");
@@ -192,7 +205,7 @@ public class GeneralInfoInput extends JFrame {
 		expMenu.add(expMenuApplications);
 		expMenuResults = new JMenuItem("Результаты конкурса");
 		expMenu.add(expMenuResults);
-		
+
 		mainPanel.add(menuBar, BorderLayout.PAGE_START);
 
 		tablePanel = new JPanel();
@@ -202,7 +215,7 @@ public class GeneralInfoInput extends JFrame {
 		JScrollPane scrPane = new JScrollPane(dataTable);
 		scrPane.setPreferredSize(new Dimension(300, 0));
 		tablePanel.add(scrPane, BorderLayout.CENTER);
-		
+
 		btnTablePanel = new JPanel();
 		btnTablePanel.setLayout(new FlowLayout());
 		addButton = new JButton("Добавить");
@@ -211,7 +224,7 @@ public class GeneralInfoInput extends JFrame {
 		btnTablePanel.add(addButton);
 		btnTablePanel.add(editButton);
 		btnTablePanel.add(deleteButton);
-		
+
 		tablePanel.add(btnTablePanel, BorderLayout.PAGE_END);
 		mainPanel.add(tablePanel, BorderLayout.LINE_START);
 
@@ -226,10 +239,10 @@ public class GeneralInfoInput extends JFrame {
 		GIPanelMain.setBorder(
 				new TitledBorder(null, "Основная информация", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		centralPanel.add(GIPanelMain);
-		
+
 		GIPanel = new JPanel();
 		GIPanel.setLayout(new GridBagLayout());
-		GIPanelMain.add(GIPanel);		
+		GIPanelMain.add(GIPanel);
 
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
@@ -302,7 +315,7 @@ public class GeneralInfoInput extends JFrame {
 		panelInfoBackDoc = new JPanel();
 		panelInfoBackDoc.setBorder(new TitledBorder(null, "Сведения о возврате документов", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
-		
+
 		GIPanelMain.add(panelInfoBackDoc);
 		panelInfoBackDoc.setLayout(new GridBagLayout());
 
@@ -337,33 +350,33 @@ public class GeneralInfoInput extends JFrame {
 		panelInfoBackDoc.add(panelDateReturn, gbc2);
 		gbc2.gridx = 1;
 		panelInfoBackDoc.add(checkBackDoc, gbc2);
-				
+
 		userInfoTPane = new JTabbedPane();
 		JPanel contGroupPanel = new JPanel();
 		JPanel entranceTestpPanel = new JPanel();
 		entranceTestpPanel = createEntranceTestPanel();
-		JPanel indAchivPanel = new JPanel();
+		JPanel indAchivPanel = createIndAchivPanel();
 		JPanel educPanel = new JPanel();
 		educPanel = createEducPanel();
 		JPanel contPanel = new JPanel();
 		JPanel passportPanel = new JPanel();
 		passportPanel = createPassportPanel();
-		
+
 		userInfoTPane.add("Конк-ные группы", contGroupPanel);
 		userInfoTPane.add("Вступ-ные испытания", entranceTestpPanel);
 		userInfoTPane.add("Инд-ные достижения", indAchivPanel);
 		userInfoTPane.add("Образование", educPanel);
 		userInfoTPane.add("Адрес и контакты", contPanel);
 		userInfoTPane.add("Паспорт", passportPanel);
-		//userInfoTPane.setPreferredSize(new Dimension(300, 250));
-		
+		// userInfoTPane.setPreferredSize(new Dimension(300, 250));
+
 		centralPanel.add(userInfoTPane);
 
-		setPreferredSize(new Dimension(1100, 770));
+		setPreferredSize(new Dimension(1100, 700));
 		pack();
 
 	}
-	
+
 	private JPanel createFIOPanel(String nameLabel) {
 		JPanel panelFIO = new JPanel();
 		panelFIO.setLayout(new FlowLayout());
@@ -377,40 +390,39 @@ public class GeneralInfoInput extends JFrame {
 
 		return panelFIO;
 	}
-	
-	private JPanel createEducPanel(){
+
+	private JPanel createEducPanel() {
 		JPanel educPanel = new JPanel();
 		educPanel.setLayout(new BoxLayout(educPanel, BoxLayout.Y_AXIS));
-		
+
 		JPanel highEducPanel = new JPanel();
 		highEducPanel = createAddEducPanel("Высшее образование");
 		educPanel.add(highEducPanel);
-		
+
 		JPanel afterDiplEducPanel = new JPanel();
 		afterDiplEducPanel = createAddEducPanel("Последипломное образование");
 		educPanel.add(afterDiplEducPanel);
-		
+
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		JButton editBtn = new JButton("Редактировать");
 		buttonPanel.add(editBtn);
 		JButton saveBtn = new JButton("Сохранить");
-		buttonPanel.add(saveBtn);		
+		buttonPanel.add(saveBtn);
 		educPanel.add(buttonPanel);
-		
+
 		return educPanel;
 	}
-	
-	private JPanel createAddEducPanel(String name){
+
+	private JPanel createAddEducPanel(String name) {
 		JPanel addEducPanel = new JPanel();
-		addEducPanel.setBorder(new TitledBorder(null, name, TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
+		addEducPanel.setBorder(new TitledBorder(null, name, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		addEducPanel.setLayout(new BoxLayout(addEducPanel, BoxLayout.Y_AXIS));
-		
+
 		JPanel digitInfoEducPanel = new JPanel();
 		digitInfoEducPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		digitInfoEducPanel.add(Box.createRigidArea(dimStartRigidArea));
-		
+
 		JLabel seriaLabel = new JLabel("Серия");
 		digitInfoEducPanel.add(seriaLabel);
 		JTextField textSeria = new JTextField();
@@ -428,85 +440,140 @@ public class GeneralInfoInput extends JFrame {
 		JTextField textYear = new JTextField();
 		textYear.setPreferredSize(dimTextDigitInfo);
 		digitInfoEducPanel.add(textYear);
-		
+
 		addEducPanel.add(digitInfoEducPanel);
-		
+
 		JPanel specialityEducPanel = new JPanel();
 		specialityEducPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		specialityEducPanel.add(Box.createRigidArea(dimStartRigidArea));
 		JLabel specialityLabel = new JLabel("Специальность");
 		specialityEducPanel.add(specialityLabel);
-		JTextField specialitySeria = new JTextField();
-		specialitySeria.setPreferredSize(new Dimension(538, 25));
-		specialityEducPanel.add(specialitySeria);
+		JTextField TextSpeciality = new JTextField();
+		TextSpeciality.setPreferredSize(new Dimension(538, 25));
+		specialityEducPanel.add(TextSpeciality);
 		addEducPanel.add(specialityEducPanel);
-		
+
 		JPanel issuedByEducPanel = new JPanel();
 		issuedByEducPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		issuedByEducPanel.add(Box.createRigidArea(dimStartRigidArea));
 		JLabel issuedByLabel = new JLabel("Кем выдан");
 		issuedByEducPanel.add(issuedByLabel);
-		JTextField issuedBySeria = new JTextField();
-		issuedBySeria.setPreferredSize(dimTextIssuedBy);
-		issuedByEducPanel.add(issuedBySeria);
+		JTextArea textIssuedBy = new JTextArea(2, 51);
+		JScrollPane paneIssuedBy = new JScrollPane(textIssuedBy);
+		textIssuedBy.setLineWrap(true);
+		issuedByEducPanel.add(paneIssuedBy);
 		addEducPanel.add(issuedByEducPanel);
-		
+
 		return addEducPanel;
 	}
-	
-	private JPanel createEntranceTestPanel(){
+
+	private JPanel createEntranceTestPanel() {
 		entranceTestPanel = new JPanel();
 		entranceTestPanel.setLayout(new BorderLayout());
-		
+
 		EntranceTestTablePanel = new JPanel();
 		entranceTestTable = new JTable(entranceTestTM);
 		entranceTestTM.setDataVector(null, entranceTestColumnNames);
 		JScrollPane scrPane = new JScrollPane(entranceTestTable);
 		scrPane.setPreferredSize(new Dimension(300, 0));
-		entranceTestTable.setMaximumSize(new Dimension(100,100));
+		entranceTestTable.setMaximumSize(new Dimension(100, 100));
 		entranceTestPanel.add(scrPane, BorderLayout.CENTER);
-//***test data		
-		entranceTestTM.setDataVector(new Object[][]
-				{
-			{ "1", "123","123","123","123"},
-			{ "2", "123","123","123","123"},
-			{ "3", "123","123","123","123"},
-				},
-				entranceTestColumnNames);
-		
-		String[] nameEntranceTest = {"n1", "n2", "n3"};
+		// ***test data
+		entranceTestTM.setDataVector(new Object[][] { { "1", "123", "123", "123", "123" },
+				{ "2", "123", "123", "123", "123" }, { "3", "123", "123", "123", "123" }, }, entranceTestColumnNames);
+
+		String[] nameEntranceTest = { "n1", "n2", "n3" };
 		createCheckboxTable(entranceTestTable, 0, nameEntranceTest);
-		
-		String[] groupEntranceTest = {"gr1", "gr2", "gr3"};
+
+		String[] groupEntranceTest = { "gr1", "gr2", "gr3" };
 		createCheckboxTable(entranceTestTable, 1, groupEntranceTest);
-		
-		String[] blockEntranceTest = {"bl1", "bl2", "bl3"};
+
+		String[] blockEntranceTest = { "bl1", "bl2", "bl3" };
 		createCheckboxTable(entranceTestTable, 2, blockEntranceTest);
-		
+
 		JPanel butPanel = new JPanel();
-		butPanel.setLayout(new BoxLayout(butPanel,  BoxLayout.PAGE_AXIS));
-		
+		butPanel.setLayout(new BoxLayout(butPanel, BoxLayout.PAGE_AXIS));
+
 		JCheckBox specialCond = new JCheckBox("Нуждается в специальных условиях");
 		specialCond.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		butPanel.add(specialCond);
-		
+
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		JButton editBtn = new JButton("Редактировать");
 		buttonPanel.add(editBtn);
 		JButton saveBtn = new JButton("Сохранить");
-		buttonPanel.add(saveBtn);		
+		buttonPanel.add(saveBtn);
 		buttonPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		
+
 		butPanel.add(buttonPanel);
 		entranceTestPanel.add(butPanel, BorderLayout.PAGE_END);
-		
+
 		return entranceTestPanel;
 	}
 
+	private JPanel createIndAchivPanel() {
+		JPanel indAchivPanel = new JPanel();
+		indAchivPanel.setLayout(new BorderLayout());
+
+		// JPanel indAchivTablePanel = new JPanel();
+		indAchivTable = new JTable(individAchivTM);
+		individAchivTM.setDataVector(null, individAchivColumnNames);
+		
+		JScrollPane scrPane = new JScrollPane(indAchivTable);
+		scrPane.setPreferredSize(new Dimension(300, 0));
+		indAchivTable.setMaximumSize(new Dimension(100, 100));
+		indAchivPanel.add(scrPane, BorderLayout.CENTER);
+		indAchivTable.setRowHeight(37);
+		// ***test data
+
+		individAchivTM.setDataVector(new Object[][] { { "1", "123", "123", "123", "123" },
+				{ "2", "123", "123", "123", "123" }, { "3", "123", "123", "123", "123" }, }, individAchivColumnNames);
+
+		String[] nameIndAchivTest = { "n1", "n2", "n3" };
+		createCheckboxTable(indAchivTable, 0, nameIndAchivTest);
+		
+		EditWatchRenderer renderer = new EditWatchRenderer();
+		indAchivTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
+		indAchivTable.getColumnModel().getColumn(2).setCellEditor(new AcceptRejectEditor());
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+		JPanel longButtonPanel = new JPanel();
+		longButtonPanel.setLayout(new GridLayout(0, 1));
+		JButton addNewAchivBtn = new JButton("Добавить новое достижение");
+		longButtonPanel.add(addNewAchivBtn);
+
+		Dimension minSize = new Dimension(5, 10);
+		Dimension prefSize = new Dimension(5, 10);
+		Dimension maxSize = new Dimension(Short.MAX_VALUE, 100);
+
+		buttonPanel.add(new Box.Filler(minSize, prefSize, maxSize));
+		buttonPanel.add(longButtonPanel);
+
+		buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+		JPanel buttonEditSavePanel = new JPanel();
+		buttonEditSavePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JButton editIndAchivButton = new JButton("Редактировать");
+		buttonEditSavePanel.add(editIndAchivButton);
+		JButton saveIndAchivButton = new JButton("Сохранить");
+		buttonEditSavePanel.add(saveIndAchivButton);
+		buttonPanel.add(buttonEditSavePanel);
+
+		indAchivPanel.add(buttonPanel, BorderLayout.PAGE_END);
+
+		return indAchivPanel;
+
+	}
+
 	private JPanel createPassportPanel() {
+
 		passportPanel = new JPanel();
-		passportPanel.setLayout(new BoxLayout(passportPanel, BoxLayout.Y_AXIS));
+		passportPanel.setLayout(new BorderLayout());
+
+		JPanel centralPassportPanel = new JPanel();
+		centralPassportPanel.setLayout(new BoxLayout(centralPassportPanel, BoxLayout.Y_AXIS));
 
 		JPanel docTypePanel = new JPanel();
 		docTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -515,7 +582,7 @@ public class GeneralInfoInput extends JFrame {
 		comboDocType = new JComboBox(arrDocType);
 		docTypePanel.add(docTypeLabel);
 		docTypePanel.add(comboDocType);
-		passportPanel.add(docTypePanel);
+		centralPassportPanel.add(docTypePanel);
 
 		JPanel passportDataPanel = new JPanel();
 		passportDataPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -541,17 +608,18 @@ public class GeneralInfoInput extends JFrame {
 		textDate = new JTextField();
 		textDate.setPreferredSize(dimTextDigitInfo);
 		passportDataPanel.add(textDate);
-		passportPanel.add(passportDataPanel);
+		centralPassportPanel.add(passportDataPanel);
 
 		JPanel issuedByPanel = new JPanel();
 		issuedByPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		issuedByPanel.add(Box.createRigidArea(dimStartRigidArea));
 		JLabel issuedByLabel = new JLabel("Кем выдан");
 		issuedByPanel.add(issuedByLabel);
-		textIssuedBy = new JTextField();
-		textIssuedBy.setPreferredSize(new Dimension(565, 70));
-		issuedByPanel.add(textIssuedBy);
-		passportPanel.add(issuedByPanel);
+		JTextArea textIssuedBy = new JTextArea(2, 51);
+		JScrollPane paneIssuedBy = new JScrollPane(textIssuedBy);
+		textIssuedBy.setLineWrap(true);
+		issuedByPanel.add(paneIssuedBy);
+		centralPassportPanel.add(issuedByPanel);
 
 		JPanel placeBirthPanel = new JPanel();
 		placeBirthPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -561,7 +629,9 @@ public class GeneralInfoInput extends JFrame {
 		textplaceBirth = new JTextField();
 		textplaceBirth.setPreferredSize(new Dimension(532, 25));
 		placeBirthPanel.add(textplaceBirth);
-		passportPanel.add(placeBirthPanel);
+		centralPassportPanel.add(placeBirthPanel);
+
+		passportPanel.add(centralPassportPanel, BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -569,11 +639,24 @@ public class GeneralInfoInput extends JFrame {
 		buttonPanel.add(editPassportButton);
 		JButton savePassportButton = new JButton("Сохранить");
 		buttonPanel.add(savePassportButton);
-		passportPanel.add(buttonPanel);
+		passportPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
 		return passportPanel;
 	}
-	
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GeneralInfoInput window = new GeneralInfoInput();
+					window.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 	private void createCheckboxTable(JTable table, int numColumn, String[] dataCheck) {
 		TableColumn tmpColumn = table.getColumnModel().getColumn(numColumn);
 		JComboBox<String> comboBox = new JComboBox<String>(dataCheck);
@@ -600,17 +683,101 @@ public class GeneralInfoInput extends JFrame {
 		}
 	}
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GeneralInfoInput window = new GeneralInfoInput();
-					window.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	public class EditWatchButtonPane extends JPanel {
 
+        private JButton editBt;
+        private JButton watchBt;
+        private String state;
+
+        public EditWatchButtonPane() {
+            setLayout(new FlowLayout());
+            editBt = new JButton("Редактировать");
+            editBt.setActionCommand("Редактировать");
+            watchBt = new JButton("Просмотреть");
+            watchBt.setActionCommand("Просмотреть");
+
+            add(editBt);
+            add(watchBt);
+
+            ActionListener listener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    state = e.getActionCommand();
+                    System.out.println("State = " + state);
+                }
+            };
+
+            editBt.addActionListener(listener);
+            watchBt.addActionListener(listener);
+        }
+
+        public void addActionListener(ActionListener listener) {
+            editBt.addActionListener(listener);
+            watchBt.addActionListener(listener);
+        }
+
+        public String getState() {
+            return state;
+        }
+    }
+
+    public class EditWatchRenderer extends DefaultTableCellRenderer {
+
+        private EditWatchButtonPane acceptRejectPane;
+
+        public EditWatchRenderer() {
+            acceptRejectPane = new EditWatchButtonPane();
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                acceptRejectPane.setBackground(table.getSelectionBackground());
+            } else {
+                acceptRejectPane.setBackground(table.getBackground());
+            }
+            return acceptRejectPane;
+        }
+    }
+
+    public class AcceptRejectEditor extends AbstractCellEditor implements TableCellEditor {
+
+        private EditWatchButtonPane acceptRejectPane;
+
+        public AcceptRejectEditor() {
+            acceptRejectPane = new EditWatchButtonPane();
+            acceptRejectPane.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            stopCellEditing();
+                        }
+                    });
+                }
+            });
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return acceptRejectPane.getState();
+        }
+
+        @Override
+        public boolean isCellEditable(EventObject e) {
+            return true;
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            if (isSelected) {
+                acceptRejectPane.setBackground(table.getSelectionBackground());
+            } else {
+                acceptRejectPane.setBackground(table.getBackground());
+            }
+            return acceptRejectPane;
+        }
+    }
 }
+
