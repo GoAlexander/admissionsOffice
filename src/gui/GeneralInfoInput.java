@@ -46,7 +46,7 @@ public class GeneralInfoInput extends JFrame {
 	private Dimension dimTextIssuedBy = new Dimension(565, 70);
 	private Dimension dimRigidArea = new Dimension(10, 0);
 	private Dimension dimStartRigidArea = new Dimension(50, 0);
-	private JTextField  textID, textDateReturn, textSeria, textNum, textDate, textIssuedBy;
+	private JTextField  textID, textDateReturn, textSeria, textNum, textDate, textIssuedBy, textplaceBirth;
 	private GridBagConstraints gbc;
 
 	private String[] columnNames = { "№", "Имя", "Фамилия", "Отчество" };
@@ -77,7 +77,7 @@ public class GeneralInfoInput extends JFrame {
 	compMenuCompetList, compMenuResetCompetResults, expMenuOrganisations,	expMenuCompetGroup, expMenuPlan, 
 	expMenuApplications, expMenuResults;
 
-	private JButton addButton, editButton, deleteButton;
+	private JButton addButton, editButton, deleteButton, editPassportButton, savePassportButton;
 
 	public GeneralInfoInput() {
 
@@ -504,64 +504,73 @@ public class GeneralInfoInput extends JFrame {
 		return entranceTestPanel;
 	}
 
-	private JPanel createPassportPanel(){
+	private JPanel createPassportPanel() {
 		passportPanel = new JPanel();
-		passportPanel.setLayout(new GridBagLayout());
-		
-		GridBagConstraints gbc3 = new GridBagConstraints();
-		gbc3.anchor = GridBagConstraints.WEST;
-		gbc3.insets = new Insets(2, 0, 5, 40);
+		passportPanel.setLayout(new BoxLayout(passportPanel, BoxLayout.Y_AXIS));
 
-		JPanel docTypePanel = new JPanel(); 
-		docTypePanel.setLayout(new FlowLayout());
+		JPanel docTypePanel = new JPanel();
+		docTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		docTypePanel.add(Box.createRigidArea(dimStartRigidArea));
 		JLabel docTypeLabel = new JLabel("Тип документа");
 		comboDocType = new JComboBox(arrDocType);
 		docTypePanel.add(docTypeLabel);
 		docTypePanel.add(comboDocType);
-		passportPanel.add(docTypePanel, gbc3);
-		
-		JPanel seriaPanel = new JPanel();
-		seriaPanel.setLayout(new FlowLayout());
+		passportPanel.add(docTypePanel);
+
+		JPanel passportDataPanel = new JPanel();
+		passportDataPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		passportDataPanel.add(Box.createRigidArea(dimStartRigidArea));
 		JLabel seriaLabel = new JLabel("Серия ");
-		seriaPanel.add(seriaLabel);
+		passportDataPanel.add(seriaLabel);
 		textSeria = new JTextField();
 		textSeria.setPreferredSize(dimTextDigitInfo);
-		seriaPanel.add(textSeria);
-		gbc3.gridy = 1;
-		passportPanel.add(seriaPanel, gbc3);
-		
-		JPanel numPanel = new JPanel();
-		numPanel.setLayout(new FlowLayout());
+		passportDataPanel.add(textSeria);
+
+		passportDataPanel.add(Box.createRigidArea(dimRigidArea));
+
 		JLabel numLabel = new JLabel("Номер ");
-		numPanel.add(numLabel);
+		passportDataPanel.add(numLabel);
 		textNum = new JTextField();
 		textNum.setPreferredSize(dimTextDigitInfo);
-		numPanel.add(textNum);
-		gbc3.gridx = 1;
-		passportPanel.add(numPanel, gbc3);
-		
-		JPanel datePanel = new JPanel();
-		datePanel.setLayout(new FlowLayout());
+		passportDataPanel.add(textNum);
+
+		passportDataPanel.add(Box.createRigidArea(dimRigidArea));
+
 		JLabel dateLabel = new JLabel("Дата выдачи ");
-		datePanel.add(dateLabel);
+		passportDataPanel.add(dateLabel);
 		textDate = new JTextField();
 		textDate.setPreferredSize(dimTextDigitInfo);
-		datePanel.add(textDate);
-		gbc3.gridx = 2;
-		passportPanel.add(datePanel, gbc3);
-		
+		passportDataPanel.add(textDate);
+		passportPanel.add(passportDataPanel);
+
 		JPanel issuedByPanel = new JPanel();
-		issuedByPanel.setLayout(new FlowLayout());
+		issuedByPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		issuedByPanel.add(Box.createRigidArea(dimStartRigidArea));
 		JLabel issuedByLabel = new JLabel("Кем выдан");
 		issuedByPanel.add(issuedByLabel);
 		textIssuedBy = new JTextField();
-		textIssuedBy.setPreferredSize(dimTextIssuedBy);
+		textIssuedBy.setPreferredSize(new Dimension(565, 70));
 		issuedByPanel.add(textIssuedBy);
-		gbc3.gridx = 0;
-		gbc3.gridy = 2;
-		gbc3.gridwidth = 3;
-		passportPanel.add(issuedByPanel, gbc3);
-		
+		passportPanel.add(issuedByPanel);
+
+		JPanel placeBirthPanel = new JPanel();
+		placeBirthPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		placeBirthPanel.add(Box.createRigidArea(dimStartRigidArea));
+		JLabel placeBirthLabel = new JLabel("Место рождения");
+		placeBirthPanel.add(placeBirthLabel);
+		textplaceBirth = new JTextField();
+		textplaceBirth.setPreferredSize(new Dimension(532, 25));
+		placeBirthPanel.add(textplaceBirth);
+		passportPanel.add(placeBirthPanel);
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		editPassportButton = new JButton("Редактировать");
+		buttonPanel.add(editPassportButton);
+		savePassportButton = new JButton("Сохранить");
+		buttonPanel.add(savePassportButton);
+		passportPanel.add(buttonPanel);
+
 		return passportPanel;
 	}
 	
