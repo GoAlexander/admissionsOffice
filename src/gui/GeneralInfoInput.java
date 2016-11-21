@@ -77,7 +77,7 @@ public class GeneralInfoInput extends JFrame {
 	compMenuCompetList, compMenuResetCompetResults, expMenuOrganisations,	expMenuCompetGroup, expMenuPlan, 
 	expMenuApplications, expMenuResults;
 
-	private JButton addButton, editButton, deleteButton, editPassportButton, savePassportButton;
+	private JButton addButton, editButton, deleteButton;
 
 	public GeneralInfoInput() {
 
@@ -565,9 +565,9 @@ public class GeneralInfoInput extends JFrame {
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		editPassportButton = new JButton("Редактировать");
+		JButton editPassportButton = new JButton("Редактировать");
 		buttonPanel.add(editPassportButton);
-		savePassportButton = new JButton("Сохранить");
+		JButton savePassportButton = new JButton("Сохранить");
 		buttonPanel.add(savePassportButton);
 		passportPanel.add(buttonPanel);
 
