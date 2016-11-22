@@ -3,6 +3,7 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -40,6 +41,7 @@ public class EditCatalogElem extends JFrame{
 		scrPane.setPreferredSize(new Dimension(300, 0));
 		//tablePanel.add(scrPane);
 		dataTable.setMaximumSize(new Dimension(100,100));
+		dataTable.setRowHeight(25);
 		dataTable.getColumnModel().getColumn(0).setMaxWidth(50);
 		mainPanel.add(scrPane, BorderLayout.CENTER);
 		
@@ -47,14 +49,12 @@ public class EditCatalogElem extends JFrame{
 		saveBtn = new JButton("Сохранить");
 		
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel,  BoxLayout.LINE_AXIS));
-		
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-		buttonPanel.add(Box.createHorizontalGlue());
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JButton editBtn = new JButton("Редактировать");
 		buttonPanel.add(editBtn);
-		buttonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		JButton saveBtn = new JButton("Сохранить");
 		buttonPanel.add(saveBtn);
-		
+
 		mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
 			
 		setPreferredSize(new Dimension(600, 500));
@@ -62,10 +62,6 @@ public class EditCatalogElem extends JFrame{
 		
 	}
 	
-	
-	
-	
-
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
