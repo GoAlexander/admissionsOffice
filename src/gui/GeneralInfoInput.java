@@ -395,12 +395,25 @@ public class GeneralInfoInput extends JFrame {
 		
 		JScrollPane pane = new JScrollPane(compGroupPanel);
 		
-		int numGroup = 5;
+		int numGroup = 3;
 		for(int i = 0; i < getAllCompGroup(numGroup).size(); i++){
 			compGroupPanel.add(getAllCompGroup(numGroup).get(i));
 			compGroupPanel.add(Box.createRigidArea(new Dimension(0,10)));
 		}
 
+		JPanel btnPanel = new JPanel();
+		btnPanel.setLayout(new GridLayout(0,1));
+		JButton addNewGroup = new JButton("Добавить новую конкурсную группу");
+		addNewGroup.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				AddNewCompetGroup openCompetGroup = new AddNewCompetGroup();
+				openCompetGroup.setVisible(true);
+			}		
+		});
+		btnPanel.add(addNewGroup);
+		compGroupPanel.add(btnPanel);
+		
 		return pane;
 	}
 	
