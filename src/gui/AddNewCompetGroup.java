@@ -18,7 +18,7 @@ import com.toedter.calendar.JDateChooser;
 
 public class AddNewCompetGroup extends JFrame{
 
-	private JPanel mainPanel, directPanel, specialityPanel, departmentPanel, orgPanel, educFormPanel, competGroupPanel, provisionPanel;
+	private JPanel mainPanel, infoPanel, directPanel, specialityPanel, departmentPanel, orgPanel, educFormPanel, competGroupPanel, provisionPanel;
 	private JButton saveBtn;
 	private JDateChooser calendar;
 	
@@ -43,17 +43,21 @@ public class AddNewCompetGroup extends JFrame{
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 		add(mainPanel);
 		
+		infoPanel = new JPanel();
+		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
+		mainPanel.add(infoPanel);
+		
 		directPanel = new JPanel();
 		directPanel = createCheckBoxPanel("Направление", directType);
-		mainPanel.add(directPanel);
+		infoPanel.add(directPanel);
 	
 		specialityPanel = new JPanel();
 		specialityPanel = createCheckBoxPanel("Специальность", specialityType);
-		mainPanel.add(specialityPanel);
+		infoPanel.add(specialityPanel);
 	
 		departmentPanel = new JPanel();
 		departmentPanel = createCheckBoxPanel("Кафедра", departmentType);
-		mainPanel.add(departmentPanel);
+		infoPanel.add(departmentPanel);
 		
 		competGroupPanel = new JPanel();
 		competGroupPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -66,15 +70,15 @@ public class AddNewCompetGroup extends JFrame{
 		competGroupPanel.add(standardLabel);
 		JComboBox comboStandardType = new JComboBox(standardType);
 		competGroupPanel.add(comboStandardType);
-		mainPanel.add(competGroupPanel);
+		infoPanel.add(competGroupPanel);
 		
 		orgPanel = new JPanel();
 		orgPanel = createCheckBoxPanel("Организация", orgType);
-		mainPanel.add(orgPanel);
+		infoPanel.add(orgPanel);
 		
 		educFormPanel = new JPanel();
 		educFormPanel = createCheckBoxPanel("Форма обучения", educFormType);
-		mainPanel.add(educFormPanel);
+		infoPanel.add(educFormPanel);
 		
 		provisionPanel = new JPanel();
 		provisionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -86,7 +90,7 @@ public class AddNewCompetGroup extends JFrame{
 		provisionPanel.add(Box.createRigidArea(dimRigidArea));
 		JCheckBox originalBox = new JCheckBox("Предоствил оригинал");
 		provisionPanel.add(originalBox);
-		mainPanel.add(provisionPanel);
+		infoPanel.add(provisionPanel);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));	
@@ -107,6 +111,18 @@ public class AddNewCompetGroup extends JFrame{
 		checkboxPanel.add(comboType);		
 
 		return checkboxPanel;
+	}
+	
+	public JPanel getAddNewCompetGroup () {
+		
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));	
+		JButton editBtn = new JButton("Редактировать");
+		buttonPanel.add(editBtn);
+		JButton deleteBtn = new JButton("Удалить");
+		buttonPanel.add(deleteBtn);
+		infoPanel.add(buttonPanel);
+		return infoPanel;
 	}
 	
 	public static void main(String[] args) {
