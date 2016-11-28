@@ -48,6 +48,8 @@ import javax.swing.table.TableColumn;
 
 import com.toedter.calendar.JDateChooser;
 
+import backend.ModelDBConnection;
+
 public class GeneralInfoInput extends JFrame {
 
 	private JPanel mainPanel, centralPanel, GIPanel, panelSurname, panelName, panelPatronymic, panelID, panelSex,
@@ -61,7 +63,7 @@ public class GeneralInfoInput extends JFrame {
 	private JTextField textID, textDateReturn, textSeria, textNum, textDate, textIssuedBy, textplaceBirth;
 	private GridBagConstraints gbc;
 
-	private String[] columnNames = { "№", "Имя", "Фамилия", "Отчество" };
+	private String[] columnNames = { "№", "Фамилия", "Имя", "Отчество" };
 	private String[] entranceTestColumnNames = { "Наименование", "Группа", "Блок испытаний", "Дата испытания", "Балл" };
 	private String[] individAchivColumnNames = { "Наименование", "Балл", "Подтверждающий документ" };
 	private GUITableModel currentTM = new GUITableModel();
@@ -94,6 +96,10 @@ public class GeneralInfoInput extends JFrame {
 	private JButton addButton, editButton, deleteButton;
 
 	public GeneralInfoInput() {
+		//----------------------
+		//Временно
+		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+		//----------------------
 
 		setTitle("General Info");
 
@@ -212,7 +218,7 @@ public class GeneralInfoInput extends JFrame {
 		tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());
 		dataTable = new JTable(currentTM);
-		currentTM.setDataVector(null, columnNames);
+		currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
 		JScrollPane scrPane = new JScrollPane(dataTable);
 		scrPane.setPreferredSize(new Dimension(300, 0));
 		tablePanel.add(scrPane, BorderLayout.CENTER);
