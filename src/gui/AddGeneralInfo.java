@@ -1,4 +1,4 @@
-package gui;
+п»їpackage gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -41,10 +41,10 @@ public class AddGeneralInfo extends JFrame {
 	private Dimension dimText = new Dimension(107, 25);
 	private Dimension dimPanel = new Dimension(300, 40);
 
-	private String[] arrSex = { "Женский", "Мужской" };
-	private String[] arrNationality = { "РФ", "Украина", "Белорусь", "Казахстан" };
+	private String[] arrSex = { "Р–РµРЅСЃРєРёР№", "РњСѓР¶СЃРєРѕР№" };
+	private String[] arrNationality = { "Р Р¤", "РЈРєСЂР°РёРЅР°", "Р‘РµР»РѕСЂСѓСЃСЊ", "РљР°Р·Р°С…СЃС‚Р°РЅ" };
 	private String[] arrReturnReason = { "1                               ", "2      ", "3      " };
-	private String[] arrDocType = { "паспорт РФ", "паспорт Украина" };
+	private String[] arrDocType = { "РїР°СЃРїРѕСЂС‚ Р Р¤", "РїР°СЃРїРѕСЂС‚ РЈРєСЂР°РёРЅР°" };
 
 	private JDateChooser calendar;
 
@@ -61,7 +61,7 @@ public class AddGeneralInfo extends JFrame {
 		JPanel GIPanelMain = new JPanel();
 		GIPanelMain.setLayout(new BoxLayout(GIPanelMain, BoxLayout.Y_AXIS));
 		GIPanelMain.setBorder(
-				new TitledBorder(null, "Основная информация", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				new TitledBorder(null, "РћСЃРЅРѕРІРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		mainPanel.add(GIPanelMain);
 
 		GIPanel = new JPanel();
@@ -76,7 +76,7 @@ public class AddGeneralInfo extends JFrame {
 		panelID.setLayout(new FlowLayout());
 		panelID.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelID.setMaximumSize(dimPanel);
-		JLabel idLabel = new JLabel("№:  ");
+		JLabel idLabel = new JLabel("в„–:  ");
 		panelID.add(idLabel);
 		textID = new JTextField();
 		textID.setPreferredSize(new Dimension(60, 25));
@@ -87,7 +87,7 @@ public class AddGeneralInfo extends JFrame {
 		dateRecDocPanel.setLayout(new FlowLayout());
 		dateRecDocPanel.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		dateRecDocPanel.setMaximumSize(dimPanel);
-		JLabel dateRecDocLabel = new JLabel("Дата приема документов ");
+		JLabel dateRecDocLabel = new JLabel("Р”Р°С‚Р° РїСЂРёРµРјР° РґРѕРєСѓРјРµРЅС‚РѕРІ ");
 		dateRecDocPanel.add(dateRecDocLabel);
 		textDateRecDoc = new JTextField();
 		textDateRecDoc.setPreferredSize(dimText);
@@ -96,18 +96,18 @@ public class AddGeneralInfo extends JFrame {
 		GIPanel.add(dateRecDocPanel, gbc);
 
 		panelSurname = new JPanel();
-		panelSurname = createFIOPanel("Фамилия:     ");
+		panelSurname = createFIOPanel("Р¤Р°РјРёР»РёСЏ:     ");
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		GIPanel.add(panelSurname, gbc);
 
 		panelName = new JPanel();
-		panelName = createFIOPanel("Имя:                ");
+		panelName = createFIOPanel("РРјСЏ:                ");
 		gbc.gridy = 2;
 		GIPanel.add(panelName, gbc);
 
 		panelPatronymic = new JPanel();
-		panelPatronymic = createFIOPanel("Отчество:      ");
+		panelPatronymic = createFIOPanel("РћС‚С‡РµСЃС‚РІРѕ:      ");
 		gbc.gridy = 3;
 		GIPanel.add(panelPatronymic, gbc);
 
@@ -115,7 +115,7 @@ public class AddGeneralInfo extends JFrame {
 		panelSex.setLayout(new FlowLayout());
 		panelSex.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelSex.setMaximumSize(dimPanel);
-		JLabel sexLabel = new JLabel("Пол:                        ");
+		JLabel sexLabel = new JLabel("РџРѕР»:                        ");
 		panelSex.add(sexLabel);
 		comboSexList = new JComboBox(arrSex);
 		comboSexList.setSelectedIndex(0);
@@ -128,7 +128,7 @@ public class AddGeneralInfo extends JFrame {
 		panelDB.setLayout(new FlowLayout());
 		panelDB.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelDB.setMaximumSize(dimPanel);
-		JLabel dbLabel = new JLabel("Дата Рождения:  ");
+		JLabel dbLabel = new JLabel("Р”Р°С‚Р° Р РѕР¶РґРµРЅРёСЏ:  ");
 		panelDB.add(dbLabel);
 		calendar = new JDateChooser();
 		calendar.setFont(new Font("Dialog", Font.PLAIN, 11));
@@ -140,7 +140,7 @@ public class AddGeneralInfo extends JFrame {
 		panelNationality.setLayout(new FlowLayout());
 		panelNationality.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelNationality.setMaximumSize(dimPanel);
-		JLabel nationalityLabel = new JLabel("Гражданство:      ");
+		JLabel nationalityLabel = new JLabel("Р“СЂР°Р¶РґР°РЅСЃС‚РІРѕ:      ");
 		panelNationality.add(nationalityLabel);
 		comboNationality = new JComboBox(arrNationality);
 		comboNationality.setSelectedIndex(0);
@@ -150,7 +150,7 @@ public class AddGeneralInfo extends JFrame {
 		GIPanel.add(panelNationality, gbc);
 
 		panelInfoBackDoc = new JPanel();
-		panelInfoBackDoc.setBorder(new TitledBorder(null, "Сведения о возврате документов", TitledBorder.LEADING,
+		panelInfoBackDoc.setBorder(new TitledBorder(null, "РЎРІРµРґРµРЅРёСЏ Рѕ РІРѕР·РІСЂР°С‚Рµ РґРѕРєСѓРјРµРЅС‚РѕРІ", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
 
 		GIPanelMain.add(panelInfoBackDoc);
@@ -163,7 +163,7 @@ public class AddGeneralInfo extends JFrame {
 		panelReturnReason = new JPanel();
 		panelReturnReason.setLayout(new FlowLayout());
 
-		JLabel returnReasonlbl = new JLabel("Причина возврата   ");
+		JLabel returnReasonlbl = new JLabel("РџСЂРёС‡РёРЅР° РІРѕР·РІСЂР°С‚Р°   ");
 		panelReturnReason.add(returnReasonlbl);
 
 		comboReturnReason = new JComboBox(arrReturnReason);
@@ -177,12 +177,12 @@ public class AddGeneralInfo extends JFrame {
 
 		panelDateReturn.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 		panelDateReturn.setMaximumSize(dimPanel);
-		JLabel dateReturnLabel = new JLabel("Дата возврата документов:     ");
+		JLabel dateReturnLabel = new JLabel("Р”Р°С‚Р° РІРѕР·РІСЂР°С‚Р° РґРѕРєСѓРјРµРЅС‚РѕРІ:     ");
 		panelDateReturn.add(dateReturnLabel);
 		textDateReturn = new JTextField();
 		textDateReturn.setPreferredSize(dimText);
 		panelDateReturn.add(textDateReturn);
-		checkBackDoc = new JCheckBox("Забрал документы");
+		checkBackDoc = new JCheckBox("Р—Р°Р±СЂР°Р» РґРѕРєСѓРјРµРЅС‚С‹");
 		gbc2.gridy = 1;
 		panelInfoBackDoc.add(panelDateReturn, gbc2);
 		gbc2.gridx = 1;
@@ -190,7 +190,7 @@ public class AddGeneralInfo extends JFrame {
 
 		JPanel btnPanel = new JPanel();
 		btnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		applyBtn = new JButton("Подтвердить");
+		applyBtn = new JButton("РџРѕРґС‚РІРµСЂРґРёС‚СЊ");
 		btnPanel.add(applyBtn);
 		GIPanelMain.add(btnPanel);
 

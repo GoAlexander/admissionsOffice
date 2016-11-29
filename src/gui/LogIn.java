@@ -1,4 +1,4 @@
-package gui;
+п»їpackage gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -40,7 +40,7 @@ public class LogIn extends JFrame {
 		loginPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		loginPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 		loginPanel.add(Box.createRigidArea(new Dimension(47, 0)));
-		JLabel loginLabel = new JLabel("Логин");
+		JLabel loginLabel = new JLabel("Р›РѕРіРёРЅ");
 		loginPanel.add(loginLabel);
 		loginPanel.add(Box.createRigidArea(new Dimension(18, 0)));
 		textLogin = new JTextField();
@@ -51,7 +51,7 @@ public class LogIn extends JFrame {
 		JPanel passwordPanel = new JPanel();
 		passwordPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 	    passwordPanel.add(Box.createRigidArea(new Dimension(50, 0)));
-		JLabel passwordLabel = new JLabel("Пароль");
+		JLabel passwordLabel = new JLabel("РџР°СЂРѕР»СЊ");
 		passwordPanel.add(passwordLabel);
 		passwordPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 		textPassword = new JTextField();
@@ -61,7 +61,7 @@ public class LogIn extends JFrame {
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		applyButton = new JButton("Подтвердить");
+		applyButton = new JButton("РџРѕРґС‚РІРµСЂРґРёС‚СЊ");
 		buttonPanel.add(applyButton);
 		
 		mainPanel.add(centralPanel, BorderLayout.CENTER);
