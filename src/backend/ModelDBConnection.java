@@ -197,4 +197,18 @@ public class ModelDBConnection {
 			e.printStackTrace();
 		}
 	}
+
+	// TODO test
+	public static void deleteAbiturient(String aid) {
+		try {
+			String query = "delete from Abiturient where aid = " + aid + ";";
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			stmt.close();
+			rset.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
