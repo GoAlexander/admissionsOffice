@@ -116,6 +116,7 @@ public class ModelDBConnection {
 					data[curPos][1] = rset.getString(2);
 					data[curPos][2] = rset.getString(3);
 					data[curPos][3] = rset.getString(4);
+					curPos++;
 				}
 
 				stmt.close();
@@ -130,35 +131,62 @@ public class ModelDBConnection {
 
 	// TODO test
 	public static void insertAbiturient(String[] info) {
-		String aid = info[0];
-		String SName = "'" + info[1] + "'";
-		String FName = "'" + info[2] + "'";
-		String MName = "'" + info[3] + "'";
-		String birthday = "'" + info[4] + "'";
-		String birthplace = "'" + info[5] + "'";
-		String id_gender = info[6];
-		String id_nationality = info[7];
-		String email = "'" + info[8] + "'";
-		String phoneNumbers = "'" + info[9] + "'";
-		String needHostel = info[10];
-		String registrationDate = "'" + info[11] + "'";
-		String returnDate = "'" + info[12] + "'";
-		String id_returnReason = info[13];
-		String needSpecConditions = info[14];
-		String is_enrolled = info[15];
+		String aid, SName, FName, MName, birthday, birthplace, id_gender, id_nationality, email, phoneNumbers,
+				needHostel, registrationDate, returnDate, id_returnReason, needSpecConditions, is_enrolled;
+		String query;
+		
+		query = aid = SName = FName = MName = birthday = birthplace = id_gender = id_nationality = email = phoneNumbers = needHostel = registrationDate = returnDate = id_returnReason = needSpecConditions = is_enrolled = null;
 
-		try {
-			String query = "insert into Abiturient Values (" + aid + ", " + SName + ", " + FName + ", " + MName + ", "
+		switch(info.length) {
+		case 16:
+			aid = info[0];
+			SName = "'" + info[1] + "'";
+			FName = "'" + info[2] + "'";
+			MName = "'" + info[3] + "'";
+			birthday = "'" + info[4] + "'";
+			birthplace = "'" + info[5] + "'";
+			id_gender = info[6];
+			id_nationality = info[7];
+			email = "'" + info[8] + "'";
+			phoneNumbers = "'" + info[9] + "'";
+			needHostel = info[10];
+			registrationDate = "'" + info[11] + "'";
+			returnDate = "'" + info[12] + "'";
+			id_returnReason = info[13];
+			needSpecConditions = info[14];
+			is_enrolled = info[15];
+			
+			query = "insert into Abiturient Values (" + aid + ", " + SName + ", " + FName + ", " + MName + ", "
 					+ birthday + ", " + birthplace + ", " + id_gender + ", " + id_nationality + ", " + email + ", "
 					+ phoneNumbers + ", " + needHostel + ", " + registrationDate + ", " + returnDate + ", "
 					+ id_returnReason + ", " + needSpecConditions + ", " + is_enrolled + ");";
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
+			
+			break;
+		case 8:
+			aid = info[0];
+			SName = "'" + info[1] + "'";
+			FName = "'" + info[2] + "'";
+			MName = "'" + info[3] + "'";
+			birthday = "'" + info[4] + "'";
+			id_gender = info[5];
+			id_nationality = info[6];
+			registrationDate = "'" + info[7] + "'";
+			
+			query = "insert into Abiturient (aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate) Values (" + aid + ", " + SName + ", " + FName + ", " + MName + ", "
+					+ birthday + ", " + id_gender + ", " + id_nationality + ", " + registrationDate + ");";
+			
+			break;
+		}
 
-			stmt.close();
-			rset.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (initConnection()) {
+			try {
+				stmt = con.createStatement();
+				stmt.executeUpdate(query);
+	
+				stmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

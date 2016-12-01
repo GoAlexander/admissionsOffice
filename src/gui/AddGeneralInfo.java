@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.SimpleDateFormat;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -25,11 +26,13 @@ import javax.swing.border.TitledBorder;
 
 import com.toedter.calendar.JDateChooser;
 
+import backend.ModelDBConnection;
+
 public class AddGeneralInfo extends JFrame {
 
 	private JPanel mainPanel, GIPanel, panelID, dateRecDocPanel, panelSurname, panelName, panelPatronymic, panelSex, panelDB,
 			panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn;
-	private JButton applyBtn;
+	private JButton applyButton;
 	private JTextField textID, textDateReturn, textDateRecDoc;
 	private JComboBox comboSexList, comboNationality, comboReturnReason;
 	private JCheckBox checkBackDoc;
@@ -190,14 +193,41 @@ public class AddGeneralInfo extends JFrame {
 
 		JPanel btnPanel = new JPanel();
 		btnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		applyBtn = new JButton("Подтвердить");
-		btnPanel.add(applyBtn);
+
+		applyButton = new JButton("Подтвердить");
+		applyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	applyButtonActionPerformed(evt);
+            }
+        });
+
+		btnPanel.add(applyButton);
 		GIPanelMain.add(btnPanel);
 
 		setPreferredSize(new Dimension(600, 500));
 		pack();
 
 	}
+
+    private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    	try {
+    		String[] abitBaseInfo = new String[8];
+    		abitBaseInfo[0] = textID.getText();
+    		abitBaseInfo[1] = ((JTextField)panelSurname.getComponent(1)).getText();
+    		abitBaseInfo[2] = ((JTextField)panelName.getComponent(1)).getText();
+    		abitBaseInfo[3] = ((JTextField)panelPatronymic.getComponent(1)).getText();
+    		abitBaseInfo[4] = new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString();
+    		abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex());
+    		abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex());
+    		abitBaseInfo[7] = textDateRecDoc.getText();
+    		
+    		System.out.print(abitBaseInfo[4]);
+    		
+    		ModelDBConnection.insertAbiturient(abitBaseInfo);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+		}
+    }
 
 	private JPanel createFIOPanel(String nameLabel) {
 		JPanel panelFIO = new JPanel();

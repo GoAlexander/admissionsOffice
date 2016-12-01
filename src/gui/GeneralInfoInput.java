@@ -225,9 +225,18 @@ public class GeneralInfoInput extends JFrame {
 
 		btnTablePanel = new JPanel();
 		btnTablePanel.setLayout(new FlowLayout());
+		
 		addButton = new JButton("Добавить");
+		addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	addButtonActionPerformed(evt);
+            }
+        });
+		
 		editButton = new JButton("Редактировать");
+		
 		deleteButton = new JButton("Удалить");
+		
 		btnTablePanel.add(addButton);
 		btnTablePanel.add(editButton);
 		btnTablePanel.add(deleteButton);
@@ -376,10 +385,19 @@ public class GeneralInfoInput extends JFrame {
 
 		centralPanel.add(userInfoTPane);
 
-		setPreferredSize(new Dimension(1100, 780));
+		setPreferredSize(new Dimension(1100, 740));
 		pack();
 
 	}
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    	try {
+    		AddGeneralInfo addGeneralInfoFrame = new AddGeneralInfo();
+    		addGeneralInfoFrame.setVisible(true);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+		}
+    }
 
 	private JPanel createFIOPanel(String nameLabel) {
 		JPanel panelFIO = new JPanel();
