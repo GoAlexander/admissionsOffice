@@ -73,22 +73,22 @@ public class ModelDBConnection {
 		return true;
 	}
 
-	public static int getCountAbiturients() {
+	public static int getCount(String tableName) {
 		if (initConnection()) {
 			try {
-				int countAbits = 0;
-				String query = "select count(*) from Abiturient";
+				int count = 0;
+				String query = "select count(*) from " + tableName;
 				stmt = con.createStatement();
 				rset = stmt.executeQuery(query);
 
 				while (rset.next()) {
-					countAbits = rset.getInt(1);
+					count = rset.getInt(1);
 				}
 
 				stmt.close();
 				rset.close();
 
-				return countAbits;
+				return count;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return -1;
@@ -98,7 +98,7 @@ public class ModelDBConnection {
 	}
 
 	public static String[][] getAllAbiturients() {
-		int countAbits = getCountAbiturients();
+		int countAbits = getCount("Abiturient");
 
 		String[][] data = null;
 
