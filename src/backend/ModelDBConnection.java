@@ -134,10 +134,10 @@ public class ModelDBConnection {
 		String aid, SName, FName, MName, birthday, birthplace, id_gender, id_nationality, email, phoneNumbers,
 				needHostel, registrationDate, returnDate, id_returnReason, needSpecConditions, is_enrolled;
 		String query;
-		
+
 		query = aid = SName = FName = MName = birthday = birthplace = id_gender = id_nationality = email = phoneNumbers = needHostel = registrationDate = returnDate = id_returnReason = needSpecConditions = is_enrolled = null;
 
-		switch(info.length) {
+		switch (info.length) {
 		case 16:
 			aid = info[0];
 			SName = "'" + info[1] + "'";
@@ -155,12 +155,12 @@ public class ModelDBConnection {
 			id_returnReason = info[13];
 			needSpecConditions = info[14];
 			is_enrolled = info[15];
-			
+
 			query = "insert into Abiturient Values (" + aid + ", " + SName + ", " + FName + ", " + MName + ", "
 					+ birthday + ", " + birthplace + ", " + id_gender + ", " + id_nationality + ", " + email + ", "
 					+ phoneNumbers + ", " + needHostel + ", " + registrationDate + ", " + returnDate + ", "
 					+ id_returnReason + ", " + needSpecConditions + ", " + is_enrolled + ");";
-			
+
 			break;
 		case 8:
 			aid = info[0];
@@ -171,10 +171,11 @@ public class ModelDBConnection {
 			id_gender = info[5];
 			id_nationality = info[6];
 			registrationDate = "'" + info[7] + "'";
-			
-			query = "insert into Abiturient (aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate) Values (" + aid + ", " + SName + ", " + FName + ", " + MName + ", "
-					+ birthday + ", " + id_gender + ", " + id_nationality + ", " + registrationDate + ");";
-			
+
+			query = "insert into Abiturient (aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate) Values ("
+					+ aid + ", " + SName + ", " + FName + ", " + MName + ", " + birthday + ", " + id_gender + ", "
+					+ id_nationality + ", " + registrationDate + ");";
+
 			break;
 		}
 
@@ -182,7 +183,7 @@ public class ModelDBConnection {
 			try {
 				stmt = con.createStatement();
 				stmt.executeUpdate(query);
-	
+
 				stmt.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -192,37 +193,46 @@ public class ModelDBConnection {
 
 	// TODO test
 	public static void editAbiturient(String[] info) {
-		String aid = info[0];
-		String SName = "'" + info[1] + "'";
-		String FName = "'" + info[2] + "'";
-		String MName = "'" + info[3] + "'";
-		String Birthday = "'" + info[4] + "'";
-		String Birthplace = "'" + info[5] + "'";
-		String id_gender = info[6];
-		String id_nationality = info[7];
-		String email = "'" + info[8] + "'";
-		String phoneNumbers = "'" + info[9] + "'";
-		String needHostel = info[10];
-		String registrationDate = "'" + info[11] + "'";
-		String returnDate = "'" + info[12] + "'";
-		String id_returnReason = info[13];
-		String needSpecConditions = info[14];
-		String is_enrolled = info[15];
 
-		try {
-			String query = "update Abiturient set SName = " + SName + ", FName = " + FName + ", MName = " + MName
-					+ ", Birthday = " + Birthday + ", Birthplace = " + Birthplace + ", id_gender = " + id_gender
-					+ ", id_nationality = " + id_nationality + ", email = " + email + ", phoneNumbers = " + phoneNumbers
-					+ ", needHostel = " + needHostel + ", registrationDate = " + registrationDate + ", returnDate = "
-					+ returnDate + ", id_returnReason = " + id_returnReason + ", needSpecConditions = "
-					+ needSpecConditions + ", is_enrolled = " + is_enrolled + " where aid = " + aid + ";";
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
+		String aid, SName, FName, MName, birthday, birthplace, id_gender, id_nationality, email, phoneNumbers,
+				needHostel, registrationDate, returnDate, id_returnReason, needSpecConditions, is_enrolled;
+		String query;
 
-			stmt.close();
-			rset.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		query = aid = SName = FName = MName = birthday = birthplace = id_gender = id_nationality = email = phoneNumbers = needHostel = registrationDate = returnDate = id_returnReason = needSpecConditions = is_enrolled = null;
+
+		aid = info[0];
+		SName = "'" + info[1] + "'";
+		FName = "'" + info[2] + "'";
+		MName = "'" + info[3] + "'";
+		birthday = "'" + info[4] + "'";
+		birthplace = "'" + info[5] + "'";
+		id_gender = info[6];
+		id_nationality = info[7];
+		email = "'" + info[8] + "'";
+		phoneNumbers = "'" + info[9] + "'";
+		needHostel = info[10];
+		registrationDate = "'" + info[11] + "'";
+		returnDate = "'" + info[12] + "'";
+		id_returnReason = info[13];
+		needSpecConditions = info[14];
+		is_enrolled = info[15];
+
+		query = "update Abiturient set SName = " + SName + ", FName = " + FName + ", MName = " + MName + ", Birthday = "
+				+ birthday + ", Birthplace = " + birthplace + ", id_gender = " + id_gender + ", id_nationality = "
+				+ id_nationality + ", email = " + email + ", phoneNumbers = " + phoneNumbers + ", needHostel = "
+				+ needHostel + ", registrationDate = " + registrationDate + ", returnDate = " + returnDate
+				+ ", id_returnReason = " + id_returnReason + ", needSpecConditions = " + needSpecConditions
+				+ ", is_enrolled = " + is_enrolled + " where aid = " + aid + ";";
+
+		if (initConnection()) {
+			try {
+				stmt = con.createStatement();
+				stmt.executeUpdate(query);
+
+				stmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
