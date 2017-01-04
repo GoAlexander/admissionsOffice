@@ -13,6 +13,10 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EventObject;
 import java.util.Vector;
 
@@ -39,8 +43,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -48,6 +55,7 @@ import javax.swing.table.TableColumn;
 
 import com.toedter.calendar.JDateChooser;
 
+import backend.MessageProcessing;
 import backend.ModelDBConnection;
 
 public class GeneralInfoInput extends JFrame {
@@ -218,7 +226,9 @@ public class GeneralInfoInput extends JFrame {
 		tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());
 		dataTable = new JTable(currentTM);
+		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
+		
 		JScrollPane scrPane = new JScrollPane(dataTable);
 		scrPane.setPreferredSize(new Dimension(300, 0));
 		tablePanel.add(scrPane, BorderLayout.CENTER);
@@ -387,15 +397,39 @@ public class GeneralInfoInput extends JFrame {
 
 		setPreferredSize(new Dimension(1100, 740));
 		pack();
-
+		
+		dataTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {               
+            public void valueChanged(ListSelectionEvent e) {
+            	if (e.getValueIsAdjusting() == false)
+            	{
+            		try {
+						String[] selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(dataTable.getSelectedRow()+1));
+						
+						((JTextField)panelID.getComponent(1)).setText(selectedAbitGeneralInfo[0]);
+						((JTextField)panelSurname.getComponent(1)).setText(selectedAbitGeneralInfo[1]);
+						((JTextField)panelName.getComponent(1)).setText(selectedAbitGeneralInfo[2]);
+						((JTextField)panelPatronymic.getComponent(1)).setText(selectedAbitGeneralInfo[3]);
+						SimpleDateFormat format = new SimpleDateFormat();
+						format.applyPattern("yyyy-MM-dd");
+						calendar.setDate(format.parse(selectedAbitGeneralInfo[4]));
+						comboSexList.setSelectedIndex(Integer.valueOf(selectedAbitGeneralInfo[5]));
+						comboNationality.setSelectedIndex(Integer.valueOf(selectedAbitGeneralInfo[6]));
+            		} catch (SQLException | ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+            	}
+            }
+       });
 	}
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
     	try {
-    		AddGeneralInfo addGeneralInfoFrame = new AddGeneralInfo();
+    		AddGeneralInfo addGeneralInfoFrame = new AddGeneralInfo(currentTM);
+    		
     		addGeneralInfoFrame.setVisible(true);
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		MessageProcessing.displayErrorMessage(this, e);
 		}
     }
 

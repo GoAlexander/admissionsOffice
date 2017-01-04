@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ModelDBConnection {
@@ -130,7 +131,35 @@ public class ModelDBConnection {
 	}
 
 	// TODO test
-	public static void insertAbiturient(String[] info) {
+	public static String[] getAbiturientGeneralInfoByID(String aid) throws SQLException {
+		String query = "select aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate from Abiturient where aid = " + aid + ";";
+		String[] abiturientInfo = null;
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+			
+			while (rset.next()) {
+				abiturientInfo = new String[8];
+				abiturientInfo[0] = String.valueOf(rset.getInt(1));
+				abiturientInfo[1] = rset.getString(2);
+				abiturientInfo[2] = rset.getString(3);
+				abiturientInfo[3] = rset.getString(4);
+				abiturientInfo[4] = rset.getDate(5).toString();
+				abiturientInfo[5] = String.valueOf(rset.getInt(6));
+				abiturientInfo[6] = String.valueOf(rset.getInt(7));
+				abiturientInfo[7] = rset.getDate(8).toString();
+				
+				System.out.println(abiturientInfo[0] + " " +abiturientInfo[1] + " " +abiturientInfo[2] + " " +abiturientInfo[3] + " " +abiturientInfo[4] + " " +abiturientInfo[5] + " " +abiturientInfo[6] + " " +abiturientInfo[7] + " ");
+			}
+			
+			stmt.close();
+			rset.close();
+		}
+		return abiturientInfo;
+	}
+
+	// TODO test
+	public static void insertAbiturient(String[] info) throws SQLException {
 		String aid, SName, FName, MName, birthday, birthplace, id_gender, id_nationality, email, phoneNumbers,
 				needHostel, registrationDate, returnDate, id_returnReason, needSpecConditions, is_enrolled;
 		String query;
@@ -180,19 +209,15 @@ public class ModelDBConnection {
 		}
 
 		if (initConnection()) {
-			try {
-				stmt = con.createStatement();
-				stmt.executeUpdate(query);
+			stmt = con.createStatement();
+			stmt.executeUpdate(query);
 
-				stmt.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			stmt.close();
 		}
 	}
 
 	// TODO test
-	public static void editAbiturient(String[] info) {
+	public static void editAbiturient(String[] info) throws SQLException {
 
 		String aid, SName, FName, MName, birthday, birthplace, id_gender, id_nationality, email, phoneNumbers,
 				needHostel, registrationDate, returnDate, id_returnReason, needSpecConditions, is_enrolled;
@@ -225,28 +250,22 @@ public class ModelDBConnection {
 				+ ", is_enrolled = " + is_enrolled + " where aid = " + aid + ";";
 
 		if (initConnection()) {
-			try {
-				stmt = con.createStatement();
-				stmt.executeUpdate(query);
+			stmt = con.createStatement();
+			stmt.executeUpdate(query);
 
-				stmt.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			stmt.close();
 		}
 	}
 
 	// TODO test
-	public static void deleteAbiturient(String aid) {
-		try {
-			String query = "delete from Abiturient where aid = " + aid + ";";
+	public static void deleteAbiturient(String aid) throws SQLException {
+		String query = "delete from Abiturient where aid = " + aid + ";";
+		if (initConnection()) {
 			stmt = con.createStatement();
 			rset = stmt.executeQuery(query);
 
 			stmt.close();
 			rset.close();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }

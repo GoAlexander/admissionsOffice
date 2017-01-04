@@ -26,10 +26,12 @@ import javax.swing.border.TitledBorder;
 
 import com.toedter.calendar.JDateChooser;
 
+import backend.MessageProcessing;
 import backend.ModelDBConnection;
 
 public class AddGeneralInfo extends JFrame {
-
+	private GUITableModel currentTM;
+	
 	private JPanel mainPanel, GIPanel, panelID, dateRecDocPanel, panelSurname, panelName, panelPatronymic, panelSex, panelDB,
 			panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn;
 	private JButton applyButton;
@@ -51,8 +53,9 @@ public class AddGeneralInfo extends JFrame {
 
 	private JDateChooser calendar;
 
-	public AddGeneralInfo() {
-
+	public AddGeneralInfo(GUITableModel currentTM) {
+		this.currentTM = currentTM;
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
 		setLocationRelativeTo(null);
@@ -211,6 +214,7 @@ public class AddGeneralInfo extends JFrame {
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
     	try {
+    		//Запись в БД
     		String[] abitBaseInfo = new String[8];
     		abitBaseInfo[0] = textID.getText();
     		abitBaseInfo[1] = ((JTextField)panelSurname.getComponent(1)).getText();
@@ -221,11 +225,16 @@ public class AddGeneralInfo extends JFrame {
     		abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex());
     		abitBaseInfo[7] = textDateRecDoc.getText();
     		
-    		System.out.print(abitBaseInfo[4]);
-    		
     		ModelDBConnection.insertAbiturient(abitBaseInfo);
+    		
+    		//Обновление таблицы главного фрейма
+    		String[] abit_ID_FIO = {abitBaseInfo[0], abitBaseInfo[1], abitBaseInfo[2], abitBaseInfo[3]};
+    		this.currentTM.addRow(abit_ID_FIO);
+
+    		this.setVisible(false);
+    		MessageProcessing.displaySuccessMessage(this, 1);
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		MessageProcessing.displayErrorMessage(this, e);
 		}
     }
 
@@ -247,7 +256,7 @@ public class AddGeneralInfo extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AddGeneralInfo window = new AddGeneralInfo();
+					AddGeneralInfo window = new AddGeneralInfo(new GUITableModel());
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
