@@ -13,6 +13,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -86,7 +88,7 @@ public class GeneralInfoInput extends JFrame {
 
 	private String[] arrSex = { "Женский", "Мужской" };
 	private String[] arrNationality = { "РФ", "Украина", "Белорусь", "Казахстан" };
-	private String[] arrReturnReason = { "1                               ", "2      ", "3      " };
+	private String[] arrReturnReason = { "r1                              ", "r2     ", "r3     " };
 	private String[] arrDocType = { "паспорт РФ", "паспорт Украина" };
 
 	private JMenuBar menuBar;
@@ -235,18 +237,28 @@ public class GeneralInfoInput extends JFrame {
 
 		btnTablePanel = new JPanel();
 		btnTablePanel.setLayout(new FlowLayout());
-		
+
 		addButton = new JButton("Добавить");
 		addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	addButtonActionPerformed(evt);
             }
         });
-		
+
 		editButton = new JButton("Редактировать");
-		
+		editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	editButtonActionPerformed(evt);
+            }
+        });
+
 		deleteButton = new JButton("Удалить");
-		
+		deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	deleteButtonActionPerformed(evt);
+            }
+        });
+
 		btnTablePanel.add(addButton);
 		btnTablePanel.add(editButton);
 		btnTablePanel.add(deleteButton);
@@ -282,6 +294,7 @@ public class GeneralInfoInput extends JFrame {
 		panelID.add(idLabel);
 		textID = new JTextField();
 		textID.setPreferredSize(new Dimension(60, 25));
+		textID.setEnabled(false);
 		panelID.add(textID);
 		GIPanel.add(panelID, gbc);
 
@@ -307,7 +320,8 @@ public class GeneralInfoInput extends JFrame {
 		JLabel sexLabel = new JLabel("Пол:                        ");
 		panelSex.add(sexLabel);
 		comboSexList = new JComboBox(arrSex);
-		comboSexList.setSelectedIndex(0);
+		comboSexList.setSelectedIndex(-1);
+		comboSexList.setEnabled(false);
 		panelSex.add(comboSexList);
 		gbc.gridx = 1;
 		gbc.gridy = 1;
@@ -321,6 +335,7 @@ public class GeneralInfoInput extends JFrame {
 		panelDB.add(dbLabel);
 		calendar = new JDateChooser();
 		calendar.setFont(new Font("Dialog", Font.PLAIN, 11));
+		calendar.setEnabled(false);
 		panelDB.add(calendar);
 		gbc.gridy = 2;
 		GIPanel.add(panelDB, gbc);
@@ -332,8 +347,9 @@ public class GeneralInfoInput extends JFrame {
 		JLabel nationalityLabel = new JLabel("Гражданство:      ");
 		panelNationality.add(nationalityLabel);
 		comboNationality = new JComboBox(arrNationality);
-		comboNationality.setSelectedIndex(0);
+		comboNationality.setSelectedIndex(-1);
 		comboNationality.setPreferredSize(dimText);
+		comboNationality.setEnabled(false);
 		panelNationality.add(comboNationality);
 		gbc.gridy = 3;
 		GIPanel.add(panelNationality, gbc);
@@ -356,7 +372,8 @@ public class GeneralInfoInput extends JFrame {
 		panelReturnReason.add(returnReasonlbl);
 
 		comboReturnReason = new JComboBox(arrReturnReason);
-		comboNationality.setSelectedIndex(0);
+		comboReturnReason.setEnabled(false);
+		comboReturnReason.setSelectedIndex(-1);
 		panelReturnReason.add(comboReturnReason);
 
 		panelInfoBackDoc.add(panelReturnReason, gbc2);
@@ -370,8 +387,25 @@ public class GeneralInfoInput extends JFrame {
 		panelDateReturn.add(dateReturnLabel);
 		textDateReturn = new JTextField();
 		textDateReturn.setPreferredSize(dimText);
+		textDateReturn.setEnabled(false);
 		panelDateReturn.add(textDateReturn);
 		checkBackDoc = new JCheckBox("Забрал документы");
+		checkBackDoc.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(checkBackDoc.isSelected()) {
+                	textDateReturn.setEnabled(true);
+                	comboReturnReason.setEnabled(true);
+                	if(textDateReturn.getText().equals("")) {
+                		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                		textDateReturn.setText(sdf.format(new Date()));
+                	}
+                } else {
+                	textDateReturn.setEnabled(false);
+                	comboReturnReason.setEnabled(false);
+                }
+            }
+        });
+		checkBackDoc.setEnabled(false);
 		gbc2.gridy = 1;
 		panelInfoBackDoc.add(panelDateReturn, gbc2);
 		gbc2.gridx = 1;
@@ -397,26 +431,39 @@ public class GeneralInfoInput extends JFrame {
 
 		setPreferredSize(new Dimension(1100, 740));
 		pack();
-		
+
 		dataTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {               
             public void valueChanged(ListSelectionEvent e) {
             	if (e.getValueIsAdjusting() == false)
             	{
             		try {
-						String[] selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(dataTable.getSelectedRow()+1));
-						
+            			String[] selectedAbitGeneralInfo;
+            			if (dataTable.getSelectedRow() >= 0) {
+							selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(dataTable.getSelectedRow()+1));
+            			} else {
+            				selectedAbitGeneralInfo = new String[10];
+            				for(int i = 0; i <selectedAbitGeneralInfo.length; i++)
+            					selectedAbitGeneralInfo[i] = "";
+            			}
 						((JTextField)panelID.getComponent(1)).setText(selectedAbitGeneralInfo[0]);
 						((JTextField)panelSurname.getComponent(1)).setText(selectedAbitGeneralInfo[1]);
 						((JTextField)panelName.getComponent(1)).setText(selectedAbitGeneralInfo[2]);
 						((JTextField)panelPatronymic.getComponent(1)).setText(selectedAbitGeneralInfo[3]);
 						SimpleDateFormat format = new SimpleDateFormat();
 						format.applyPattern("yyyy-MM-dd");
-						calendar.setDate(format.parse(selectedAbitGeneralInfo[4]));
-						comboSexList.setSelectedIndex(Integer.valueOf(selectedAbitGeneralInfo[5]));
-						comboNationality.setSelectedIndex(Integer.valueOf(selectedAbitGeneralInfo[6]));
+						calendar.setDate(selectedAbitGeneralInfo[4].equals("") ? null : format.parse(selectedAbitGeneralInfo[4]));
+						comboSexList.setSelectedIndex(selectedAbitGeneralInfo[5].equals("") ? -1 : Integer.valueOf(selectedAbitGeneralInfo[5])-1);
+						comboNationality.setSelectedIndex(selectedAbitGeneralInfo[6].equals("") ? -1 : Integer.valueOf(selectedAbitGeneralInfo[6])-1);
+						comboReturnReason.setSelectedIndex(selectedAbitGeneralInfo[8].equals("") ? -1 : Integer.valueOf(selectedAbitGeneralInfo[8])-1);
+						textDateReturn.setText(selectedAbitGeneralInfo[9]);
+						if(selectedAbitGeneralInfo[8].equals(""))
+							checkBackDoc.setSelected(false);
+						else
+							checkBackDoc.setSelected(true);
+						textDateReturn.setEnabled(false);
+		            	comboReturnReason.setEnabled(false);
             		} catch (SQLException | ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+            			MessageProcessing.displayErrorMessage(tablePanel, e1);
 					}
             	}
             }
@@ -433,6 +480,101 @@ public class GeneralInfoInput extends JFrame {
 		}
     }
 
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
+		try{
+			if(((JTextField)panelSurname.getComponent(1)).isEnabled()) {
+				//Изменения в БД
+		    	String[] abitBaseInfo = new String[10];
+				abitBaseInfo[0] = ((JTextField)panelID.getComponent(1)).getText();
+				abitBaseInfo[1] = ((JTextField)panelSurname.getComponent(1)).getText();
+				abitBaseInfo[2] = ((JTextField)panelName.getComponent(1)).getText();
+				abitBaseInfo[3] = ((JTextField)panelPatronymic.getComponent(1)).getText();
+				abitBaseInfo[4] = new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString();
+				abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex()+1);
+				abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex()+1);
+				//Временно
+				//Раскомментировать, когда добавится соответствующий компонент интерфейса
+				//abitBaseInfo[7] = textDateRecDoc.getText();
+				abitBaseInfo[7] = "12.12.2009";
+				if(checkBackDoc.isSelected()){
+					abitBaseInfo[8] = textDateReturn.getText();
+					abitBaseInfo[9] = String.valueOf(comboReturnReason.getSelectedIndex()+1);
+				} else {
+					abitBaseInfo[8] = null;
+					abitBaseInfo[9] = null;
+				}
+				
+				ModelDBConnection.editAbiturient(abitBaseInfo);
+	
+				//Изменение таблицы
+				currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
+				dataTable.addRowSelectionInterval(Integer.valueOf(abitBaseInfo[0]) - 1, Integer.valueOf(abitBaseInfo[0]) - 1);
+				dataTable.getColumnModel().getColumn(0).setMaxWidth(40);
+				dataTable.updateUI();
+
+				MessageProcessing.displaySuccessMessage(this, 2);
+
+				//Обновление интерфейса
+				((JTextField)panelSurname.getComponent(1)).setEnabled(false);
+				((JTextField)panelName.getComponent(1)).setEnabled(false);
+				((JTextField)panelPatronymic.getComponent(1)).setEnabled(false);
+				calendar.setEnabled(false);
+				comboSexList.setEnabled(false);
+				comboNationality.setEnabled(false);
+				//Временно
+				//Раскомментировать, когда добавится соответствующий компонент интерфейса
+				//textDateRecDoc.setEditable(false);
+            	textDateReturn.setEnabled(false);
+            	comboReturnReason.setEnabled(false);
+				checkBackDoc.setEnabled(false);
+
+				//!!! Добавить !!!
+				//Фрагмент setEnable(false) для всех компонентов JTabbedPane
+
+				addButton.setEnabled(true);
+				deleteButton.setEnabled(true);
+				editButton.setText("Редактировать");
+			} else {
+				((JTextField)panelSurname.getComponent(1)).setEnabled(true);
+				((JTextField)panelName.getComponent(1)).setEnabled(true);
+				((JTextField)panelPatronymic.getComponent(1)).setEnabled(true);
+				calendar.setEnabled(true);
+				comboSexList.setEnabled(true);
+				comboNationality.setEnabled(true);
+				//Временно
+				//Раскомментировать, когда добавится соответствующий компонент интерфейса
+				//textDateRecDoc.setEditable(true);
+				checkBackDoc.setEnabled(true);
+				if(checkBackDoc.isSelected()){
+	            	textDateReturn.setEnabled(true);
+	            	comboReturnReason.setEnabled(true);
+				}
+				//!!! Добавить !!!
+				//Фрагмент setEnable(false) для всех компонентов JTabbedPane
+
+				addButton.setEnabled(false);
+				deleteButton.setEnabled(false);
+				editButton.setText("    Сохранить     ");
+			}
+    	} catch (Exception e) {
+    		MessageProcessing.displayErrorMessage(this, e);
+		}
+    }
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    	try {
+    		if(MessageProcessing.displayDialogMessage(this, 1)==0){
+    			ModelDBConnection.deleteAbiturient(((JTextField)panelID.getComponent(1)).getText());
+    			currentTM.removeRow(dataTable.getSelectedRow());
+    			dataTable.clearSelection();
+    			dataTable.updateUI();
+    			MessageProcessing.displaySuccessMessage(this, 3);
+    		}
+		} catch (SQLException e) {
+			MessageProcessing.displayErrorMessage(this, e);
+		}
+    }
+
 	private JPanel createFIOPanel(String nameLabel) {
 		JPanel panelFIO = new JPanel();
 		panelFIO.setLayout(new FlowLayout());
@@ -441,6 +583,7 @@ public class GeneralInfoInput extends JFrame {
 		JLabel FIOLabel = new JLabel(nameLabel);
 		panelFIO.add(FIOLabel);
 		JTextField textFIO = new JTextField();
+		textFIO.setEnabled(false);
 		textFIO.setPreferredSize(dimText);
 		panelFIO.add(textFIO);
 
