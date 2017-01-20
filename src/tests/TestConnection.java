@@ -1,7 +1,7 @@
 // @author BIUlitin
 // modified by GoAlexander
 
-package firstTest;
+package tests;
 
 import java.sql.*;
 

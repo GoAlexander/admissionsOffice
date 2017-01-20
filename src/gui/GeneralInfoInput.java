@@ -106,10 +106,10 @@ public class GeneralInfoInput extends JFrame {
 	private JButton addButton, editButton, deleteButton;
 
 	public GeneralInfoInput() {
-		//----------------------
-		//Временно
+		// ----------------------
+		// Временно
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
-		//----------------------
+		// ----------------------
 
 		setTitle("General Info");
 
@@ -230,7 +230,7 @@ public class GeneralInfoInput extends JFrame {
 		dataTable = new JTable(currentTM);
 		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
-		
+
 		JScrollPane scrPane = new JScrollPane(dataTable);
 		scrPane.setPreferredSize(new Dimension(300, 0));
 		tablePanel.add(scrPane, BorderLayout.CENTER);
@@ -240,24 +240,24 @@ public class GeneralInfoInput extends JFrame {
 
 		addButton = new JButton("Добавить");
 		addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	addButtonActionPerformed(evt);
-            }
-        });
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				addButtonActionPerformed(evt);
+			}
+		});
 
 		editButton = new JButton("Редактировать");
 		editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	editButtonActionPerformed(evt);
-            }
-        });
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				editButtonActionPerformed(evt);
+			}
+		});
 
 		deleteButton = new JButton("Удалить");
 		deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	deleteButtonActionPerformed(evt);
-            }
-        });
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				deleteButtonActionPerformed(evt);
+			}
+		});
 
 		btnTablePanel.add(addButton);
 		btnTablePanel.add(editButton);
@@ -391,20 +391,20 @@ public class GeneralInfoInput extends JFrame {
 		panelDateReturn.add(textDateReturn);
 		checkBackDoc = new JCheckBox("Забрал документы");
 		checkBackDoc.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if(checkBackDoc.isSelected()) {
-                	textDateReturn.setEnabled(true);
-                	comboReturnReason.setEnabled(true);
-                	if(textDateReturn.getText().equals("")) {
-                		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                		textDateReturn.setText(sdf.format(new Date()));
-                	}
-                } else {
-                	textDateReturn.setEnabled(false);
-                	comboReturnReason.setEnabled(false);
-                }
-            }
-        });
+			public void itemStateChanged(ItemEvent e) {
+				if (checkBackDoc.isSelected()) {
+					textDateReturn.setEnabled(true);
+					comboReturnReason.setEnabled(true);
+					if (textDateReturn.getText().equals("")) {
+						SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+						textDateReturn.setText(sdf.format(new Date()));
+					}
+				} else {
+					textDateReturn.setEnabled(false);
+					comboReturnReason.setEnabled(false);
+				}
+			}
+		});
 		checkBackDoc.setEnabled(false);
 		gbc2.gridy = 1;
 		panelInfoBackDoc.add(panelDateReturn, gbc2);
@@ -432,148 +432,156 @@ public class GeneralInfoInput extends JFrame {
 		setPreferredSize(new Dimension(1100, 740));
 		pack();
 
-		dataTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {               
-            public void valueChanged(ListSelectionEvent e) {
-            	if (e.getValueIsAdjusting() == false)
-            	{
-            		try {
-            			String[] selectedAbitGeneralInfo;
-            			if (dataTable.getSelectedRow() >= 0) {
-							selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(dataTable.getSelectedRow()+1));
-            			} else {
-            				selectedAbitGeneralInfo = new String[10];
-            				for(int i = 0; i <selectedAbitGeneralInfo.length; i++)
-            					selectedAbitGeneralInfo[i] = "";
-            			}
-						((JTextField)panelID.getComponent(1)).setText(selectedAbitGeneralInfo[0]);
-						((JTextField)panelSurname.getComponent(1)).setText(selectedAbitGeneralInfo[1]);
-						((JTextField)panelName.getComponent(1)).setText(selectedAbitGeneralInfo[2]);
-						((JTextField)panelPatronymic.getComponent(1)).setText(selectedAbitGeneralInfo[3]);
+		dataTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getValueIsAdjusting() == false) {
+					try {
+						String[] selectedAbitGeneralInfo;
+						if (dataTable.getSelectedRow() >= 0) {
+							selectedAbitGeneralInfo = ModelDBConnection
+									.getAbiturientGeneralInfoByID(String.valueOf(dataTable.getSelectedRow() + 1));
+						} else {
+							selectedAbitGeneralInfo = new String[10];
+							for (int i = 0; i < selectedAbitGeneralInfo.length; i++)
+								selectedAbitGeneralInfo[i] = "";
+						}
+						((JTextField) panelID.getComponent(1)).setText(selectedAbitGeneralInfo[0]);
+						((JTextField) panelSurname.getComponent(1)).setText(selectedAbitGeneralInfo[1]);
+						((JTextField) panelName.getComponent(1)).setText(selectedAbitGeneralInfo[2]);
+						((JTextField) panelPatronymic.getComponent(1)).setText(selectedAbitGeneralInfo[3]);
 						SimpleDateFormat format = new SimpleDateFormat();
 						format.applyPattern("yyyy-MM-dd");
-						calendar.setDate(selectedAbitGeneralInfo[4].equals("") ? null : format.parse(selectedAbitGeneralInfo[4]));
-						comboSexList.setSelectedIndex(selectedAbitGeneralInfo[5].equals("") ? -1 : Integer.valueOf(selectedAbitGeneralInfo[5])-1);
-						comboNationality.setSelectedIndex(selectedAbitGeneralInfo[6].equals("") ? -1 : Integer.valueOf(selectedAbitGeneralInfo[6])-1);
-						comboReturnReason.setSelectedIndex(selectedAbitGeneralInfo[8].equals("") ? -1 : Integer.valueOf(selectedAbitGeneralInfo[8])-1);
+						calendar.setDate(selectedAbitGeneralInfo[4].equals("") ? null
+								: format.parse(selectedAbitGeneralInfo[4]));
+						comboSexList.setSelectedIndex(selectedAbitGeneralInfo[5].equals("") ? -1
+								: Integer.valueOf(selectedAbitGeneralInfo[5]) - 1);
+						comboNationality.setSelectedIndex(selectedAbitGeneralInfo[6].equals("") ? -1
+								: Integer.valueOf(selectedAbitGeneralInfo[6]) - 1);
+						comboReturnReason.setSelectedIndex(selectedAbitGeneralInfo[8].equals("") ? -1
+								: Integer.valueOf(selectedAbitGeneralInfo[8]) - 1);
 						textDateReturn.setText(selectedAbitGeneralInfo[9]);
-						if(selectedAbitGeneralInfo[8].equals(""))
+						if (selectedAbitGeneralInfo[8].equals(""))
 							checkBackDoc.setSelected(false);
 						else
 							checkBackDoc.setSelected(true);
 						textDateReturn.setEnabled(false);
-		            	comboReturnReason.setEnabled(false);
-            		} catch (SQLException | ParseException e1) {
-            			MessageProcessing.displayErrorMessage(tablePanel, e1);
+						comboReturnReason.setEnabled(false);
+					} catch (SQLException | ParseException e1) {
+						MessageProcessing.displayErrorMessage(tablePanel, e1);
 					}
-            	}
-            }
-       });
+				}
+			}
+		});
 	}
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    	try {
-    		AddGeneralInfo addGeneralInfoFrame = new AddGeneralInfo(currentTM);
-    		
-    		addGeneralInfoFrame.setVisible(true);
-    	} catch (Exception e) {
-    		MessageProcessing.displayErrorMessage(this, e);
-		}
-    }
+	private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		try {
+			AddGeneralInfo addGeneralInfoFrame = new AddGeneralInfo(currentTM);
 
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
-		try{
-			if(((JTextField)panelSurname.getComponent(1)).isEnabled()) {
-				//Изменения в БД
-		    	String[] abitBaseInfo = new String[10];
-				abitBaseInfo[0] = ((JTextField)panelID.getComponent(1)).getText();
-				abitBaseInfo[1] = ((JTextField)panelSurname.getComponent(1)).getText();
-				abitBaseInfo[2] = ((JTextField)panelName.getComponent(1)).getText();
-				abitBaseInfo[3] = ((JTextField)panelPatronymic.getComponent(1)).getText();
+			addGeneralInfoFrame.setVisible(true);
+		} catch (Exception e) {
+			MessageProcessing.displayErrorMessage(this, e);
+		}
+	}
+
+	private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		try {
+			if (((JTextField) panelSurname.getComponent(1)).isEnabled()) {
+				// Изменения в БД
+				String[] abitBaseInfo = new String[10];
+				abitBaseInfo[0] = ((JTextField) panelID.getComponent(1)).getText();
+				abitBaseInfo[1] = ((JTextField) panelSurname.getComponent(1)).getText();
+				abitBaseInfo[2] = ((JTextField) panelName.getComponent(1)).getText();
+				abitBaseInfo[3] = ((JTextField) panelPatronymic.getComponent(1)).getText();
 				abitBaseInfo[4] = new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString();
-				abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex()+1);
-				abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex()+1);
-				//Временно
-				//Раскомментировать, когда добавится соответствующий компонент интерфейса
-				//abitBaseInfo[7] = textDateRecDoc.getText();
+				abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex() + 1);
+				abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex() + 1);
+				// Временно
+				// Раскомментировать, когда добавится соответствующий компонент
+				// интерфейса
+				// abitBaseInfo[7] = textDateRecDoc.getText();
 				abitBaseInfo[7] = "12.12.2009";
-				if(checkBackDoc.isSelected()){
+				if (checkBackDoc.isSelected()) {
 					abitBaseInfo[8] = textDateReturn.getText();
-					abitBaseInfo[9] = String.valueOf(comboReturnReason.getSelectedIndex()+1);
+					abitBaseInfo[9] = String.valueOf(comboReturnReason.getSelectedIndex() + 1);
 				} else {
 					abitBaseInfo[8] = null;
 					abitBaseInfo[9] = null;
 				}
-				
+
 				ModelDBConnection.editAbiturient(abitBaseInfo);
-	
-				//Изменение таблицы
+
+				// Изменение таблицы
 				currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
-				dataTable.addRowSelectionInterval(Integer.valueOf(abitBaseInfo[0]) - 1, Integer.valueOf(abitBaseInfo[0]) - 1);
+				dataTable.addRowSelectionInterval(Integer.valueOf(abitBaseInfo[0]) - 1,
+						Integer.valueOf(abitBaseInfo[0]) - 1);
 				dataTable.getColumnModel().getColumn(0).setMaxWidth(40);
 				dataTable.updateUI();
 
 				MessageProcessing.displaySuccessMessage(this, 2);
 
-				//Обновление интерфейса
-				((JTextField)panelSurname.getComponent(1)).setEnabled(false);
-				((JTextField)panelName.getComponent(1)).setEnabled(false);
-				((JTextField)panelPatronymic.getComponent(1)).setEnabled(false);
+				// Обновление интерфейса
+				((JTextField) panelSurname.getComponent(1)).setEnabled(false);
+				((JTextField) panelName.getComponent(1)).setEnabled(false);
+				((JTextField) panelPatronymic.getComponent(1)).setEnabled(false);
 				calendar.setEnabled(false);
 				comboSexList.setEnabled(false);
 				comboNationality.setEnabled(false);
-				//Временно
-				//Раскомментировать, когда добавится соответствующий компонент интерфейса
-				//textDateRecDoc.setEditable(false);
-            	textDateReturn.setEnabled(false);
-            	comboReturnReason.setEnabled(false);
+				// Временно
+				// Раскомментировать, когда добавится соответствующий компонент
+				// интерфейса
+				// textDateRecDoc.setEditable(false);
+				textDateReturn.setEnabled(false);
+				comboReturnReason.setEnabled(false);
 				checkBackDoc.setEnabled(false);
 
-				//!!! Добавить !!!
-				//Фрагмент setEnable(false) для всех компонентов JTabbedPane
+				// !!! Добавить !!!
+				// Фрагмент setEnable(false) для всех компонентов JTabbedPane
 
 				addButton.setEnabled(true);
 				deleteButton.setEnabled(true);
 				editButton.setText("Редактировать");
 			} else {
-				((JTextField)panelSurname.getComponent(1)).setEnabled(true);
-				((JTextField)panelName.getComponent(1)).setEnabled(true);
-				((JTextField)panelPatronymic.getComponent(1)).setEnabled(true);
+				((JTextField) panelSurname.getComponent(1)).setEnabled(true);
+				((JTextField) panelName.getComponent(1)).setEnabled(true);
+				((JTextField) panelPatronymic.getComponent(1)).setEnabled(true);
 				calendar.setEnabled(true);
 				comboSexList.setEnabled(true);
 				comboNationality.setEnabled(true);
-				//Временно
-				//Раскомментировать, когда добавится соответствующий компонент интерфейса
-				//textDateRecDoc.setEditable(true);
+				// Временно
+				// Раскомментировать, когда добавится соответствующий компонент
+				// интерфейса
+				// textDateRecDoc.setEditable(true);
 				checkBackDoc.setEnabled(true);
-				if(checkBackDoc.isSelected()){
-	            	textDateReturn.setEnabled(true);
-	            	comboReturnReason.setEnabled(true);
+				if (checkBackDoc.isSelected()) {
+					textDateReturn.setEnabled(true);
+					comboReturnReason.setEnabled(true);
 				}
-				//!!! Добавить !!!
-				//Фрагмент setEnable(false) для всех компонентов JTabbedPane
+				// !!! Добавить !!!
+				// Фрагмент setEnable(false) для всех компонентов JTabbedPane
 
 				addButton.setEnabled(false);
 				deleteButton.setEnabled(false);
 				editButton.setText("    Сохранить     ");
 			}
-    	} catch (Exception e) {
-    		MessageProcessing.displayErrorMessage(this, e);
+		} catch (Exception e) {
+			MessageProcessing.displayErrorMessage(this, e);
 		}
-    }
+	}
 
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    	try {
-    		if(MessageProcessing.displayDialogMessage(this, 1)==0){
-    			ModelDBConnection.deleteAbiturient(((JTextField)panelID.getComponent(1)).getText());
-    			currentTM.removeRow(dataTable.getSelectedRow());
-    			dataTable.clearSelection();
-    			dataTable.updateUI();
-    			MessageProcessing.displaySuccessMessage(this, 3);
-    		}
+	private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		try {
+			if (MessageProcessing.displayDialogMessage(this, 1) == 0) {
+				ModelDBConnection.deleteAbiturient(((JTextField) panelID.getComponent(1)).getText());
+				currentTM.removeRow(dataTable.getSelectedRow());
+				dataTable.clearSelection();
+				dataTable.updateUI();
+				MessageProcessing.displaySuccessMessage(this, 3);
+			}
 		} catch (SQLException e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
-    }
+	}
 
 	private JPanel createFIOPanel(String nameLabel) {
 		JPanel panelFIO = new JPanel();
@@ -589,42 +597,43 @@ public class GeneralInfoInput extends JFrame {
 
 		return panelFIO;
 	}
-//************************************************ВРЕМЕННО
+
+	// ************************************************ВРЕМЕННО
 	private JScrollPane createCompGroupPanel() {
 		JPanel compGroupPanel = new JPanel();
 		compGroupPanel.setLayout(new BoxLayout(compGroupPanel, BoxLayout.PAGE_AXIS));
-		
+
 		JScrollPane pane = new JScrollPane(compGroupPanel);
-		
+
 		int numGroup = 3;
-		for(int i = 0; i < getAllCompGroup(numGroup).size(); i++){
+		for (int i = 0; i < getAllCompGroup(numGroup).size(); i++) {
 			compGroupPanel.add(getAllCompGroup(numGroup).get(i));
-			compGroupPanel.add(Box.createRigidArea(new Dimension(0,10)));
+			compGroupPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		}
 
 		JPanel btnPanel = new JPanel();
-		btnPanel.setLayout(new GridLayout(0,1));
+		btnPanel.setLayout(new GridLayout(0, 1));
 		JButton addNewGroup = new JButton("Добавить новую конкурсную группу");
-		addNewGroup.addActionListener(new ActionListener(){
+		addNewGroup.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				AddNewCompetGroup openCompetGroup = new AddNewCompetGroup();
 				openCompetGroup.setVisible(true);
-			}		
+			}
 		});
 		btnPanel.add(addNewGroup);
 		compGroupPanel.add(btnPanel);
-		
+
 		return pane;
 	}
-	
-	private Vector<JPanel> getAllCompGroup(int numGroup){
-		Vector<JPanel>allGroup = new Vector<JPanel>();
-		for(int i = 0; i < numGroup; i++){
+
+	private Vector<JPanel> getAllCompGroup(int numGroup) {
+		Vector<JPanel> allGroup = new Vector<JPanel>();
+		for (int i = 0; i < numGroup; i++) {
 			JPanel tmp = getMainCompGroupPanel();
 			allGroup.add(tmp);
 		}
-		
+
 		return allGroup;
 	}
 
@@ -671,9 +680,9 @@ public class GeneralInfoInput extends JFrame {
 		showInfo.setForeground(Color.BLACK);
 		showInfo.setFont(new Font("Tahoma", Font.BOLD, 20));
 		mainCompGroupPanel.add(showInfo, BorderLayout.LINE_END);
-		
+
 		JPanel allInfoPanel = new JPanel();
-//		allInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		// allInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		mainCompGroupPanel.add(allInfoPanel, BorderLayout.PAGE_END);
 		showInfo.addActionListener(new OpenCompetGroupPanelListener(allInfoPanel));
 

@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -130,9 +131,9 @@ public class ModelDBConnection {
 		return data;
 	}
 
-	// TODO test
 	public static String[] getAbiturientGeneralInfoByID(String aid) throws SQLException {
-		String query = "select aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate, id_returnReason, returnDate from Abiturient where aid = " + aid + ";";
+		String query = "select aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate, id_returnReason, returnDate from Abiturient where aid = "
+				+ aid + ";";
 		String[] abiturientInfo = null;
 		if (initConnection()) {
 			stmt = con.createStatement();
@@ -149,8 +150,10 @@ public class ModelDBConnection {
 				abiturientInfo[6] = String.valueOf(rset.getInt(7));
 				abiturientInfo[7] = rset.getDate(8).toString();
 				abiturientInfo[8] = rset.getInt(9) == 0 ? "" : String.valueOf(rset.getInt(9));
-				abiturientInfo[9] = rset.getDate(10)==null ? "" : rset.getDate(10).toString();
-				System.out.println(abiturientInfo[0] + " " +abiturientInfo[1] + " " +abiturientInfo[2] + " " +abiturientInfo[3] + " " +abiturientInfo[4] + " " +abiturientInfo[5] + " " +abiturientInfo[6] + " " +abiturientInfo[7] + " ");
+				abiturientInfo[9] = rset.getDate(10) == null ? "" : rset.getDate(10).toString();
+				System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
+						+ abiturientInfo[3] + " " + abiturientInfo[4] + " " + abiturientInfo[5] + " "
+						+ abiturientInfo[6] + " " + abiturientInfo[7] + " ");
 			}
 
 			stmt.close();
@@ -159,7 +162,6 @@ public class ModelDBConnection {
 		return abiturientInfo;
 	}
 
-	// TODO test
 	public static void insertAbiturient(String[] info) throws SQLException {
 		String aid, SName, FName, MName, birthday, birthplace, id_gender, id_nationality, email, phoneNumbers,
 				needHostel, registrationDate, returnDate, id_returnReason, needSpecConditions, is_enrolled;
@@ -217,7 +219,6 @@ public class ModelDBConnection {
 		}
 	}
 
-	// TODO test
 	public static void editAbiturient(String[] info) throws SQLException {
 
 		String aid, SName, FName, MName, birthday, birthplace, id_gender, id_nationality, email, phoneNumbers,
@@ -245,12 +246,12 @@ public class ModelDBConnection {
 			needSpecConditions = info[14];
 			is_enrolled = info[15];
 
-			query = "update Abiturient set SName = " + SName + ", FName = " + FName + ", MName = " + MName + ", Birthday = "
-					+ birthday + ", Birthplace = " + birthplace + ", id_gender = " + id_gender + ", id_nationality = "
-					+ id_nationality + ", email = " + email + ", phoneNumbers = " + phoneNumbers + ", needHostel = "
-					+ needHostel + ", registrationDate = " + registrationDate + ", returnDate = " + returnDate
-					+ ", id_returnReason = " + id_returnReason + ", needSpecConditions = " + needSpecConditions
-					+ ", is_enrolled = " + is_enrolled + " where aid = " + aid + ";";
+			query = "update Abiturient set SName = " + SName + ", FName = " + FName + ", MName = " + MName
+					+ ", Birthday = " + birthday + ", Birthplace = " + birthplace + ", id_gender = " + id_gender
+					+ ", id_nationality = " + id_nationality + ", email = " + email + ", phoneNumbers = " + phoneNumbers
+					+ ", needHostel = " + needHostel + ", registrationDate = " + registrationDate + ", returnDate = "
+					+ returnDate + ", id_returnReason = " + id_returnReason + ", needSpecConditions = "
+					+ needSpecConditions + ", is_enrolled = " + is_enrolled + " where aid = " + aid + ";";
 
 			break;
 		case 8:
@@ -263,9 +264,9 @@ public class ModelDBConnection {
 			id_nationality = info[6];
 			registrationDate = "'" + info[7] + "'";
 
-			query = "update Abiturient set SName = " + SName + ", FName = " + FName + ", MName = " + MName + ", Birthday = "
-					+ birthday + ", id_gender = " + id_gender + ", id_nationality = "
-					+ id_nationality + ", registrationDate = " + registrationDate + " where aid = " + aid + ";";
+			query = "update Abiturient set SName = " + SName + ", FName = " + FName + ", MName = " + MName
+					+ ", Birthday = " + birthday + ", id_gender = " + id_gender + ", id_nationality = " + id_nationality
+					+ ", registrationDate = " + registrationDate + " where aid = " + aid + ";";
 
 			break;
 		case 10:
@@ -296,7 +297,6 @@ public class ModelDBConnection {
 		}
 	}
 
-	// TODO test
 	public static void deleteAbiturient(String aid) throws SQLException {
 		String query = "delete from Abiturient where aid = " + aid + ";";
 		if (initConnection()) {
@@ -305,5 +305,95 @@ public class ModelDBConnection {
 
 			stmt.close();
 		}
+	}
+
+	// TODO change to String[][]?
+	// TODO insert into GUI
+	public static String[] getAllFromTableOrderedById(String table) throws SQLException {
+		String id = "id";
+		if (table.equals("Abiturient"))
+			id = "aid";
+		else if (table.equals("AbiturientIndividualAchievement") || table.equals("AbiturientPostgraduateEducation")
+				|| table.equals("AbiturientEntranceTests") || table.equals("AbiturientPassport")
+				|| table.equals("AbiturientAddress") || table.equals("AbiturientCompetitiveGroup"))
+			id = "aid_abiturient";
+		else if (table.equals("AdmissionPlan") || table.equals("Users"))
+			return getAllFromTable(table);
+
+		int count = getCount(table);
+
+		String[] data = null;
+
+		if (count > 0) {
+			try {
+				data = new String[count];
+
+				String query = "select * from " + table + " order by " + id + " ;";
+				stmt = con.createStatement();
+				rset = stmt.executeQuery(query);
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+
+				int curPos = 0;
+				while (rset.next()) {
+					data[curPos] = "";
+					for (int i = 1; i <= numberOfColumns; i++) {
+						data[curPos] = data[curPos] + rsmd.getColumnLabel(i) + " = " + rset.getObject(i).toString()
+								+ ", ";
+					}
+					System.out.println(data[curPos]);
+					curPos++;
+				}
+				stmt.close();
+				rset.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return data;
+	}
+
+	// TODO change to String[][]?
+	// TODO insert into GUI
+	public static String[] getAllFromTable(String table) throws SQLException {
+		int count = getCount(table);
+
+		String[] data = null;
+
+		if (count > 0) {
+			try {
+				data = new String[count];
+
+				String query = "select * from " + table + " ;";
+				stmt = con.createStatement();
+				rset = stmt.executeQuery(query);
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+
+				int curPos = 0;
+				while (rset.next()) {
+					data[curPos] = "";
+					for (int i = 1; i <= numberOfColumns; i++) {
+						String object = new String();
+						if (rset.getObject(i) == null)
+							object = "null";
+						else
+							object = rset.getObject(i).toString();
+						if (i != numberOfColumns)
+							object = object + ", ";
+						data[curPos] = data[curPos] + rsmd.getColumnLabel(i) + " = " + object;
+					}
+					System.out.println(data[curPos]);
+					curPos++;
+				}
+				stmt.close();
+				rset.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return data;
 	}
 }

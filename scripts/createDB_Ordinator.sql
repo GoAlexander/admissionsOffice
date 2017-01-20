@@ -1,5 +1,8 @@
 ﻿--Удаляем существующую БД
---drop database Ordinator;
+use master;
+go
+drop database Ordinator;
+go
 
 --Создаем новую БД
 create database Ordinator;
