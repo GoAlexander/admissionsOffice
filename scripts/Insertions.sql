@@ -18,6 +18,6 @@ insert into ReturnReasons values
 	(2, 'r2', null),
 	(3, 'r3', null);
 
-insert into [Ordinator].[dbo].[PassportType] values
+insert into PassportType values
 	(1, 'паспорт РФ', null),
 	(2, 'паспорт Украины', null);

@@ -1,4 +1,4 @@
-package tests;
+Ôªøpackage tests;
 
 import java.sql.SQLException;
 
@@ -11,11 +11,11 @@ public class TestBackend {
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
 		ModelDBConnection.getAllFromTableOrderedById("Gender");
 		System.out.println("--------------------------");
-		String[] data1 = { "1", "ÃÛÊÒÍÓÈ", null };
+		String[] data1 = { "1", "–ú—É–∂—Å–∫–æ–π", null };
 		ModelDBConnection.updateElementInTableById("Gender", data1);
 		ModelDBConnection.getAllFromTableOrderedById("Gender");
 		System.out.println("--------------------------");
-		String[] data2 = { "1", "∆ÂÌÒÍËÈ", null };
+		String[] data2 = { "1", "–ñ–µ–Ω—Å–∫–∏–π", null };
 		ModelDBConnection.updateElementInTableById("Gender", data2);
 		ModelDBConnection.getAllFromTableOrderedById("Gender");
 	}
