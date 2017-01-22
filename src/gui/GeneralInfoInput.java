@@ -439,7 +439,7 @@ public class GeneralInfoInput extends JFrame {
 						String[] selectedAbitGeneralInfo;
 						if (dataTable.getSelectedRow() >= 0) {
 							selectedAbitGeneralInfo = ModelDBConnection
-									.getAbiturientGeneralInfoByID(String.valueOf(dataTable.getSelectedRow() + 1));
+									.getAbiturientGeneralInfoByID(String.valueOf(Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
 						} else {
 							selectedAbitGeneralInfo = new String[10];
 							for (int i = 0; i < selectedAbitGeneralInfo.length; i++)
@@ -511,10 +511,10 @@ public class GeneralInfoInput extends JFrame {
 
 				ModelDBConnection.editAbiturient(abitBaseInfo);
 
+				int selectedRow = dataTable.getSelectedRow();
 				// Изменение таблицы
 				currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
-				dataTable.addRowSelectionInterval(Integer.valueOf(abitBaseInfo[0]) - 1,
-						Integer.valueOf(abitBaseInfo[0]) - 1);
+				dataTable.addRowSelectionInterval(selectedRow, selectedRow);
 				dataTable.getColumnModel().getColumn(0).setMaxWidth(40);
 				dataTable.updateUI();
 

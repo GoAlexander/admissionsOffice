@@ -310,16 +310,28 @@ public class ModelDBConnection {
 	// TODO insert into GUI
 	public static String[][] getAllFromTableOrderedById(String table) throws SQLException {
 		String id = "id";
-		if (table.equals("Abiturient"))
+		
+		switch(table){
+		case "Abiturient":
 			id = "aid";
-		else if (table.equals("AbiturientIndividualAchievement") || table.equals("AbiturientPostgraduateEducation")
-				|| table.equals("AbiturientEntranceTests") || table.equals("AbiturientPassport")
-				|| table.equals("AbiturientAddress") || table.equals("AbiturientCompetitiveGroup"))
+			break;
+		case "AbiturientIndividualAchievement":
+		case "AbiturientPostgraduateEducation":
+		case "AbiturientEntranceTests":
+		case "AbiturientPassport":
+		case "AbiturientAddress":
+		case "AbiturientCompetitiveGroup":
 			id = "aid_abiturient";
-		else if (table.equals("AdmissionPlan"))
+			break;
+		case "AdmissionPlan":
 			id = "specialtyCode";
-		else if (table.equals("Users"))
+			break;
+		case "Users":
 			id = "userLogin";
+			break;
+		default:
+			id = "id";
+		}
 
 		int count = getCount(table);
 
@@ -392,18 +404,28 @@ public class ModelDBConnection {
 
 	// TODO insert into GUI
 	public static void updateElementInTableById(String table, String[] data) throws SQLException {
-
 		String id = "id";
-		if (table.equals("Abiturient"))
+		switch(table){
+		case "Abiturient":
 			id = "aid";
-		else if (table.equals("AbiturientIndividualAchievement") || table.equals("AbiturientPostgraduateEducation")
-				|| table.equals("AbiturientEntranceTests") || table.equals("AbiturientPassport")
-				|| table.equals("AbiturientAddress") || table.equals("AbiturientCompetitiveGroup"))
+			break;
+		case "AbiturientIndividualAchievement":
+		case "AbiturientPostgraduateEducation":
+		case "AbiturientEntranceTests":
+		case "AbiturientPassport":
+		case "AbiturientAddress":
+		case "AbiturientCompetitiveGroup":
 			id = "aid_abiturient";
-		else if (table.equals("AdmissionPlan"))
+			break;
+		case "AdmissionPlan":
 			id = "specialtyCode";
-		else if (table.equals("Users"))
+			break;
+		case "Users":
 			id = "userLogin";
+			break;
+		default:
+			id = "id";
+		}
 
 		String query = "select * from " + table + " where " + id + " = " + data[0] + ";";
 		int numberOfColumns = 0;
