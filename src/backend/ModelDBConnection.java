@@ -307,9 +307,8 @@ public class ModelDBConnection {
 		}
 	}
 
-	// TODO change to String[][]?
 	// TODO insert into GUI
-	public static String[] getAllFromTableOrderedById(String table) throws SQLException {
+	public static String[][] getAllFromTableOrderedById(String table) throws SQLException {
 		String id = "id";
 		if (table.equals("Abiturient"))
 			id = "aid";
@@ -317,16 +316,17 @@ public class ModelDBConnection {
 				|| table.equals("AbiturientEntranceTests") || table.equals("AbiturientPassport")
 				|| table.equals("AbiturientAddress") || table.equals("AbiturientCompetitiveGroup"))
 			id = "aid_abiturient";
-		else if (table.equals("AdmissionPlan") || table.equals("Users"))
-			return getAllFromTable(table);
+		else if (table.equals("AdmissionPlan"))
+			id = "specialtyCode";
+		else if (table.equals("Users"))
+			id = "userLogin";
 
 		int count = getCount(table);
 
-		String[] data = null;
+		String[][] data = null;
 
 		if (count > 0) {
 			try {
-				data = new String[count];
 
 				String query = "select * from " + table + " order by " + id + " ;";
 				stmt = con.createStatement();
@@ -334,14 +334,14 @@ public class ModelDBConnection {
 				ResultSetMetaData rsmd = rset.getMetaData();
 				int numberOfColumns = rsmd.getColumnCount();
 
+				data = new String[count][numberOfColumns];
 				int curPos = 0;
 				while (rset.next()) {
-					data[curPos] = "";
-					for (int i = 1; i <= numberOfColumns; i++) {
-						data[curPos] = data[curPos] + rsmd.getColumnLabel(i) + " = " + rset.getObject(i).toString()
-								+ ", ";
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+						System.out.println(data[curPos][i]);
 					}
-					System.out.println(data[curPos]);
 					curPos++;
 				}
 				stmt.close();
@@ -354,16 +354,14 @@ public class ModelDBConnection {
 		return data;
 	}
 
-	// TODO change to String[][]?
 	// TODO insert into GUI
-	public static String[] getAllFromTable(String table) throws SQLException {
+	public static String[][] getAllFromTable(String table) throws SQLException {
 		int count = getCount(table);
 
-		String[] data = null;
+		String[][] data = null;
 
 		if (count > 0) {
 			try {
-				data = new String[count];
 
 				String query = "select * from " + table + " ;";
 				stmt = con.createStatement();
@@ -371,20 +369,15 @@ public class ModelDBConnection {
 				ResultSetMetaData rsmd = rset.getMetaData();
 				int numberOfColumns = rsmd.getColumnCount();
 
+				data = new String[count][numberOfColumns];
 				int curPos = 0;
 				while (rset.next()) {
-					data[curPos] = "";
-					for (int i = 1; i <= numberOfColumns; i++) {
-						String object = new String();
-						if (rset.getObject(i) == null)
-							object = "null";
-						else
-							object = rset.getObject(i).toString();
-						if (i != numberOfColumns)
-							object = object + ", ";
-						data[curPos] = data[curPos] + rsmd.getColumnLabel(i) + " = " + object;
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+						System.out.println(data[curPos][i]);
+						System.out.println(data[curPos][i]);
 					}
-					System.out.println(data[curPos]);
 					curPos++;
 				}
 				stmt.close();
@@ -395,5 +388,50 @@ public class ModelDBConnection {
 			}
 		}
 		return data;
+	}
+
+	// TODO insert into GUI
+	public static void updateElementInTableById(String table, String[] data) throws SQLException {
+
+		String id = "id";
+		if (table.equals("Abiturient"))
+			id = "aid";
+		else if (table.equals("AbiturientIndividualAchievement") || table.equals("AbiturientPostgraduateEducation")
+				|| table.equals("AbiturientEntranceTests") || table.equals("AbiturientPassport")
+				|| table.equals("AbiturientAddress") || table.equals("AbiturientCompetitiveGroup"))
+			id = "aid_abiturient";
+		else if (table.equals("AdmissionPlan"))
+			id = "specialtyCode";
+		else if (table.equals("Users"))
+			id = "userLogin";
+
+		String query = "select * from " + table + " where " + id + " = " + data[0] + ";";
+		int numberOfColumns = 0;
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			ResultSetMetaData rsmd = rset.getMetaData();
+			numberOfColumns = rsmd.getColumnCount();
+
+			query = "update " + table + " set ";
+			for (int i = 1; i < numberOfColumns; i++) {
+				if (i == numberOfColumns - 1)
+					query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'";
+				else
+					query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'" + ", ";
+			}
+			query = query + " where " + id + " = " + data[0] + ";";
+			stmt.close();
+			rset.close();
+		}
+
+		System.out.println(query);
+
+		stmt = con.createStatement();
+		stmt.executeUpdate(query);
+
+		stmt.close();
+		rset.close();
 	}
 }
