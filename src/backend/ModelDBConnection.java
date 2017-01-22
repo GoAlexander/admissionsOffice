@@ -307,6 +307,31 @@ public class ModelDBConnection {
 		}
 	}
 
+	public static String[] getNamesFromTableOrderedById(String table) {
+		try {
+			String query = "select name from " + table + " order by id";
+	
+			int i = 0, countTableRows = getCount(table);
+			String[] listElems = new String[countTableRows];
+	
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+	
+			while (rset.next()) {
+				listElems[i] = rset.getString(1);
+				i++;
+			}
+	
+			stmt.close();
+			rset.close();
+	
+			return listElems;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	// TODO insert into GUI
 	public static String[][] getAllFromTableOrderedById(String table) throws SQLException {
 		String id = "id";

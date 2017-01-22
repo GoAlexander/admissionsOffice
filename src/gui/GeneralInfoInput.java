@@ -86,10 +86,7 @@ public class GeneralInfoInput extends JFrame {
 	private JComboBox comboSexList, comboNationality, comboReturnReason, comboDocType;
 	private JDateChooser calendar;
 
-	private String[] arrSex = { "Женский", "Мужской" };
-	private String[] arrNationality = { "РФ", "Украина", "Белорусь", "Казахстан" };
-	private String[] arrReturnReason = { "r1                              ", "r2     ", "r3     " };
-	private String[] arrDocType = { "паспорт РФ", "паспорт Украина" };
+	private String[] arrSex, arrNationality, arrReturnReason, arrDocType;
 
 	private JMenuBar menuBar;
 	private JMenu directoryMenu, docMenu, reportMenu, compMenu, expMenu;
@@ -110,6 +107,11 @@ public class GeneralInfoInput extends JFrame {
 		// Временно
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
 		// ----------------------
+
+		arrSex = ModelDBConnection.getNamesFromTableOrderedById("Gender");
+		arrNationality = ModelDBConnection.getNamesFromTableOrderedById("Nationality");
+		arrReturnReason = ModelDBConnection.getNamesFromTableOrderedById("ReturnReasons");
+		arrDocType = ModelDBConnection.getNamesFromTableOrderedById("PassportType");
 
 		setTitle("General Info");
 

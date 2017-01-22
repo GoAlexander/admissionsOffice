@@ -47,16 +47,18 @@ public class AddGeneralInfo extends JFrame {
 	private Dimension dimText = new Dimension(107, 25);
 	private Dimension dimPanel = new Dimension(300, 40);
 
-	private String[] arrSex = { "Женский", "Мужской" };
-	private String[] arrNationality = { "РФ", "Украина", "Белорусь", "Казахстан" };
-	private String[] arrReturnReason = { "1                               ", "2      ", "3      " };
-	private String[] arrDocType = { "паспорт РФ", "паспорт Украина" };
+	private String[] arrSex, arrNationality, arrReturnReason, arrDocType;
 
 	private JDateChooser calendar;
 
 	public AddGeneralInfo(GUITableModel currentTM) {
+		arrSex = ModelDBConnection.getNamesFromTableOrderedById("Gender");
+		arrNationality = ModelDBConnection.getNamesFromTableOrderedById("Nationality");
+		arrReturnReason = ModelDBConnection.getNamesFromTableOrderedById("ReturnReasons");
+		arrDocType = ModelDBConnection.getNamesFromTableOrderedById("PassportType");
+
 		this.currentTM = currentTM;
-		
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
 		setLocationRelativeTo(null);

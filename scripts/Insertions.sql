@@ -1,19 +1,23 @@
-use Ordinator;
+п»їuse Ordinator;
 go
 
 insert into Nationality values
-	(1, 'РФ', null),
-	(2, 'Украина', null),
-	(3, 'Белорусь', null),
-	(4, 'Казахстан', null);
+	(1, 'Р Р¤', null),
+	(2, 'РЈРєСЂР°РёРЅР°', null),
+	(3, 'Р‘РµР»РѕСЂСѓСЃСЊ', null),
+	(4, 'РљР°Р·Р°С…СЃС‚Р°РЅ', null);
 go
 
 insert into Gender values
-	(1, 'Женский', null),
-	(2, 'Мужской', null);
+	(1, 'Р–РµРЅСЃРєРёР№', null),
+	(2, 'РњСѓР¶СЃРєРѕР№', null);
 go
 
 insert into ReturnReasons values
 	(1, 'r1', null),
 	(2, 'r2', null),
-	(3, 'r2', null);
+	(3, 'r3', null);
+
+insert into [Ordinator].[dbo].[PassportType] values
+	(1, 'РїР°СЃРїРѕСЂС‚ Р Р¤', null),
+	(2, 'РїР°СЃРїРѕСЂС‚ РЈРєСЂР°РёРЅС‹', null);
