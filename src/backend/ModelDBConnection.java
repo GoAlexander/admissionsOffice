@@ -310,21 +310,21 @@ public class ModelDBConnection {
 	public static String[] getNamesFromTableOrderedById(String table) {
 		try {
 			String query = "select name from " + table + " order by id";
-	
+
 			int i = 0, countTableRows = getCount(table);
 			String[] listElems = new String[countTableRows];
-	
+
 			stmt = con.createStatement();
 			rset = stmt.executeQuery(query);
-	
+
 			while (rset.next()) {
 				listElems[i] = rset.getString(1);
 				i++;
 			}
-	
+
 			stmt.close();
 			rset.close();
-	
+
 			return listElems;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -332,11 +332,23 @@ public class ModelDBConnection {
 		}
 	}
 
-	// TODO insert into GUI
+	/*
+	 * public static String[] getTableColumnNames(String table) throws
+	 * SQLException {
+	 * 
+	 * try { String query = "select * from " + table + " ;"; stmt =
+	 * con.createStatement(); rset = stmt.executeQuery(query); ResultSetMetaData
+	 * rsmd = rset.getMetaData(); int numberOfColumns = rsmd.getColumnCount();
+	 * String[] data = new String[numberOfColumns]; for (int i = 0; i <
+	 * numberOfColumns; i++) { data[i] = rsmd.getColumnLabel(i+1); }
+	 * stmt.close(); rset.close(); return data; } catch (Exception e) {
+	 * e.printStackTrace(); return null; } }
+	 */
+
 	public static String[][] getAllFromTableOrderedById(String table) throws SQLException {
 		String id = "id";
-		
-		switch(table){
+
+		switch (table) {
 		case "Abiturient":
 			id = "aid";
 			break;
@@ -413,7 +425,6 @@ public class ModelDBConnection {
 						if (rset.getObject(i + 1) != null)
 							data[curPos][i] = rset.getObject(i + 1).toString();
 						System.out.println(data[curPos][i]);
-						System.out.println(data[curPos][i]);
 					}
 					curPos++;
 				}
@@ -427,10 +438,9 @@ public class ModelDBConnection {
 		return data;
 	}
 
-	// TODO insert into GUI
 	public static void updateElementInTableById(String table, String[] data) throws SQLException {
 		String id = "id";
-		switch(table){
+		switch (table) {
 		case "Abiturient":
 			id = "aid";
 			break;
