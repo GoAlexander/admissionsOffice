@@ -1,6 +1,6 @@
+package gui;
 
 import java.util.ArrayList;
-
 import javax.swing.JTable;
 
 class Cell {
