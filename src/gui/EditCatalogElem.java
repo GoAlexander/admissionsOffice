@@ -27,7 +27,7 @@ public class EditCatalogElem extends JFrame {
 
 	private JButton addBtn, editBtn, saveBtn, deleteBtn;
 
-	public EditCatalogElem(String table) throws SQLException {
+	public EditCatalogElem(String table, String title) throws SQLException {
 
 		switch (table) {
 		case "EntranceTest":
@@ -45,7 +45,7 @@ public class EditCatalogElem extends JFrame {
 			break;
 		}
 
-		setTitle("Редактирование элементов справочника");
+		setTitle("Редактирование элементов справочника: " + title);
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
@@ -166,7 +166,7 @@ public class EditCatalogElem extends JFrame {
 			public void run() {
 				try {
 					ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
-					EditCatalogElem window = new EditCatalogElem("Gender");
+					EditCatalogElem window = new EditCatalogElem("Gender", "Пол");
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
