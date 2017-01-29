@@ -899,8 +899,9 @@ public class GeneralInfoInput extends JFrame {
 		JLabel regionLabel = new JLabel("Регион");
 		adressPanel.add(regionLabel);
 
-		String[] arrRegionType = { "                    1", "2", "3" };
+		String[] arrRegionType = ModelDBConnection.getNamesFromTableOrderedById("Region");
 		JComboBox comboRegionType = new JComboBox(arrRegionType);
+		comboRegionType.setSelectedIndex(-1);
 		adressPanel.add(comboRegionType);
 
 		contPanel.add(adressPanel);
@@ -910,8 +911,9 @@ public class GeneralInfoInput extends JFrame {
 		typePunktPanel.add(Box.createRigidArea(dimStartRigidArea));
 		JLabel typePunktLabel = new JLabel("Тип населенного пункта");
 		typePunktPanel.add(typePunktLabel);
-		String[] arrPunktType = { "                    1", "2", "3" };
+		String[] arrPunktType = ModelDBConnection.getNamesFromTableOrderedById("LocalityType");
 		JComboBox comboPunktType = new JComboBox(arrPunktType);
+		comboPunktType.setSelectedIndex(-1);
 		typePunktPanel.add(comboPunktType);
 
 		contPanel.add(typePunktPanel);
