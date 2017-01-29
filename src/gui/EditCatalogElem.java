@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import backend.MessageProcessing;
 import backend.ModelDBConnection;
 
 import java.awt.event.ActionListener;
@@ -24,7 +25,7 @@ public class EditCatalogElem extends JFrame {
 	private GUITableModel currentTM = new GUITableModel();
 	private String[] columnNames = { "id", "Наименование", "Код ФИС" };
 
-	private JButton editBtn, saveBtn;
+	private JButton addBtn, editBtn, saveBtn, deleteBtn;
 
 	public EditCatalogElem(String table) throws SQLException {
 
@@ -68,16 +69,34 @@ public class EditCatalogElem extends JFrame {
 		// dataTable.getColumnModel().getColumn(0).setMaxWidth(50);
 		mainPanel.add(scrPane, BorderLayout.CENTER);
 
+		addBtn = new JButton("Добавить");
 		editBtn = new JButton("Редактировать");
 		saveBtn = new JButton("Сохранить");
+		deleteBtn = new JButton("Удалить");
 		saveBtn.setEnabled(false);
+		deleteBtn.setEnabled(false);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+		addBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				currentTM.addRow(new String[columnNames.length]);
+				dataTable.setEnabled(true);
+				addBtn.setEnabled(false);
+				editBtn.setEnabled(false);
+				saveBtn.setEnabled(true);
+			}
+		});
+		buttonPanel.add(addBtn);
+
 		editBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dataTable.setEnabled(true);
+				addBtn.setEnabled(false);
+				editBtn.setEnabled(false);
 				saveBtn.setEnabled(true);
+				deleteBtn.setEnabled(true);
 			}
 		});
 		buttonPanel.add(editBtn);
@@ -85,7 +104,10 @@ public class EditCatalogElem extends JFrame {
 		saveBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dataTable.setEnabled(false);
+				addBtn.setEnabled(true);
+				editBtn.setEnabled(true);
 				saveBtn.setEnabled(false);
+				deleteBtn.setEnabled(false);
 				if (dataTable.isEditing())
 					dataTable.getCellEditor().stopCellEditing();
 				dataTable.clearSelection();
@@ -95,6 +117,15 @@ public class EditCatalogElem extends JFrame {
 		});
 		buttonPanel.add(saveBtn);
 
+		deleteBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteButtonActionPerformed(e, table);
+				currentTM.removeRow(dataTable.getSelectedRow());
+				currentTM.fireTableDataChanged();
+			}
+		});
+		buttonPanel.add(deleteBtn);
+		
 		mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
 		setPreferredSize(new Dimension(850, 600));
@@ -115,13 +146,18 @@ public class EditCatalogElem extends JFrame {
 				}
 				ModelDBConnection.updateElementInTableById(table, rowData);
 			}
-			String titleMessage = "Результат редактирования справочника";
-			String message = "Данные успешно изменены!";
-			JOptionPane.showMessageDialog(this, message, titleMessage, JOptionPane.INFORMATION_MESSAGE);
+			MessageProcessing.displaySuccessMessage(this, 4);
 		} catch (SQLException e1) {
-			String titleMessage = "Результат редактирования справочника";
-			String message = "Справочник не может быть отредактирован!";
-			JOptionPane.showMessageDialog(this, message, titleMessage, JOptionPane.ERROR_MESSAGE);
+			MessageProcessing.displayErrorMessage(this, 2);
+		}
+	}
+
+	private void deleteButtonActionPerformed(ActionEvent e, String table) {
+		try {
+			ModelDBConnection.deleteElementInTableById(table, (String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
+			MessageProcessing.displaySuccessMessage(this, 5);
+		} catch (SQLException e1) {
+			MessageProcessing.displayErrorMessage(this, 3);
 		}
 	}
 

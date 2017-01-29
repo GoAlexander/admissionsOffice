@@ -21,6 +21,14 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат удаления абитуриента";
 			message = "Абитуриент успешно удален из базы!";
 			break;
+		case 4:
+			titleMessage = "Результат редактирования справочника";
+			message = "Данные успешно изменены!";
+			break;
+		case 5:
+			titleMessage = "Результат редактирования справочника";
+			message = "Данные успешно удалены!";
+			break;
 		}
 
         JOptionPane.showMessageDialog(parent,
@@ -43,6 +51,14 @@ public abstract class MessageProcessing {
 		case 1:
 			titleMessage = "Результат добавления абитуриента";
 			message = "Абитуриент не может быть добавлен!";
+			break;
+		case 2:
+			titleMessage = "Результат редактирования справочника";
+			message = "Справочник не может быть отредактирован!";
+			break;
+		case 3:
+			titleMessage = "Результат редактирования справочника";
+			message = "Элемент не может быть удален из справочника!";
 			break;
 		default:
 			titleMessage = "Неизвестная ошибка";

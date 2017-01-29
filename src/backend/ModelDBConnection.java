@@ -471,18 +471,67 @@ public class ModelDBConnection {
 			ResultSetMetaData rsmd = rset.getMetaData();
 			numberOfColumns = rsmd.getColumnCount();
 
-			query = "update " + table + " set ";
-			for (int i = 1; i < numberOfColumns; i++) {
-				if (i == numberOfColumns - 1)
-					query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'";
-				else
-					query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'" + ", ";
+			int countStrings = 0;
+			while (rset.next()) {
+				countStrings++;
 			}
-			query = query + " where " + id + " = " + data[0] + ";";
+			
+			if(countStrings > 0) {
+				query = "update " + table + " set ";
+				for (int i = 1; i < numberOfColumns; i++) {
+					if (i == numberOfColumns - 1)
+						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'";
+					else
+						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'" + ", ";
+				}
+				query = query + " where " + id + " = " + data[0] + ";";
+			} else {
+				query = "insert into " + table + " values (" + data[0] + ", ";
+				for (int i = 1; i < numberOfColumns; i++) {
+					if (i == numberOfColumns - 1)
+						query = query + "'" + data[i] + "')";
+					else
+						query = query + "'" + data[i] + "'" + ", ";
+				}
+			}
 			stmt.close();
 			rset.close();
 		}
 
+		System.out.println(query);
+
+		stmt = con.createStatement();
+		stmt.executeUpdate(query);
+
+		stmt.close();
+		rset.close();
+	}
+
+	public static void deleteElementInTableById(String table, String data) throws SQLException {
+		String id = "id";
+		switch (table) {
+		case "Abiturient":
+			id = "aid";
+			break;
+		case "AbiturientIndividualAchievement":
+		case "AbiturientPostgraduateEducation":
+		case "AbiturientEntranceTests":
+		case "AbiturientPassport":
+		case "AbiturientAddress":
+		case "AbiturientCompetitiveGroup":
+			id = "aid_abiturient";
+			break;
+		case "AdmissionPlan":
+			id = "specialtyCode";
+			break;
+		case "Users":
+			id = "userLogin";
+			break;
+		default:
+			id = "id";
+		}
+
+		String query = "delete from " + table + " where " + id + " = " + data + ";";
 		System.out.println(query);
 
 		stmt = con.createStatement();
