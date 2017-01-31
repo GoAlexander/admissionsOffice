@@ -2,14 +2,11 @@
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 

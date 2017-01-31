@@ -1,4 +1,4 @@
-﻿package gui;
+﻿package tab_catalogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -6,12 +6,12 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
+import general_classes.GUITableModel;
 
 import java.awt.event.ActionListener;
 import java.sql.SQLException;

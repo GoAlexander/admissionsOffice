@@ -2,7 +2,6 @@
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -19,14 +18,11 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.EventObject;
 import java.util.Vector;
 
-import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -40,50 +36,47 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
 import com.toedter.calendar.JDateChooser;
 
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
+import tab_education.EducationPanel;
+import tab_entrance_tests.EntranceTestsPanel;
+import tab_passport.PassportPanel;
+import tab_address_contacts.AddressContactsPanel;
+import tab_catalogs.EditMenuListener;
+import tab_competitive_groups.AddNewCompetitiveGroup;
+import tab_competitive_groups.CompetitiveGroupPanelListener;
+import tab_competitive_groups.CompetitiveGroupsPanel;
+import tab_competitive_groups.SimpleCompetitiveGroupPanel;
+import general_classes.GUITableModel;
+import tab_achievements.IndividualAchievementsPanel;
 
 public class GeneralInfoInput extends JFrame {
 
 	private JPanel mainPanel, centralPanel, GIPanel, panelSurname, panelName, panelPatronymic, panelID, panelSex,
-			panelDB, panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn, tablePanel, btnTablePanel,
-			passportPanel, entranceTestPanel, EntranceTestTablePanel;
+			panelDB, panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn, tablePanel, btnTablePanel;
 	private Dimension dimPanel = new Dimension(300, 40);
 	private Dimension dimText = new Dimension(170, 25);
-	private Dimension dimTextDigitInfo = new Dimension(139, 25);
 	private Dimension dimRigidArea = new Dimension(10, 0);
-	private Dimension dimStartRigidArea = new Dimension(50, 0);
-	private JTextField textID, textDateReturn, textSeria, textNum, textDate, textIssuedBy, textplaceBirth;
+	private JTextField textID, textDateReturn;
 	private GridBagConstraints gbc;
 
 	private String[] columnNames = { "№", "Фамилия", "Имя", "Отчество" };
-	private String[] entranceTestColumnNames = { "Наименование", "Группа", "Блок испытаний", "Дата испытания", "Балл" };
-	private String[] individAchivColumnNames = { "Наименование", "Балл", "Подтверждающий документ" };
 	private GUITableModel currentTM = new GUITableModel();
-	private GUITableModel entranceTestTM = new GUITableModel();
-	private GUITableModel individAchivTM = new GUITableModel();
-	private JTable dataTable, entranceTestTable, indAchivTable;
+	private JTable dataTable;
 	private JCheckBox checkBackDoc;
 	private JTabbedPane userInfoTPane;
 
-	private JComboBox comboSexList, comboNationality, comboReturnReason, comboDocType;
+	private JComboBox comboSexList, comboNationality, comboReturnReason;
 	private JDateChooser calendar;
 
-	private String[] arrSex, arrNationality, arrReturnReason, arrDocType;
+	private String[] arrSex, arrNationality, arrReturnReason;
 
 	private JMenuBar menuBar;
 	private JMenu directoryMenu, docMenu, reportMenu, compMenu, expMenu;
@@ -108,7 +101,7 @@ public class GeneralInfoInput extends JFrame {
 		arrSex = ModelDBConnection.getNamesFromTableOrderedById("Gender");
 		arrNationality = ModelDBConnection.getNamesFromTableOrderedById("Nationality");
 		arrReturnReason = ModelDBConnection.getNamesFromTableOrderedById("ReturnReasons");
-		arrDocType = ModelDBConnection.getNamesFromTableOrderedById("PassportType");
+		ModelDBConnection.getNamesFromTableOrderedById("PassportType");
 
 		setTitle("General Info");
 
@@ -430,12 +423,12 @@ public class GeneralInfoInput extends JFrame {
 		panelInfoBackDoc.add(checkBackDoc, gbc2);
 
 		userInfoTPane = new JTabbedPane();
-		JScrollPane compGroupPanel = createCompGroupPanel();
-		JPanel entranceTestpPanel = createEntranceTestPanel();
-		JPanel indAchivPanel = createIndAchivPanel();
-		JPanel educPanel = createEducPanel();
-		JPanel contPanel = createContPanel();
-		JPanel passportPanel = createPassportPanel();
+		JPanel compGroupPanel = new CompetitiveGroupsPanel("aaa");
+		JPanel entranceTestpPanel = new EntranceTestsPanel();
+		JPanel indAchivPanel = new IndividualAchievementsPanel();
+		JPanel educPanel = new EducationPanel();
+		JPanel contPanel = new AddressContactsPanel();
+		JPanel passportPanel = new PassportPanel();
 
 		userInfoTPane.add("Конк-ные группы", compGroupPanel);
 		userInfoTPane.add("Вступ-ные испытания", entranceTestpPanel);
@@ -443,7 +436,7 @@ public class GeneralInfoInput extends JFrame {
 		userInfoTPane.add("Образование", educPanel);
 		userInfoTPane.add("Адрес и контакты", contPanel);
 		userInfoTPane.add("Паспорт", passportPanel);
-		// userInfoTPane.setPreferredSize(new Dimension(300, 250));
+		userInfoTPane.setPreferredSize(new Dimension(300, 375));
 
 		centralPanel.add(userInfoTPane);
 
@@ -614,586 +607,6 @@ public class GeneralInfoInput extends JFrame {
 		panelFIO.add(textFIO);
 
 		return panelFIO;
-	}
-
-	// ************************************************ВРЕМЕННО
-	private JScrollPane createCompGroupPanel() {
-		JPanel compGroupPanel = new JPanel();
-		compGroupPanel.setLayout(new BoxLayout(compGroupPanel, BoxLayout.PAGE_AXIS));
-
-		JScrollPane pane = new JScrollPane(compGroupPanel);
-
-		int numGroup = 3;
-		for (int i = 0; i < getAllCompGroup(numGroup).size(); i++) {
-			compGroupPanel.add(getAllCompGroup(numGroup).get(i));
-			compGroupPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		}
-
-		JPanel btnPanel = new JPanel();
-		btnPanel.setLayout(new GridLayout(0, 1));
-		JButton addNewGroup = new JButton("Добавить новую конкурсную группу");
-		addNewGroup.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				AddNewCompetGroup openCompetGroup = new AddNewCompetGroup();
-				openCompetGroup.setVisible(true);
-			}
-		});
-		btnPanel.add(addNewGroup);
-		compGroupPanel.add(btnPanel);
-
-		return pane;
-	}
-
-	private Vector<JPanel> getAllCompGroup(int numGroup) {
-		Vector<JPanel> allGroup = new Vector<JPanel>();
-		for (int i = 0; i < numGroup; i++) {
-			JPanel tmp = getMainCompGroupPanel();
-			allGroup.add(tmp);
-		}
-
-		return allGroup;
-	}
-
-	private JPanel getMainCompGroupPanel() {
-		JPanel mainCompGroupPanel = new JPanel();
-		mainCompGroupPanel.setLayout(new BorderLayout());
-		mainCompGroupPanel.setBorder(BorderFactory.createEtchedBorder());
-
-		JPanel compGroupPanel = new JPanel();
-		compGroupPanel.setLayout(new BoxLayout(compGroupPanel, BoxLayout.PAGE_AXIS));
-		mainCompGroupPanel.add(compGroupPanel, BorderLayout.CENTER);
-
-		JPanel dirSpecPanel = new JPanel();
-		dirSpecPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel dirLabel = new JLabel("Направление");
-		dirSpecPanel.add(dirLabel);
-		JTextField textDir = new JTextField();
-		textDir.setPreferredSize(dimText);
-		dirSpecPanel.add(textDir);
-		dirSpecPanel.add(Box.createRigidArea(dimRigidArea));
-		JLabel specLabel = new JLabel("Специальность");
-		dirSpecPanel.add(specLabel);
-		JTextField textSpec = new JTextField();
-		textSpec.setPreferredSize(dimText);
-		dirSpecPanel.add(textSpec);
-		compGroupPanel.add(dirSpecPanel);
-
-		JPanel groupBallPanel = new JPanel();
-		groupBallPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel groupLabel = new JLabel("Конкурсная группа");
-		groupBallPanel.add(groupLabel);
-		JTextField textGroup = new JTextField();
-		textGroup.setPreferredSize(dimText);
-		groupBallPanel.add(textGroup);
-		groupBallPanel.add(Box.createRigidArea(dimRigidArea));
-		JLabel ballLabel = new JLabel("Конкурсный балл");
-		groupBallPanel.add(ballLabel);
-		JTextField textBall = new JTextField();
-		textBall.setPreferredSize(dimText);
-		groupBallPanel.add(textBall);
-		compGroupPanel.add(groupBallPanel);
-
-		JButton showInfo = new JButton("+");
-		showInfo.setForeground(Color.BLACK);
-		showInfo.setFont(new Font("Tahoma", Font.BOLD, 20));
-		mainCompGroupPanel.add(showInfo, BorderLayout.LINE_END);
-
-		JPanel allInfoPanel = new JPanel();
-		// allInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		mainCompGroupPanel.add(allInfoPanel, BorderLayout.PAGE_END);
-		showInfo.addActionListener(new OpenCompetGroupPanelListener(allInfoPanel));
-
-		return mainCompGroupPanel;
-	}
-
-	private JPanel createEducPanel() {
-		JPanel educPanel = new JPanel();
-		educPanel.setLayout(new BoxLayout(educPanel, BoxLayout.Y_AXIS));
-
-		JPanel highEducPanel = new JPanel();
-		highEducPanel = createAddEducPanel("Высшее образование");
-		educPanel.add(highEducPanel);
-
-		JPanel afterDiplEducPanel = new JPanel();
-		afterDiplEducPanel = createAddEducPanel("Последипломное образование");
-		educPanel.add(afterDiplEducPanel);
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton editBtn = new JButton("Редактировать");
-		buttonPanel.add(editBtn);
-		JButton saveBtn = new JButton("Сохранить");
-		buttonPanel.add(saveBtn);
-		educPanel.add(buttonPanel);
-
-		return educPanel;
-	}
-
-	private JPanel createAddEducPanel(String name) {
-		JPanel addEducPanel = new JPanel();
-		addEducPanel.setBorder(new TitledBorder(null, name, TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		addEducPanel.setLayout(new BoxLayout(addEducPanel, BoxLayout.Y_AXIS));
-
-		JPanel digitInfoEducPanel = new JPanel();
-		digitInfoEducPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		digitInfoEducPanel.add(Box.createRigidArea(dimStartRigidArea));
-
-		JLabel seriaLabel = new JLabel("Серия");
-		digitInfoEducPanel.add(seriaLabel);
-		JTextField textSeria = new JTextField();
-		textSeria.setPreferredSize(dimTextDigitInfo);
-		digitInfoEducPanel.add(textSeria);
-		digitInfoEducPanel.add(Box.createRigidArea(dimRigidArea));
-		JLabel numLabel = new JLabel("Номер");
-		digitInfoEducPanel.add(numLabel);
-		JTextField textNum = new JTextField();
-		textNum.setPreferredSize(dimTextDigitInfo);
-		digitInfoEducPanel.add(textNum);
-		digitInfoEducPanel.add(Box.createRigidArea(dimRigidArea));
-		JLabel yearLabel = new JLabel("Год окончания");
-		digitInfoEducPanel.add(yearLabel);
-		JTextField textYear = new JTextField();
-		textYear.setPreferredSize(dimTextDigitInfo);
-		digitInfoEducPanel.add(textYear);
-
-		addEducPanel.add(digitInfoEducPanel);
-
-		JPanel specialityEducPanel = new JPanel();
-		specialityEducPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		specialityEducPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel specialityLabel = new JLabel("Специальность");
-		specialityEducPanel.add(specialityLabel);
-		JTextField TextSpeciality = new JTextField();
-		TextSpeciality.setPreferredSize(new Dimension(538, 25));
-		specialityEducPanel.add(TextSpeciality);
-		addEducPanel.add(specialityEducPanel);
-
-		JPanel issuedByEducPanel = new JPanel();
-		issuedByEducPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		issuedByEducPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel issuedByLabel = new JLabel("Кем выдан");
-		issuedByEducPanel.add(issuedByLabel);
-		JTextArea textIssuedBy = new JTextArea(2, 51);
-		JScrollPane paneIssuedBy = new JScrollPane(textIssuedBy);
-		textIssuedBy.setLineWrap(true);
-		issuedByEducPanel.add(paneIssuedBy);
-		addEducPanel.add(issuedByEducPanel);
-
-		return addEducPanel;
-	}
-
-	private JPanel createEntranceTestPanel() {
-		entranceTestPanel = new JPanel();
-		entranceTestPanel.setLayout(new BorderLayout());
-
-		EntranceTestTablePanel = new JPanel();
-		entranceTestTable = new JTable(entranceTestTM);
-		entranceTestTM.setDataVector(null, entranceTestColumnNames);
-		JScrollPane scrPane = new JScrollPane(entranceTestTable);
-		scrPane.setPreferredSize(new Dimension(300, 0));
-		entranceTestTable.setMaximumSize(new Dimension(100, 100));
-		entranceTestTable.setRowHeight(25);
-		entranceTestPanel.add(scrPane, BorderLayout.CENTER);
-		// ***test data
-		entranceTestTM.setDataVector(new Object[][] { { "1", "123", "123", "123", "123" },
-				{ "2", "123", "123", "123", "123" }, { "3", "123", "123", "123", "123" }, }, entranceTestColumnNames);
-
-		String[] nameEntranceTest = { "n1", "n2", "n3" };
-		createCheckboxTable(entranceTestTable, 0, nameEntranceTest);
-
-		String[] groupEntranceTest = { "gr1", "gr2", "gr3" };
-		createCheckboxTable(entranceTestTable, 1, groupEntranceTest);
-
-		String[] blockEntranceTest = { "bl1", "bl2", "bl3" };
-		createCheckboxTable(entranceTestTable, 2, blockEntranceTest);
-
-		JPanel butPanel = new JPanel();
-		butPanel.setLayout(new BoxLayout(butPanel, BoxLayout.PAGE_AXIS));
-
-		JCheckBox specialCond = new JCheckBox("Нуждается в специальных условиях");
-		specialCond.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		butPanel.add(specialCond);
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton editBtn = new JButton("Редактировать");
-		buttonPanel.add(editBtn);
-		JButton saveBtn = new JButton("Сохранить");
-		buttonPanel.add(saveBtn);
-		buttonPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-		butPanel.add(buttonPanel);
-		entranceTestPanel.add(butPanel, BorderLayout.PAGE_END);
-
-		return entranceTestPanel;
-	}
-
-	private JPanel createIndAchivPanel() {
-		JPanel indAchivPanel = new JPanel();
-		indAchivPanel.setLayout(new BorderLayout());
-
-		// JPanel indAchivTablePanel = new JPanel();
-		indAchivTable = new JTable(individAchivTM);
-		individAchivTM.setDataVector(null, individAchivColumnNames);
-
-		JScrollPane scrPane = new JScrollPane(indAchivTable);
-		scrPane.setPreferredSize(new Dimension(300, 0));
-		indAchivTable.setMaximumSize(new Dimension(100, 100));
-		indAchivPanel.add(scrPane, BorderLayout.CENTER);
-		indAchivTable.setRowHeight(37);
-		// ***test data
-
-		individAchivTM.setDataVector(new Object[][] { { "1", "123", "123", "123", "123" },
-				{ "2", "123", "123", "123", "123" }, { "3", "123", "123", "123", "123" }, }, individAchivColumnNames);
-
-		String[] nameIndAchivTest = { "n1", "n2", "n3" };
-		createCheckboxTable(indAchivTable, 0, nameIndAchivTest);
-
-		EditWatchRenderer renderer = new EditWatchRenderer();
-		indAchivTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
-		indAchivTable.getColumnModel().getColumn(2).setCellEditor(new AcceptRejectEditor());
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-		JPanel longButtonPanel = new JPanel();
-		longButtonPanel.setLayout(new GridLayout(0, 1));
-		JButton addNewAchivBtn = new JButton("Добавить новое достижение");
-		longButtonPanel.add(addNewAchivBtn);
-
-		Dimension minSize = new Dimension(5, 10);
-		Dimension prefSize = new Dimension(5, 10);
-		Dimension maxSize = new Dimension(Short.MAX_VALUE, 100);
-
-		buttonPanel.add(new Box.Filler(minSize, prefSize, maxSize));
-		buttonPanel.add(longButtonPanel);
-
-		buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-		JPanel buttonEditSavePanel = new JPanel();
-		buttonEditSavePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton editIndAchivButton = new JButton("Редактировать");
-		buttonEditSavePanel.add(editIndAchivButton);
-		JButton saveIndAchivButton = new JButton("Сохранить");
-		buttonEditSavePanel.add(saveIndAchivButton);
-		buttonPanel.add(buttonEditSavePanel);
-
-		indAchivPanel.add(buttonPanel, BorderLayout.PAGE_END);
-
-		return indAchivPanel;
-	}
-
-	private JPanel createContPanel() {
-		JPanel contPanel = new JPanel();
-		contPanel.setLayout(new BoxLayout(contPanel, BoxLayout.PAGE_AXIS));
-
-		JPanel adressPanel = new JPanel();
-		adressPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		adressPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel indexLabel = new JLabel("Индекс");
-		adressPanel.add(indexLabel);
-		JTextField textIndex = new JTextField();
-		textIndex.setPreferredSize(dimTextDigitInfo);
-		adressPanel.add(textIndex);
-		adressPanel.add(Box.createRigidArea(dimRigidArea));
-		JLabel regionLabel = new JLabel("Регион");
-		adressPanel.add(regionLabel);
-
-		String[] arrRegionType = ModelDBConnection.getNamesFromTableOrderedById("Region");
-		JComboBox comboRegionType = new JComboBox(arrRegionType);
-		comboRegionType.setSelectedIndex(-1);
-		adressPanel.add(comboRegionType);
-
-		contPanel.add(adressPanel);
-
-		JPanel typePunktPanel = new JPanel();
-		typePunktPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		typePunktPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel typePunktLabel = new JLabel("Тип населенного пункта");
-		typePunktPanel.add(typePunktLabel);
-		String[] arrPunktType = ModelDBConnection.getNamesFromTableOrderedById("LocalityType");
-		JComboBox comboPunktType = new JComboBox(arrPunktType);
-		comboPunktType.setSelectedIndex(-1);
-		typePunktPanel.add(comboPunktType);
-
-		contPanel.add(typePunktPanel);
-
-		JPanel adressLivingPanel = new JPanel();
-		adressLivingPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		adressLivingPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel adressLivingLabel = new JLabel("Адрес");
-		adressLivingPanel.add(adressLivingLabel);
-		JTextArea textAdressLiving = new JTextArea(2, 51);
-		JScrollPane paneIssuedBy = new JScrollPane(textAdressLiving);
-		textAdressLiving.setLineWrap(true);
-		adressLivingPanel.add(paneIssuedBy);
-
-		contPanel.add(adressLivingPanel);
-
-		JPanel contInfoPanel = new JPanel();
-		contInfoPanel.setLayout(new BoxLayout(contInfoPanel, BoxLayout.PAGE_AXIS));
-		contInfoPanel.setBorder(
-				new TitledBorder(null, "Контактная информация", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-
-		JPanel phonePanel = new JPanel();
-		phonePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		phonePanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel phoneLabel = new JLabel("Телефон");
-		phonePanel.add(phoneLabel);
-		JTextField textPhone = new JTextField();
-		textPhone.setPreferredSize(new Dimension(545, 25));
-		phonePanel.add(textPhone);
-		contInfoPanel.add(phonePanel);
-
-		JPanel emailPanel = new JPanel();
-		emailPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		emailPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel emailLabel = new JLabel("e-mail");
-		emailPanel.add(emailLabel);
-		JTextField textEmail = new JTextField();
-		textEmail.setPreferredSize(new Dimension(565, 25));
-		emailPanel.add(textEmail);
-		contInfoPanel.add(emailPanel);
-
-		contPanel.add(contInfoPanel);
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton editBtn = new JButton("Редактировать");
-		buttonPanel.add(editBtn);
-		JButton saveBtn = new JButton("Сохранить");
-		buttonPanel.add(saveBtn);
-		contPanel.add(buttonPanel);
-
-		return contPanel;
-	}
-
-	private JPanel createPassportPanel() {
-		passportPanel = new JPanel();
-		passportPanel.setLayout(new BoxLayout(passportPanel, BoxLayout.PAGE_AXIS));
-
-		JPanel docTypePanel = new JPanel();
-		docTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		docTypePanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel docTypeLabel = new JLabel("Тип документа");
-		comboDocType = new JComboBox(arrDocType);
-		docTypePanel.add(docTypeLabel);
-		docTypePanel.add(comboDocType);
-		passportPanel.add(docTypePanel);
-
-		JPanel passportDataPanel = new JPanel();
-		passportDataPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		passportDataPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel seriaLabel = new JLabel("Серия ");
-		passportDataPanel.add(seriaLabel);
-		textSeria = new JTextField();
-		textSeria.setPreferredSize(dimTextDigitInfo);
-		passportDataPanel.add(textSeria);
-
-		passportDataPanel.add(Box.createRigidArea(dimRigidArea));
-
-		JLabel numLabel = new JLabel("Номер ");
-		passportDataPanel.add(numLabel);
-		textNum = new JTextField();
-		textNum.setPreferredSize(dimTextDigitInfo);
-		passportDataPanel.add(textNum);
-
-		passportDataPanel.add(Box.createRigidArea(dimRigidArea));
-
-		JLabel dateLabel = new JLabel("Дата выдачи ");
-		passportDataPanel.add(dateLabel);
-		textDate = new JTextField();
-		textDate.setPreferredSize(dimTextDigitInfo);
-		passportDataPanel.add(textDate);
-		passportPanel.add(passportDataPanel);
-
-		JPanel issuedByPanel = new JPanel();
-		issuedByPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		issuedByPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel issuedByLabel = new JLabel("Кем выдан");
-		issuedByPanel.add(issuedByLabel);
-		JTextArea textIssuedBy = new JTextArea(2, 51);
-		JScrollPane paneIssuedBy = new JScrollPane(textIssuedBy);
-		textIssuedBy.setLineWrap(true);
-		issuedByPanel.add(paneIssuedBy);
-		passportPanel.add(issuedByPanel);
-
-		JPanel placeBirthPanel = new JPanel();
-		placeBirthPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		placeBirthPanel.add(Box.createRigidArea(dimStartRigidArea));
-		JLabel placeBirthLabel = new JLabel("Место рождения");
-		placeBirthPanel.add(placeBirthLabel);
-		textplaceBirth = new JTextField();
-		textplaceBirth.setPreferredSize(new Dimension(532, 25));
-		placeBirthPanel.add(textplaceBirth);
-		passportPanel.add(placeBirthPanel);
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton editPassportButton = new JButton("Редактировать");
-		buttonPanel.add(editPassportButton);
-		JButton savePassportButton = new JButton("Сохранить");
-		buttonPanel.add(savePassportButton);
-		passportPanel.add(buttonPanel);
-
-		return passportPanel;
-	}
-
-	private void createCheckboxTable(JTable table, int numColumn, String[] dataCheck) {
-		TableColumn tmpColumn = table.getColumnModel().getColumn(numColumn);
-		JComboBox<String> comboBox = new JComboBox<String>(dataCheck);
-
-		DefaultCellEditor defaultCellEditor = new DefaultCellEditor(comboBox);
-		tmpColumn.setCellEditor(defaultCellEditor);
-		tmpColumn.setCellRenderer(new CheckBoxCellRenderer(comboBox));
-	}
-
-	class CheckBoxCellRenderer implements TableCellRenderer {
-		JComboBox combo;
-
-		public CheckBoxCellRenderer(JComboBox comboBox) {
-			this.combo = new JComboBox();
-			for (int i = 0; i < comboBox.getItemCount(); i++) {
-				combo.addItem(comboBox.getItemAt(i));
-			}
-		}
-
-		public Component getTableCellRendererComponent(JTable jtable, Object value, boolean isSelected,
-				boolean hasFocus, int row, int column) {
-			combo.setSelectedItem(value);
-			return combo;
-		}
-	}
-
-	public class EditWatchButtonPane extends JPanel {
-
-		private JButton editBt;
-		private JButton watchBt;
-		private String state;
-
-		public EditWatchButtonPane() {
-			setLayout(new FlowLayout());
-			editBt = new JButton("Редактировать");
-			editBt.setActionCommand("Редактировать");
-			watchBt = new JButton("Просмотреть");
-			watchBt.setActionCommand("Просмотреть");
-
-			add(editBt);
-			add(watchBt);
-
-			ActionListener listenerWatch = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					WatchConfirmingDoc window = new WatchConfirmingDoc();
-					window.setVisible(true);
-				}
-			};
-
-			editBt.addActionListener(listenerWatch);
-			watchBt.addActionListener(listenerWatch);
-		}
-
-		public void addActionListener(ActionListener listener) {
-			editBt.addActionListener(listener);
-			watchBt.addActionListener(listener);
-		}
-
-		public String getState() {
-			return state;
-		}
-	}
-
-	public class EditWatchRenderer extends DefaultTableCellRenderer {
-
-		private EditWatchButtonPane acceptRejectPane;
-
-		public EditWatchRenderer() {
-			acceptRejectPane = new EditWatchButtonPane();
-		}
-
-		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-				int row, int column) {
-			if (isSelected) {
-				acceptRejectPane.setBackground(table.getSelectionBackground());
-			} else {
-				acceptRejectPane.setBackground(table.getBackground());
-			}
-			return acceptRejectPane;
-		}
-	}
-
-	public class AcceptRejectEditor extends AbstractCellEditor implements TableCellEditor {
-
-		private EditWatchButtonPane acceptRejectPane;
-
-		public AcceptRejectEditor() {
-			acceptRejectPane = new EditWatchButtonPane();
-			acceptRejectPane.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							stopCellEditing();
-						}
-					});
-				}
-			});
-		}
-
-		@Override
-		public Object getCellEditorValue() {
-			return acceptRejectPane.getState();
-		}
-
-		@Override
-		public boolean isCellEditable(EventObject e) {
-			return true;
-		}
-
-		@Override
-		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
-				int column) {
-			if (isSelected) {
-				acceptRejectPane.setBackground(table.getSelectionBackground());
-			} else {
-				acceptRejectPane.setBackground(table.getBackground());
-			}
-			return acceptRejectPane;
-		}
-	}
-
-	public class OpenCompetGroupPanelListener implements ActionListener {
-
-		private boolean isPushed = false;
-		private JPanel panel = new JPanel();
-
-		public OpenCompetGroupPanelListener(JPanel panel) {
-			this.panel = panel;
-			AddNewCompetGroup openCompetGroup = new AddNewCompetGroup();
-			panel.add(openCompetGroup.getAddNewCompetGroup());
-			panel.setVisible(false);
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			try {
-				if (!isPushed) {
-					((JButton) arg0.getSource()).setText("-");
-					panel.setVisible(true);
-					isPushed = true;
-				} else {
-					((JButton) arg0.getSource()).setText("+");
-					panel.setVisible(false);
-					isPushed = false;
-
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public static void main(String[] args) {

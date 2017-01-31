@@ -1,4 +1,4 @@
-﻿package gui;
+﻿package general_classes;
 
 import java.util.Vector;
 

@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;

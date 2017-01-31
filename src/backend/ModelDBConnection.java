@@ -99,6 +99,30 @@ public class ModelDBConnection {
 		return -1;
 	}
 
+	public static int getCountForAbitID(String tableName, String aid) {
+		if (initConnection()) {
+			try {
+				int count = 0;
+				String query = "select count(*) from " + tableName + " where aid_abiturient = " + aid;
+				stmt = con.createStatement();
+				rset = stmt.executeQuery(query);
+
+				while (rset.next()) {
+					count = rset.getInt(1);
+				}
+
+				stmt.close();
+				rset.close();
+
+				return count;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+		return -1;
+	}
+
 	public static String[][] getAllAbiturients() {
 		int countAbits = getCount("Abiturient");
 
@@ -539,5 +563,82 @@ public class ModelDBConnection {
 
 		stmt.close();
 		rset.close();
+	}
+
+	public static String[][] getAllAchievmentsByAbiturientId(String aid){
+		String[][] data = null;
+
+		int countStrings = getCountForAbitID("AbiturientIndividualAchievement", aid);
+
+		if (countStrings > 0) {
+			try {
+				String query = "select name, AbiturientIndividualAchievement.score from IndividualAchievement, AbiturientIndividualAchievement "
+						+ "where IndividualAchievement.id = AbiturientIndividualAchievement.id_individual_achievement "
+						+ "and aid_abiturient = " + aid;
+				stmt = con.createStatement();
+				rset = stmt.executeQuery(query);
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
+				}
+				stmt.close();
+				rset.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return data;
+	}
+
+	public static String[][] getAllEntranceTestsResultsByAbiturientId(String aid){
+		String[][] data = null;
+		String query = "select EntranceTest.name, null, null, null, null from EntranceTest";
+		int countStrings;
+		
+		if(!aid.equals("")) {
+			countStrings = getCountForAbitID("AbiturientEntranceTests", aid);
+
+			if (countStrings > 0) {
+				query = "select EntranceTest.name, TestBox.name, testGroup, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox "
+						+ "where EntranceTest.id = AbiturientEntranceTests.id_entranceTest "
+						+ "and TestBox.id = AbiturientEntranceTests.id_testBox "
+						+ "and aid_abiturient = " + aid;
+			}
+		} else {
+			countStrings = getCount("EntranceTest");
+		}
+
+		try {
+
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+			ResultSetMetaData rsmd = rset.getMetaData();
+			int numberOfColumns = rsmd.getColumnCount();
+
+			data = new String[countStrings][numberOfColumns];
+			int curPos = 0;
+			while (rset.next()) {
+				for (int i = 0; i < numberOfColumns; i++) {
+					if (rset.getObject(i + 1) != null)
+						data[curPos][i] = rset.getObject(i + 1).toString();
+				}
+				curPos++;
+			}
+			stmt.close();
+			rset.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return data;
 	}
 }
