@@ -1,7 +1,9 @@
-package gui;
+﻿package tab_catalogs;
 
 import java.util.ArrayList;
 import javax.swing.JTable;
+
+import general_classes.GUITableModel;
 
 class Cell {
 	Integer Row = null;

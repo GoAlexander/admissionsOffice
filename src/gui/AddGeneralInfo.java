@@ -29,6 +29,7 @@ import com.toedter.calendar.JDateChooser;
 
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
+import general_classes.GUITableModel;
 
 public class AddGeneralInfo extends JFrame {
 	private GUITableModel currentTM;

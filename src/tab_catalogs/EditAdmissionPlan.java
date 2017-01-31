@@ -1,4 +1,4 @@
-﻿package gui;
+﻿package tab_catalogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -6,9 +6,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,7 +16,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import gui.GeneralInfoInput.CheckBoxCellRenderer;
+import general_classes.GUITableModel;
 
 public class EditAdmissionPlan extends JFrame {
 
