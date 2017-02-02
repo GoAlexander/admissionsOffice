@@ -487,6 +487,7 @@ public class ModelDBConnection {
 		}
 
 		String query = "select * from " + table + " where " + id + " = " + data[0] + ";";
+		System.out.println(query);
 		int numberOfColumns = 0;
 		if (initConnection()) {
 			stmt = con.createStatement();
@@ -562,7 +563,6 @@ public class ModelDBConnection {
 		stmt.executeUpdate(query);
 
 		stmt.close();
-		rset.close();
 	}
 
 	public static String[][] getAllAchievmentsByAbiturientId(String aid){
@@ -618,7 +618,6 @@ public class ModelDBConnection {
 		}
 
 		try {
-
 			stmt = con.createStatement();
 			rset = stmt.executeQuery(query);
 			ResultSetMetaData rsmd = rset.getMetaData();
@@ -640,5 +639,58 @@ public class ModelDBConnection {
 			return null;
 		}
 		return data;
+	}
+
+	public static String[] getAbiturientPassportByID(String aid) throws SQLException {
+		String query = "select aid_abiturient, id_passportType, paspSeries, paspNumber, paspGivenBy, paspGivenDate, Birthplace "
+				+ "from Abiturient, AbiturientPassport where " + "Abiturient.aid = AbiturientPassport.aid_abiturient "
+				+ "and aid_abiturient = " + aid + ";";
+		String[] abiturientPassportInfo = new String[7];
+		for (int i = 0; i < abiturientPassportInfo.length; i++)
+			abiturientPassportInfo[i] = "";
+		abiturientPassportInfo[0] = aid;
+
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			while (rset.next()) {
+				abiturientPassportInfo = new String[7];
+				abiturientPassportInfo[0] = String.valueOf(rset.getInt(1));
+				abiturientPassportInfo[1] = String.valueOf(rset.getInt(2));
+				abiturientPassportInfo[2] = rset.getString(3);
+				abiturientPassportInfo[3] = rset.getString(4);
+				abiturientPassportInfo[4] = rset.getString(5);
+				abiturientPassportInfo[5] = rset.getString(6);
+				abiturientPassportInfo[6] = rset.getString(7);
+
+				System.out.println(abiturientPassportInfo[0] + " " + abiturientPassportInfo[1] + " " + abiturientPassportInfo[2] + " "
+						+ abiturientPassportInfo[3] + " " + abiturientPassportInfo[4] + " " + abiturientPassportInfo[5] + " "
+						+ abiturientPassportInfo[6]);
+			}
+
+			stmt.close();
+			rset.close();
+		}
+		return abiturientPassportInfo;
+	}
+
+	public static void updateAbiturientPassportByID(String aid, String[] data) throws SQLException {
+		try {
+		String query = "update Abiturient set Birthplace = '" + data[5] + "' where aid = " + aid + ";";
+
+		String[] abiturientPassportInfo = new String[6];
+		abiturientPassportInfo[0] = aid;
+		for (int i = 1; i < abiturientPassportInfo.length; i++)
+			abiturientPassportInfo[i] = data[i-1];
+
+		ModelDBConnection.updateElementInTableById("AbiturientPassport", abiturientPassportInfo);
+		System.out.println(query);
+		stmt = con.createStatement();
+		stmt.executeQuery(query);
+		stmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

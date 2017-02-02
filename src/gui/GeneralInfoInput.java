@@ -60,7 +60,8 @@ import tab_achievements.IndividualAchievementsPanel;
 public class GeneralInfoInput extends JFrame {
 
 	private JPanel mainPanel, centralPanel, GIPanel, panelSurname, panelName, panelPatronymic, panelID, panelSex,
-			panelDB, panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn, tablePanel, btnTablePanel;
+			panelDB, panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn, tablePanel, btnTablePanel,
+			compGroupPanel, entranceTestpPanel, indAchivPanel, educPanel, contPanel, passportPanel;
 	private Dimension dimPanel = new Dimension(300, 40);
 	private Dimension dimText = new Dimension(170, 25);
 	private Dimension dimRigidArea = new Dimension(10, 0);
@@ -423,12 +424,12 @@ public class GeneralInfoInput extends JFrame {
 		panelInfoBackDoc.add(checkBackDoc, gbc2);
 
 		userInfoTPane = new JTabbedPane();
-		JPanel compGroupPanel = new CompetitiveGroupsPanel("aaa");
-		JPanel entranceTestpPanel = new EntranceTestsPanel();
-		JPanel indAchivPanel = new IndividualAchievementsPanel();
-		JPanel educPanel = new EducationPanel();
-		JPanel contPanel = new AddressContactsPanel();
-		JPanel passportPanel = new PassportPanel();
+		compGroupPanel = new CompetitiveGroupsPanel("aaa");
+		entranceTestpPanel = new EntranceTestsPanel();
+		indAchivPanel = new IndividualAchievementsPanel();
+		educPanel = new EducationPanel();
+		contPanel = new AddressContactsPanel();
+		passportPanel = new PassportPanel();
 
 		userInfoTPane.add("Конк-ные группы", compGroupPanel);
 		userInfoTPane.add("Вступ-ные испытания", entranceTestpPanel);
@@ -447,37 +448,25 @@ public class GeneralInfoInput extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
 					try {
-						String[] selectedAbitGeneralInfo;
+						String[] selectedAbitGeneralInfo, selectedAbitPassport;
+
 						if (dataTable.getSelectedRow() >= 0) {
 							selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(
+									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
+							selectedAbitPassport = ModelDBConnection.getAbiturientPassportByID(String.valueOf(
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
 						} else {
 							selectedAbitGeneralInfo = new String[10];
 							for (int i = 0; i < selectedAbitGeneralInfo.length; i++)
 								selectedAbitGeneralInfo[i] = "";
+							selectedAbitPassport = new String[7];
+							for (int i = 0; i < selectedAbitPassport.length; i++)
+								selectedAbitPassport[i] = "";
 						}
-						((JTextField) panelID.getComponent(1)).setText(selectedAbitGeneralInfo[0]);
-						((JTextField) panelSurname.getComponent(1)).setText(selectedAbitGeneralInfo[1]);
-						((JTextField) panelName.getComponent(1)).setText(selectedAbitGeneralInfo[2]);
-						((JTextField) panelPatronymic.getComponent(1)).setText(selectedAbitGeneralInfo[3]);
-						SimpleDateFormat format = new SimpleDateFormat();
-						format.applyPattern("yyyy-MM-dd");
-						calendar.setDate(selectedAbitGeneralInfo[4].equals("") ? null
-								: format.parse(selectedAbitGeneralInfo[4]));
-						comboSexList.setSelectedIndex(selectedAbitGeneralInfo[5].equals("") ? -1
-								: Integer.valueOf(selectedAbitGeneralInfo[5]) - 1);
-						comboNationality.setSelectedIndex(selectedAbitGeneralInfo[6].equals("") ? -1
-								: Integer.valueOf(selectedAbitGeneralInfo[6]) - 1);
-						comboReturnReason.setSelectedIndex(selectedAbitGeneralInfo[8].equals("") ? -1
-								: Integer.valueOf(selectedAbitGeneralInfo[8]) - 1);
-						textDateReturn.setText(selectedAbitGeneralInfo[9]);
-						if (selectedAbitGeneralInfo[8].equals(""))
-							checkBackDoc.setSelected(false);
-						else
-							checkBackDoc.setSelected(true);
-						textDateReturn.setEnabled(false);
-						comboReturnReason.setEnabled(false);
-					} catch (SQLException | ParseException e1) {
+
+						setValues(selectedAbitGeneralInfo);
+						((PassportPanel)passportPanel).setValues(selectedAbitPassport);
+					} catch (SQLException e1) {
 						MessageProcessing.displayErrorMessage(tablePanel, e1);
 					}
 				}
@@ -607,6 +596,34 @@ public class GeneralInfoInput extends JFrame {
 		panelFIO.add(textFIO);
 
 		return panelFIO;
+	}
+
+	public void setValues(String[] values) {
+		try {
+			((JTextField) panelID.getComponent(1)).setText(values[0]);
+			((JTextField) panelSurname.getComponent(1)).setText(values[1]);
+			((JTextField) panelName.getComponent(1)).setText(values[2]);
+			((JTextField) panelPatronymic.getComponent(1)).setText(values[3]);
+			SimpleDateFormat format = new SimpleDateFormat();
+			format.applyPattern("yyyy-MM-dd");
+			calendar.setDate(values[4].equals("") ? null
+					: format.parse(values[4]));
+			comboSexList.setSelectedIndex(values[5].equals("") ? -1
+					: Integer.valueOf(values[5]) - 1);
+			comboNationality.setSelectedIndex(values[6].equals("") ? -1
+					: Integer.valueOf(values[6]) - 1);
+			comboReturnReason.setSelectedIndex(values[8].equals("") ? -1
+					: Integer.valueOf(values[8]) - 1);
+			textDateReturn.setText(values[9]);
+			if (values[8].equals(""))
+				checkBackDoc.setSelected(false);
+			else
+				checkBackDoc.setSelected(true);
+			textDateReturn.setEnabled(false);
+			comboReturnReason.setEnabled(false);
+		} catch (ParseException e) {
+			MessageProcessing.displayErrorMessage(tablePanel, e);
+		}
 	}
 
 	public static void main(String[] args) {
