@@ -310,6 +310,17 @@ public class GeneralInfoInput extends JFrame {
 		panelID.add(textID);
 		GIPanel.add(panelID, gbc);
 
+		panelDateDoc = new JPanel();
+		panelDateDoc.setLayout(new FlowLayout());
+		panelDateDoc.setAlignmentY(JComponent.LEFT_ALIGNMENT);
+		panelDateDoc.setMaximumSize(dimPanel);
+		JLabel dateDocLabel = new JLabel("Дата приёма документов:  ");
+		panelDateDoc.add(dateDocLabel);
+		JLabel dateCurrDocLabel = new JLabel();
+		panelDateDoc.add(dateCurrDocLabel);
+		gbc.gridx = 1;
+		GIPanel.add(panelDateDoc, gbc);
+
 		panelSurname = new JPanel();
 		panelSurname = createFIOPanel("Фамилия:     ");
 		gbc.gridy = 1;
