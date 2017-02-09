@@ -61,7 +61,7 @@ public class GeneralInfoInput extends JFrame {
 
 	private JPanel mainPanel, centralPanel, GIPanel, panelSurname, panelName, panelPatronymic, panelID, panelSex,
 			panelDB, panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn, tablePanel, btnTablePanel,
-			compGroupPanel, entranceTestpPanel, indAchivPanel, educPanel, contPanel, passportPanel;
+			compGroupPanel, entranceTestpPanel, indAchivPanel, educPanel, contPanel, passportPanel, panelDateDoc;
 	private Dimension dimPanel = new Dimension(300, 40);
 	private Dimension dimText = new Dimension(170, 25);
 	private Dimension dimRigidArea = new Dimension(10, 0);

@@ -9,6 +9,7 @@ public class TestBackend {
 	public static void main(String[] args) throws SQLException {
 
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+		ModelDBConnection.getCount("Abiturient");
 		ModelDBConnection.getAllFromTableOrderedById("Gender");
 		System.out.println("--------------------------");
 		String[] data1 = { "1", "Мужской", null };

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 
 public class ModelDBConnection {
 	static String login;
@@ -79,17 +80,15 @@ public class ModelDBConnection {
 		if (initConnection()) {
 			try {
 				int count = 0;
-				String query = "select count(*) from " + tableName;
-				stmt = con.createStatement();
-				rset = stmt.executeQuery(query);
+				cstmt=con.prepareCall("{? = call getCount(?)}");
 
-				while (rset.next()) {
-					count = rset.getInt(1);
-				}
+				cstmt.registerOutParameter(1, Types.INTEGER);
+				cstmt.setString(2,tableName);
 
-				stmt.close();
-				rset.close();
+				cstmt.execute();
 
+				count = cstmt.getInt(1);
+				System.out.println(count);
 				return count;
 			} catch (Exception e) {
 				e.printStackTrace();
