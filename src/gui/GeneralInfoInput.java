@@ -318,7 +318,6 @@ public class GeneralInfoInput extends JFrame {
 		panelDateDoc.add(dateDocLabel);
 		JLabel dateCurrDocLabel = new JLabel();
 		panelDateDoc.add(dateCurrDocLabel);
-		gbc.gridx = 1;
 		GIPanel.add(panelDateDoc, gbc);
 
 		panelSurname = new JPanel();
@@ -507,11 +506,7 @@ public class GeneralInfoInput extends JFrame {
 				abitBaseInfo[4] = new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString();
 				abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex() + 1);
 				abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex() + 1);
-				// Временно
-				// Раскомментировать, когда добавится соответствующий компонент
-				// интерфейса
-				// abitBaseInfo[7] = textDateRecDoc.getText();
-				abitBaseInfo[7] = "12.12.2009";
+				abitBaseInfo[7] = ((JLabel) panelDateDoc.getComponent(1)).getText();
 				if (checkBackDoc.isSelected()) {
 					abitBaseInfo[8] = textDateReturn.getText();
 					abitBaseInfo[9] = String.valueOf(comboReturnReason.getSelectedIndex() + 1);
@@ -538,10 +533,6 @@ public class GeneralInfoInput extends JFrame {
 				calendar.setEnabled(false);
 				comboSexList.setEnabled(false);
 				comboNationality.setEnabled(false);
-				// Временно
-				// Раскомментировать, когда добавится соответствующий компонент
-				// интерфейса
-				// textDateRecDoc.setEditable(false);
 				textDateReturn.setEnabled(false);
 				comboReturnReason.setEnabled(false);
 				checkBackDoc.setEnabled(false);
@@ -559,10 +550,6 @@ public class GeneralInfoInput extends JFrame {
 				calendar.setEnabled(true);
 				comboSexList.setEnabled(true);
 				comboNationality.setEnabled(true);
-				// Временно
-				// Раскомментировать, когда добавится соответствующий компонент
-				// интерфейса
-				// textDateRecDoc.setEditable(true);
 				checkBackDoc.setEnabled(true);
 				if (checkBackDoc.isSelected()) {
 					textDateReturn.setEnabled(true);
@@ -623,6 +610,7 @@ public class GeneralInfoInput extends JFrame {
 					: Integer.valueOf(values[5]) - 1);
 			comboNationality.setSelectedIndex(values[6].equals("") ? -1
 					: Integer.valueOf(values[6]) - 1);
+			((JLabel) panelDateDoc.getComponent(1)).setText(values[7]);
 			comboReturnReason.setSelectedIndex(values[8].equals("") ? -1
 					: Integer.valueOf(values[8]) - 1);
 			textDateReturn.setText(values[9]);
