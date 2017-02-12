@@ -18,12 +18,11 @@ import javax.swing.border.TitledBorder;
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
 
-public class AddressContactsPanel extends JPanel{
+public class AddressContactsPanel extends JPanel {
 	private String currentAbit;
 
-	private Dimension	dimStartRigidArea = new Dimension(50, 0), 
-						dimTextDigitInfo = new Dimension(139, 25),
-						dimRigidArea = new Dimension(10, 0);
+	private Dimension dimStartRigidArea = new Dimension(50, 0), dimTextDigitInfo = new Dimension(139, 25),
+			dimRigidArea = new Dimension(10, 0);
 
 	private JTextField textIndex, textPhone, textEmail;
 	private JComboBox comboRegionType, comboPunktType;
@@ -144,6 +143,7 @@ public class AddressContactsPanel extends JPanel{
 
 	private void saveAddressContactsButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
+			ModelDBConnection.updateAbiturientAddressAndContactsByID(currentAbit, getValues());
 			this.setEditable(false);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
@@ -152,12 +152,24 @@ public class AddressContactsPanel extends JPanel{
 
 	public void setValues(String[] values) {
 		currentAbit = values[0];
-		textIndex.setText(values[1]);
-		comboRegionType.setSelectedIndex(Integer.valueOf(values[2]));
-		comboPunktType.setSelectedIndex(Integer.valueOf(values[3]));
+		comboRegionType.setSelectedIndex(values[1].equals("") ? -1 : Integer.valueOf(values[1]) - 1);
+		comboPunktType.setSelectedIndex(values[1].equals("") ? -1 : Integer.valueOf(values[2]) - 1);
+		textIndex.setText(values[3]);
 		textAdressLiving.setText(values[4]);
-		textPhone.setText(values[5]);
-		textEmail.setText(values[6]);
+		textEmail.setText(values[5]);
+		textPhone.setText(values[6]);
+	}
+
+	public String[] getValues() {
+		String[] values = new String[6];
+		values[0] = String.valueOf(comboRegionType.getSelectedIndex() + 1);
+		values[1] = String.valueOf(comboPunktType.getSelectedIndex() + 1);
+		values[2] = textIndex.getText();
+		values[3] = textAdressLiving.getText();
+		values[4] = textEmail.getText();
+		values[5] = textPhone.getText();
+
+		return values;
 	}
 
 	public void setEditable(boolean state) {
@@ -168,7 +180,6 @@ public class AddressContactsPanel extends JPanel{
 		textPhone.setEditable(state);
 		textEmail.setEditable(state);
 		saveAddressContactsButton.setEnabled(state);
-
 		editAddressContactsButton.setEnabled(!state);
 	}
 }

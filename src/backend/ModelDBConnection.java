@@ -80,10 +80,10 @@ public class ModelDBConnection {
 		if (initConnection()) {
 			try {
 				int count = 0;
-				cstmt=con.prepareCall("{? = call getCount(?)}");
+				cstmt = con.prepareCall("{? = call getCount(?)}");
 
 				cstmt.registerOutParameter(1, Types.INTEGER);
-				cstmt.setString(2,tableName);
+				cstmt.setString(2, tableName);
 
 				cstmt.execute();
 
@@ -499,8 +499,8 @@ public class ModelDBConnection {
 			while (rset.next()) {
 				countStrings++;
 			}
-			
-			if(countStrings > 0) {
+
+			if (countStrings > 0) {
 				query = "update " + table + " set ";
 				for (int i = 1; i < numberOfColumns; i++) {
 					if (i == numberOfColumns - 1)
@@ -564,7 +564,7 @@ public class ModelDBConnection {
 		stmt.close();
 	}
 
-	public static String[][] getAllAchievmentsByAbiturientId(String aid){
+	public static String[][] getAllAchievmentsByAbiturientId(String aid) {
 		String[][] data = null;
 
 		int countStrings = getCountForAbitID("AbiturientIndividualAchievement", aid);
@@ -598,19 +598,18 @@ public class ModelDBConnection {
 		return data;
 	}
 
-	public static String[][] getAllEntranceTestsResultsByAbiturientId(String aid){
+	public static String[][] getAllEntranceTestsResultsByAbiturientId(String aid) {
 		String[][] data = null;
 		String query = "select EntranceTest.name, null, null, null, null from EntranceTest";
 		int countStrings;
-		
-		if(!aid.equals("")) {
+
+		if (!aid.equals("")) {
 			countStrings = getCountForAbitID("AbiturientEntranceTests", aid);
 
 			if (countStrings > 0) {
 				query = "select EntranceTest.name, TestBox.name, testGroup, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox "
 						+ "where EntranceTest.id = AbiturientEntranceTests.id_entranceTest "
-						+ "and TestBox.id = AbiturientEntranceTests.id_testBox "
-						+ "and aid_abiturient = " + aid;
+						+ "and TestBox.id = AbiturientEntranceTests.id_testBox " + "and aid_abiturient = " + aid;
 			}
 		} else {
 			countStrings = getCount("EntranceTest");
@@ -663,9 +662,9 @@ public class ModelDBConnection {
 				abiturientPassportInfo[5] = rset.getString(6);
 				abiturientPassportInfo[6] = rset.getString(7);
 
-				System.out.println(abiturientPassportInfo[0] + " " + abiturientPassportInfo[1] + " " + abiturientPassportInfo[2] + " "
-						+ abiturientPassportInfo[3] + " " + abiturientPassportInfo[4] + " " + abiturientPassportInfo[5] + " "
-						+ abiturientPassportInfo[6]);
+				System.out.println(abiturientPassportInfo[0] + " " + abiturientPassportInfo[1] + " "
+						+ abiturientPassportInfo[2] + " " + abiturientPassportInfo[3] + " " + abiturientPassportInfo[4]
+						+ " " + abiturientPassportInfo[5] + " " + abiturientPassportInfo[6]);
 			}
 
 			stmt.close();
@@ -676,18 +675,73 @@ public class ModelDBConnection {
 
 	public static void updateAbiturientPassportByID(String aid, String[] data) throws SQLException {
 		try {
-		String query = "update Abiturient set Birthplace = '" + data[5] + "' where aid = " + aid + ";";
+			String query = "update Abiturient set Birthplace = '" + data[5] + "' where aid = " + aid + ";";
 
-		String[] abiturientPassportInfo = new String[6];
-		abiturientPassportInfo[0] = aid;
-		for (int i = 1; i < abiturientPassportInfo.length; i++)
-			abiturientPassportInfo[i] = data[i-1];
+			String[] abiturientPassportInfo = new String[6];
+			abiturientPassportInfo[0] = aid;
+			for (int i = 1; i < abiturientPassportInfo.length; i++)
+				abiturientPassportInfo[i] = data[i - 1];
 
-		ModelDBConnection.updateElementInTableById("AbiturientPassport", abiturientPassportInfo);
-		System.out.println(query);
-		stmt = con.createStatement();
-		stmt.executeQuery(query);
-		stmt.close();
+			ModelDBConnection.updateElementInTableById("AbiturientPassport", abiturientPassportInfo);
+			System.out.println(query);
+			stmt = con.createStatement();
+			stmt.executeQuery(query);
+			stmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String[] getAbiturientAddressAndContactsByID(String aid) throws SQLException {
+		String query = "select aid_abiturient, id_region, id_localityType, indexAddress, factAddress, email, phoneNumbers "
+				+ "from Abiturient, AbiturientAddress  where " + "Abiturient.aid = AbiturientAddress.aid_abiturient "
+				+ "and aid_abiturient = " + aid + ";";
+		String[] abiturientAddressAndContactsInfo = new String[7];
+		for (int i = 0; i < abiturientAddressAndContactsInfo.length; i++)
+			abiturientAddressAndContactsInfo[i] = "";
+		abiturientAddressAndContactsInfo[0] = aid;
+
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			while (rset.next()) {
+				abiturientAddressAndContactsInfo = new String[7];
+				abiturientAddressAndContactsInfo[0] = String.valueOf(rset.getInt(1));
+				abiturientAddressAndContactsInfo[1] = String.valueOf(rset.getInt(2));
+				abiturientAddressAndContactsInfo[2] = String.valueOf(rset.getInt(3));
+				abiturientAddressAndContactsInfo[3] = rset.getString(4);
+				abiturientAddressAndContactsInfo[4] = rset.getString(5);
+				abiturientAddressAndContactsInfo[5] = rset.getString(6);
+				abiturientAddressAndContactsInfo[6] = rset.getString(7);
+
+				System.out.println(abiturientAddressAndContactsInfo[0] + " " + abiturientAddressAndContactsInfo[1] + " "
+						+ abiturientAddressAndContactsInfo[2] + " " + abiturientAddressAndContactsInfo[3] + " "
+						+ abiturientAddressAndContactsInfo[4] + " " + abiturientAddressAndContactsInfo[5] + " "
+						+ abiturientAddressAndContactsInfo[6]);
+			}
+
+			stmt.close();
+			rset.close();
+		}
+		return abiturientAddressAndContactsInfo;
+	}
+
+	public static void updateAbiturientAddressAndContactsByID(String aid, String[] data) throws SQLException {
+		try {
+			String query = "update Abiturient set email = '" + data[4] + "', phoneNumbers = '" + data[5] + "' where aid = "
+					+ aid + ";";
+
+			String[] abiturientAddressInfo = new String[5];
+			abiturientAddressInfo[0] = aid;
+			for (int i = 1; i < abiturientAddressInfo.length; i++)
+				abiturientAddressInfo[i] = data[i - 1];
+
+			ModelDBConnection.updateElementInTableById("AbiturientAddress", abiturientAddressInfo);
+			System.out.println(query);
+			stmt = con.createStatement();
+			stmt.executeQuery(query);
+			stmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

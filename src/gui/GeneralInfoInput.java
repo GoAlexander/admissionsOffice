@@ -458,12 +458,14 @@ public class GeneralInfoInput extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
 					try {
-						String[] selectedAbitGeneralInfo, selectedAbitPassport;
+						String[] selectedAbitGeneralInfo, selectedAbitPassport, selectedAbitAddressAndContacts;
 
 						if (dataTable.getSelectedRow() >= 0) {
 							selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
 							selectedAbitPassport = ModelDBConnection.getAbiturientPassportByID(String.valueOf(
+									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
+							selectedAbitAddressAndContacts = ModelDBConnection.getAbiturientAddressAndContactsByID(String.valueOf(
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
 						} else {
 							selectedAbitGeneralInfo = new String[10];
@@ -472,10 +474,14 @@ public class GeneralInfoInput extends JFrame {
 							selectedAbitPassport = new String[7];
 							for (int i = 0; i < selectedAbitPassport.length; i++)
 								selectedAbitPassport[i] = "";
+							selectedAbitAddressAndContacts = new String[7];
+							for (int i = 0; i < selectedAbitAddressAndContacts.length; i++)
+								selectedAbitAddressAndContacts[i] = "";
 						}
 
 						setValues(selectedAbitGeneralInfo);
 						((PassportPanel)passportPanel).setValues(selectedAbitPassport);
+						((AddressContactsPanel)contPanel).setValues(selectedAbitAddressAndContacts);
 					} catch (SQLException e1) {
 						MessageProcessing.displayErrorMessage(tablePanel, e1);
 					}
