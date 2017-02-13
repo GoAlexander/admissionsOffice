@@ -119,3 +119,13 @@ insert into [AbiturientPassport] values
 (3,	3,	'1234',	'123456',	'qweqwe',	'2004-12-12');
 
 go
+
+insert into [AbiturientHigherEducation] values
+(2, '1234', '123456', 1, 'Maths', 'HSE');
+
+go
+
+insert into [AbiturientAddress] values
+(2, 1, 1, '456654', 'gol');
+
+go

@@ -458,7 +458,7 @@ public class GeneralInfoInput extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
 					try {
-						String[] selectedAbitGeneralInfo, selectedAbitPassport, selectedAbitAddressAndContacts;
+						String[] selectedAbitGeneralInfo, selectedAbitPassport, selectedAbitAddressAndContacts, selectedAbitHigherEducation, selectedAbitPostGraduationEducation;
 
 						if (dataTable.getSelectedRow() >= 0) {
 							selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(
@@ -467,6 +467,9 @@ public class GeneralInfoInput extends JFrame {
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
 							selectedAbitAddressAndContacts = ModelDBConnection.getAbiturientAddressAndContactsByID(String.valueOf(
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
+							selectedAbitHigherEducation = ModelDBConnection.getAbiturientEducationByID(String.valueOf(
+									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))), "AbiturientHigherEducation");
+							
 						} else {
 							selectedAbitGeneralInfo = new String[10];
 							for (int i = 0; i < selectedAbitGeneralInfo.length; i++)
@@ -477,11 +480,16 @@ public class GeneralInfoInput extends JFrame {
 							selectedAbitAddressAndContacts = new String[7];
 							for (int i = 0; i < selectedAbitAddressAndContacts.length; i++)
 								selectedAbitAddressAndContacts[i] = "";
+							selectedAbitHigherEducation = new String[6];
+							for (int i = 0; i < selectedAbitHigherEducation.length; i++)
+								selectedAbitHigherEducation[i] = "";
+			
 						}
 
 						setValues(selectedAbitGeneralInfo);
 						((PassportPanel)passportPanel).setValues(selectedAbitPassport);
 						((AddressContactsPanel)contPanel).setValues(selectedAbitAddressAndContacts);
+						(((EducationPanel)educPanel).getHigherPanel()).setValues(selectedAbitHigherEducation);
 					} catch (SQLException e1) {
 						MessageProcessing.displayErrorMessage(tablePanel, e1);
 					}

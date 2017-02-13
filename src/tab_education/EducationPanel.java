@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import backend.MessageProcessing;
+import backend.ModelDBConnection;
 
 public class EducationPanel extends JPanel{
 	private SimpleEducationPanel highEducPanel, afterDiplEducPanel;
@@ -57,6 +58,7 @@ public class EducationPanel extends JPanel{
 	private void saveEducationButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
 			this.setEditable(false);
+			ModelDBConnection.updateAbiturientEducationByID("AbiturientHigherEducation", highEducPanel.getValues());
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -68,5 +70,9 @@ public class EducationPanel extends JPanel{
 		saveEducationButton.setEnabled(state);
 		
 		editEducationButton.setEnabled(!state);
+	}
+	
+	public SimpleEducationPanel getHigherPanel(){
+		return highEducPanel;
 	}
 }

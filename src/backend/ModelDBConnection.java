@@ -473,6 +473,7 @@ public class ModelDBConnection {
 		case "AbiturientPassport":
 		case "AbiturientAddress":
 		case "AbiturientCompetitiveGroup":
+		case "AbiturientHigherEducation":
 			id = "aid_abiturient";
 			break;
 		case "AdmissionPlan":
