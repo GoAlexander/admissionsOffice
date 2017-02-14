@@ -121,11 +121,16 @@ insert into [AbiturientPassport] values
 go
 
 insert into [AbiturientHigherEducation] values
-(2, '1234', '123456', 1, 'Maths', 'HSE');
+(2, '1234', '123456', 'HSE', 'Maths', 1);
 
 go
 
 insert into [AbiturientAddress] values
 (2, 1, 1, '456654', 'gol');
+
+go
+
+insert into [AbiturientIndividualAchievement] values
+(2, 1, 199, 'Document', '1234654', '654', 'HSE', '2016-12-12');
 
 go

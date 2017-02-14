@@ -29,10 +29,14 @@ public class WatchConfirmingDoc extends JFrame {
 						dimRigidArea = new Dimension(10, 0),
 						dimText = new Dimension(107, 25);
 
-	public WatchConfirmingDoc() {
+	private String nameButton;
+	
+	public WatchConfirmingDoc(String nameButton) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
 
+		this.nameButton = nameButton;
+		
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		add(mainPanel);
@@ -106,10 +110,10 @@ public class WatchConfirmingDoc extends JFrame {
 
 	private void editConfirmingDocButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			if(editConfirmingDocButton.getText().equals("Редактировать"))
+			if(nameButton.equals("edit"))
 				setEditable(true);
 			else {
-				//Some actions
+				setVisible(false);
 			}
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
@@ -120,10 +124,10 @@ public class WatchConfirmingDoc extends JFrame {
 		currentAbit = values[0];
 		currentAchievmentId = values[1];
 
-		nameDocText.setText(values[2]);
-		seriaText.setText(values[3]);
-		numText.setText(values[4]);
-		dateText.setText(values[5]);
+		nameDocText.setText(values[3]);
+		seriaText.setText(values[4]);
+		numText.setText(values[5]);
+		dateText.setText(values[7]);
 		textIssuedBy.setText(values[6]);
 	}
 
@@ -138,18 +142,5 @@ public class WatchConfirmingDoc extends JFrame {
 			editConfirmingDocButton.setText("Сохранить");
 		else
 			editConfirmingDocButton.setText("Редактировать");
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WatchConfirmingDoc window = new WatchConfirmingDoc();
-					window.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 }

@@ -26,7 +26,8 @@ public class IndividualAchievementsPanel extends JPanel{
 	private JButton addNewAchievmentButton, editAchievmentButton, saveAchievmentButton;
 	private GUITableModel individAchivTM = new GUITableModel();
 	private String[] individAchivColumnNames = { "Наименование", "Балл", "Подтверждающий документ" };
-
+	private String[][] data;
+	
 	public IndividualAchievementsPanel() {
 		this.setLayout(new BorderLayout());
 
@@ -125,7 +126,14 @@ public class IndividualAchievementsPanel extends JPanel{
 
 	public void setValues(String aid) {
 		currentAbit = aid;
-		individAchivTM.setDataVector(ModelDBConnection.getAllAchievmentsByAbiturientId(aid), individAchivColumnNames);
+		data = ModelDBConnection.getAllAchievmentsByAbiturientId(aid);
+		individAchivTM.setDataVector(data, individAchivColumnNames);
+		indAchivTable.getColumnModel().getColumn(2).setCellEditor(new AcceptRejectEditor(indAchivTable));
+	}
+	
+	public String[] getSelectedInfo(){
+		int row = indAchivTable.getSelectedRow();
+		return data[row];
 	}
 
 	public void setEditable(boolean state) {

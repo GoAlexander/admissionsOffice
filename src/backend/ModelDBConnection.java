@@ -730,8 +730,8 @@ public class ModelDBConnection {
 
 	public static void updateAbiturientAddressAndContactsByID(String aid, String[] data) throws SQLException {
 		try {
-			String query = "update Abiturient set email = '" + data[4] + "', phoneNumbers = '" + data[5] + "' where aid = "
-					+ aid + ";";
+			String query = "update Abiturient set email = '" + data[4] + "', phoneNumbers = '" + data[5]
+					+ "' where aid = " + aid + ";";
 
 			String[] abiturientAddressInfo = new String[5];
 			abiturientAddressInfo[0] = aid;
@@ -747,45 +747,87 @@ public class ModelDBConnection {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static String[] getAbiturientEducationByID(String aid, String nameTable) throws SQLException {
-		  String query = "select aid_abiturient, diplomaSeries, diplomaNumber, instituteName, diplomaSpeciality, graduationYear "
-		    + "from " + nameTable + "  where " + " aid_abiturient = " + aid + ";";
-		  
-		  String[] educationInfo = new String[6];
-		  for (int i = 0; i < educationInfo.length; i++)
-		   educationInfo[i] = "";
-		  educationInfo[0] = aid;
+		String query = "select aid_abiturient, diplomaSeries, diplomaNumber, instituteName, diplomaSpeciality, graduationYear "
+				+ "from " + nameTable + " where aid_abiturient = " + aid + ";";
 
-		  if (initConnection()) {
-		   stmt = con.createStatement();
-		   rset = stmt.executeQuery(query);
+		String[] educationInfo = new String[6];
+		for (int i = 0; i < educationInfo.length; i++)
+			educationInfo[i] = "";
+		educationInfo[0] = aid;
 
-		   while (rset.next()) {
-		    educationInfo = new String[6];
-		    educationInfo[0] = String.valueOf(rset.getInt(1));
-		    educationInfo[1] = rset.getString(2);
-		    educationInfo[2] = rset.getString(3);
-		    educationInfo[3] = rset.getString(4);
-		    educationInfo[4] = rset.getString(5);
-		    educationInfo[5] = String.valueOf(rset.getInt(6));
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
 
-		    System.out.println(educationInfo[0] + " " + educationInfo[1] + " "
-		      + educationInfo[2] + " " + educationInfo[3] + " "
-		      + educationInfo[4] + " " + educationInfo[5]);
-		   }
+			while (rset.next()) {
+				educationInfo = new String[6];
+				educationInfo[0] = String.valueOf(rset.getInt(1));
+				educationInfo[1] = rset.getString(2);
+				educationInfo[2] = rset.getString(3);
+				educationInfo[3] = rset.getString(4);
+				educationInfo[4] = rset.getString(5);
+				educationInfo[5] = String.valueOf(rset.getInt(6));
 
-		   stmt.close();
-		   rset.close();
-		  }
-		  return educationInfo;
-		 }
-		 
-		 public static void updateAbiturientEducationByID(String nameTable, String[] data) throws SQLException {
-		  try {
-		   ModelDBConnection.updateElementInTableById(nameTable, data);
-		  } catch (Exception e) {
-		   e.printStackTrace();
-		  }
-		 }
+				System.out.println(educationInfo[0] + " " + educationInfo[1] + " " + educationInfo[2] + " "
+						+ educationInfo[3] + " " + educationInfo[4] + " " + educationInfo[5]);
+			}
+
+			stmt.close();
+			rset.close();
+		}
+		return educationInfo;
+	}
+
+	public static void updateAbiturientEducationByID(String nameTable, String[] data) throws SQLException {
+		try {
+			ModelDBConnection.updateElementInTableById(nameTable, data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String[] getAbiturientIndividualAchievementByID(String aid) throws SQLException {
+		String query = "select aid_abiturient, id_individual_achievement, score, documentName, documentSeries, documentNumber, issuedBy, issueDate"
+				+ " from AbiturientIndividualAchievement where aid_abiturient = " + aid + ";";
+
+		String[] indAchivInfo = new String[8];
+		for (int i = 0; i < indAchivInfo.length; i++)
+			indAchivInfo[i] = "";
+		indAchivInfo[0] = aid;
+
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			while (rset.next()) {
+				indAchivInfo = new String[8];
+				indAchivInfo[0] = String.valueOf(rset.getInt(1));
+				indAchivInfo[1] = String.valueOf(rset.getInt(2));
+				indAchivInfo[2] = String.valueOf(rset.getInt(3));
+				indAchivInfo[3] = rset.getString(4);
+				indAchivInfo[4] = rset.getString(5);
+				indAchivInfo[5] = rset.getString(6);
+				indAchivInfo[6] = rset.getString(7);
+				indAchivInfo[7] = String.valueOf(rset.getDate(8));
+
+				System.out.println(indAchivInfo[0] + " " + indAchivInfo[1] + " " + indAchivInfo[2] + " "
+						+ indAchivInfo[3] + " " + indAchivInfo[4] + " " + indAchivInfo[5] + " " + indAchivInfo[6] + " "
+						+ indAchivInfo[7]);
+			}
+
+			stmt.close();
+			rset.close();
+		}
+		return indAchivInfo;
+	}
+
+	public static void updateAbiturientIndividualAchivementByID(String[] data) throws SQLException {
+		try {
+			ModelDBConnection.updateElementInTableById("AbiturientIndividualAchievement", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

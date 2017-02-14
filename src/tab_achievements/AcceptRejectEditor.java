@@ -27,7 +27,7 @@ public class AcceptRejectEditor extends AbstractCellEditor implements TableCellE
 			}
 		});*/
 	}
-
+	
 	@Override
 	public Object getCellEditorValue() {
 		return acceptRejectPane.getState();

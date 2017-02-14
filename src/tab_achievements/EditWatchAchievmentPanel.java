@@ -6,16 +6,21 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 
 import backend.MessageProcessing;
+import backend.ModelDBConnection;
 
 public class EditWatchAchievmentPanel extends JPanel{
 	JTable table;
 
 	private JButton editButton, watchButton;
 	private String state;
-
+	
+	private String[] data;
+	
 	public EditWatchAchievmentPanel(JTable table) {
 		this.table = table;
-
+		
+		this.data = data;
+		
 		this.setLayout(new FlowLayout());
 
 		editButton = new JButton("Редактировать");
@@ -23,6 +28,7 @@ public class EditWatchAchievmentPanel extends JPanel{
 		editButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				editButtonActionPerformed(evt);
+				table.getSelectedRow();
 			}
 		});
 
@@ -40,9 +46,10 @@ public class EditWatchAchievmentPanel extends JPanel{
 
 	private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			WatchConfirmingDoc window = new WatchConfirmingDoc();
+			WatchConfirmingDoc window = new WatchConfirmingDoc("edit");
 			window.setEditable(true);
 			window.setVisible(true);
+		//	window.setValues(data);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -50,7 +57,7 @@ public class EditWatchAchievmentPanel extends JPanel{
 
 	private void watchButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			WatchConfirmingDoc window = new WatchConfirmingDoc();
+			WatchConfirmingDoc window = new WatchConfirmingDoc("watch");
 			window.setVisible(true);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
