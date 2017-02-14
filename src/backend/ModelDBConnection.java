@@ -749,7 +749,7 @@ public class ModelDBConnection {
 	}
 	
 	public static String[] getAbiturientEducationByID(String aid, String nameTable) throws SQLException {
-		  String query = "select aid_abiturient, diplomaSeries, diplomaNumber, graduationYear, instituteName, diplomaSpeciality "
+		  String query = "select aid_abiturient, diplomaSeries, diplomaNumber, instituteName, diplomaSpeciality, graduationYear "
 		    + "from " + nameTable + "  where " + " aid_abiturient = " + aid + ";";
 		  
 		  String[] educationInfo = new String[6];
@@ -766,10 +766,10 @@ public class ModelDBConnection {
 		    educationInfo[0] = String.valueOf(rset.getInt(1));
 		    educationInfo[1] = rset.getString(2);
 		    educationInfo[2] = rset.getString(3);
-		    educationInfo[3] = String.valueOf(rset.getInt(4));
+		    educationInfo[3] = rset.getString(4);
 		    educationInfo[4] = rset.getString(5);
-		    educationInfo[5] = rset.getString(6);
-		    
+		    educationInfo[5] = String.valueOf(rset.getInt(6));
+
 		    System.out.println(educationInfo[0] + " " + educationInfo[1] + " "
 		      + educationInfo[2] + " " + educationInfo[3] + " "
 		      + educationInfo[4] + " " + educationInfo[5]);
@@ -783,14 +783,7 @@ public class ModelDBConnection {
 		 
 		 public static void updateAbiturientEducationByID(String nameTable, String[] data) throws SQLException {
 		  try {
-		   String query = "update " + nameTable + " set diplomaSeries = '" + data[1] + "', diplomaNumber = '" + data[2] + "', graduationYear = '" + data[3] + "', diplomaSpeciality = '" + data[4] + "', instituteName = '" + data[5] + "' where aid_abiturient = "
-		     + data[0] + ";"; 
-
 		   ModelDBConnection.updateElementInTableById(nameTable, data);
-		   System.out.println(query);
-		   stmt = con.createStatement();
-		   stmt.executeQuery(query);
-		   stmt.close();
 		  } catch (Exception e) {
 		   e.printStackTrace();
 		  }

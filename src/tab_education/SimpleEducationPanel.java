@@ -91,9 +91,9 @@ public class SimpleEducationPanel extends JPanel{
 		currentAbit = values[0];
 		textSeria.setText(values[1]);
 		textNum.setText(values[2]);
-		textYear.setText(values[3]);
-		textSpeciality.setText(values[4]);
-		textIssuedBy.setText(values[5]);
+		textSpeciality.setText(values[3]);
+		textIssuedBy.setText(values[4]);
+		textYear.setText(values[5]);
 	}
 
 	public void setEditable(boolean state) {
@@ -110,9 +110,9 @@ public class SimpleEducationPanel extends JPanel{
 		values[0] = currentAbit;
 		values[1] = textSeria.getText();
 		values[2] = textNum.getText();
-		values[3] = textYear.getText();
-		values[4] = textSpeciality.getText();
-		values[5] = textIssuedBy.getText();
+		values[3] = textSpeciality.getText();
+		values[4] = textIssuedBy.getText();
+		values[5] = textYear.getText();
 
 		return values;
 	}
