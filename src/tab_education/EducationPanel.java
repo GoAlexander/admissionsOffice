@@ -59,6 +59,7 @@ public class EducationPanel extends JPanel{
 		try {
 			this.setEditable(false);
 			ModelDBConnection.updateAbiturientEducationByID("AbiturientHigherEducation", highEducPanel.getValues());
+			ModelDBConnection.updateAbiturientEducationByID("AbiturientPostgraduateEducation", afterDiplEducPanel.getValues());
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -72,7 +73,8 @@ public class EducationPanel extends JPanel{
 		editEducationButton.setEnabled(!state);
 	}
 	
-	public SimpleEducationPanel getHigherPanel(){
-		return highEducPanel;
+	public void setValues(String[] abiturientHigherEducationData, String[] abiturientPostgraduateEducationData){
+		highEducPanel.setValues(abiturientHigherEducationData);
+		afterDiplEducPanel.setValues(abiturientPostgraduateEducationData);
 	}
 }

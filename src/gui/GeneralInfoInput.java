@@ -469,6 +469,8 @@ public class GeneralInfoInput extends JFrame {
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
 							selectedAbitHigherEducation = ModelDBConnection.getAbiturientEducationByID(String.valueOf(
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))), "AbiturientHigherEducation");
+							selectedAbitPostGraduationEducation = ModelDBConnection.getAbiturientEducationByID(String.valueOf(
+									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))), "AbiturientPostgraduateEducation");
 							
 						} else {
 							selectedAbitGeneralInfo = new String[10];
@@ -483,13 +485,15 @@ public class GeneralInfoInput extends JFrame {
 							selectedAbitHigherEducation = new String[6];
 							for (int i = 0; i < selectedAbitHigherEducation.length; i++)
 								selectedAbitHigherEducation[i] = "";
-			
+							selectedAbitPostGraduationEducation = new String[6];
+							for (int i = 0; i < selectedAbitPostGraduationEducation.length; i++)
+								selectedAbitPostGraduationEducation[i] = "";
 						}
 
 						setValues(selectedAbitGeneralInfo);
 						((PassportPanel)passportPanel).setValues(selectedAbitPassport);
 						((AddressContactsPanel)contPanel).setValues(selectedAbitAddressAndContacts);
-						(((EducationPanel)educPanel).getHigherPanel()).setValues(selectedAbitHigherEducation);
+						((EducationPanel)educPanel).setValues(selectedAbitHigherEducation, selectedAbitPostGraduationEducation);
 					} catch (SQLException e1) {
 						MessageProcessing.displayErrorMessage(tablePanel, e1);
 					}
