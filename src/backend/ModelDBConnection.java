@@ -57,7 +57,7 @@ public class ModelDBConnection {
 				switch (serverType) {
 				case "AzureServer":
 					connectionUrl = "jdbc:sqlserver://" + serverAddress + ":1433;database=" + dbName + ";user=" + login
-							+ "@projectownserver;password=" + password
+							+ ";password=" + password
 							+ ";encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
 					break;
 				case "MSServer":
