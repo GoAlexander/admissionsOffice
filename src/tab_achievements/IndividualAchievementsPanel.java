@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.sql.SQLException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -22,11 +23,13 @@ import general_classes.GUITableModel;
 
 public class IndividualAchievementsPanel extends JPanel{
 	private String currentAbit;
-	private JTable indAchivTable;
+	private static JTable indAchivTable;
 	private JButton addNewAchievmentButton, editAchievmentButton, saveAchievmentButton;
 	private GUITableModel individAchivTM = new GUITableModel();
 	private String[] individAchivColumnNames = { "Наименование", "Балл", "Подтверждающий документ" };
-	private String[][] data;
+
+	private static String[][] data;
+	private static String[][] data1;
 	
 	public IndividualAchievementsPanel() {
 		this.setLayout(new BorderLayout());
@@ -42,6 +45,8 @@ public class IndividualAchievementsPanel extends JPanel{
 		// ***test data
 
 		individAchivTM.setDataVector(null, individAchivColumnNames);
+		
+	
 
 		String[] nameIndAchivTest = ModelDBConnection.getNamesFromTableOrderedById("IndividualAchievement");
 		createCheckboxTable(indAchivTable, 0, nameIndAchivTest);
@@ -49,6 +54,8 @@ public class IndividualAchievementsPanel extends JPanel{
 		EditWatchRenderer renderer = new EditWatchRenderer(indAchivTable);
 		indAchivTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
 		indAchivTable.getColumnModel().getColumn(2).setCellEditor(new AcceptRejectEditor(indAchivTable));
+		
+		
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -102,6 +109,7 @@ public class IndividualAchievementsPanel extends JPanel{
 	private void addNewAchievmentButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
 			individAchivTM.addRow(new String[individAchivColumnNames.length]);
+			
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -127,13 +135,24 @@ public class IndividualAchievementsPanel extends JPanel{
 	public void setValues(String aid) {
 		currentAbit = aid;
 		data = ModelDBConnection.getAllAchievmentsByAbiturientId(aid);
+	
 		individAchivTM.setDataVector(data, individAchivColumnNames);
+		
+		EditWatchRenderer renderer = new EditWatchRenderer(indAchivTable);
+		indAchivTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
 		indAchivTable.getColumnModel().getColumn(2).setCellEditor(new AcceptRejectEditor(indAchivTable));
 	}
 	
-	public String[] getSelectedInfo(){
-		int row = indAchivTable.getSelectedRow();
-		return data[row];
+	public static String[] getSelectedInfo(){
+		try {
+			data1 = ModelDBConnection.getAllFromTable("AbiturientIndividualAchievement");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int row  = indAchivTable.getSelectedRow();
+		return data1[row];
+		
 	}
 
 	public void setEditable(boolean state) {

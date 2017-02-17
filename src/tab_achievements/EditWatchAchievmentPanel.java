@@ -2,6 +2,7 @@
 
 import java.awt.FlowLayout;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
@@ -18,8 +19,9 @@ public class EditWatchAchievmentPanel extends JPanel{
 	
 	public EditWatchAchievmentPanel(JTable table) {
 		this.table = table;
-		
 		this.data = data;
+		
+	
 		
 		this.setLayout(new FlowLayout());
 
@@ -47,6 +49,7 @@ public class EditWatchAchievmentPanel extends JPanel{
 	private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
 			WatchConfirmingDoc window = new WatchConfirmingDoc("edit");
+			window.setValues(IndividualAchievementsPanel.getSelectedInfo());
 			window.setEditable(true);
 			window.setVisible(true);
 		//	window.setValues(data);
@@ -58,6 +61,7 @@ public class EditWatchAchievmentPanel extends JPanel{
 	private void watchButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
 			WatchConfirmingDoc window = new WatchConfirmingDoc("watch");
+			window.setValues(IndividualAchievementsPanel.getSelectedInfo());
 			window.setVisible(true);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);

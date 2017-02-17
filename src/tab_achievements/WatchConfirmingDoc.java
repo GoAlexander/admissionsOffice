@@ -16,27 +16,27 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import backend.MessageProcessing;
+import backend.ModelDBConnection;
 
 public class WatchConfirmingDoc extends JFrame {
-	String currentAbit, currentAchievmentId;
-	
+	String currentAbit, currentAchievmentId, score;
+
 	private JPanel mainPanel;
 	private JButton editConfirmingDocButton;
 	private JTextField nameDocText, seriaText, numText, dateText;
 	private JTextArea textIssuedBy;
 
-	private Dimension	dimTextDigitInfo = new Dimension(400, 25),
-						dimRigidArea = new Dimension(10, 0),
-						dimText = new Dimension(107, 25);
+	private Dimension dimTextDigitInfo = new Dimension(400, 25), dimRigidArea = new Dimension(10, 0),
+			dimText = new Dimension(107, 25);
 
 	private String nameButton;
-	
+
 	public WatchConfirmingDoc(String nameButton) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
 
 		this.nameButton = nameButton;
-		
+
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		add(mainPanel);
@@ -88,12 +88,16 @@ public class WatchConfirmingDoc extends JFrame {
 		issuedByPanel.add(paneIssuedBy);
 		mainPanel.add(issuedByPanel);
 
-		editConfirmingDocButton = new JButton("Редактировать");
+		editConfirmingDocButton = new JButton("Сохранить");
 		editConfirmingDocButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				editConfirmingDocButtonActionPerformed(evt);
 			}
 		});
+
+		if (nameButton.equals("watch")) {
+			editConfirmingDocButton.setVisible(false);
+		}
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -110,25 +114,40 @@ public class WatchConfirmingDoc extends JFrame {
 
 	private void editConfirmingDocButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			if(nameButton.equals("edit"))
-				setEditable(true);
-			else {
-				setVisible(false);
-			}
+
+			ModelDBConnection.updateAbiturientIndividualAchivementByID(getValues());
+
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
 	public void setValues(String[] values) {
+
 		currentAbit = values[0];
 		currentAchievmentId = values[1];
-
+		score = values[2];
 		nameDocText.setText(values[3]);
 		seriaText.setText(values[4]);
 		numText.setText(values[5]);
-		dateText.setText(values[7]);
 		textIssuedBy.setText(values[6]);
+		dateText.setText(values[7]);
+
+	}
+
+	public String[] getValues() {
+		String[] data = new String[8];
+		System.out.println(currentAbit);
+		data[0] = currentAbit;
+		data[1] = currentAchievmentId;
+		data[2] = score;
+		data[3] = nameDocText.getText();
+		data[4] = seriaText.getText();
+		data[5] = numText.getText();
+		data[6] = textIssuedBy.getText();
+		data[7] = dateText.getText();
+
+		return data;
 	}
 
 	public void setEditable(boolean state) {
@@ -138,9 +157,5 @@ public class WatchConfirmingDoc extends JFrame {
 		dateText.setEditable(state);
 		textIssuedBy.setEditable(state);
 
-		if(state)
-			editConfirmingDocButton.setText("Сохранить");
-		else
-			editConfirmingDocButton.setText("Редактировать");
 	}
 }
