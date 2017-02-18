@@ -10,19 +10,13 @@ import backend.MessageProcessing;
 import backend.ModelDBConnection;
 
 public class EditWatchAchievmentPanel extends JPanel{
-	JTable table;
+	private WatchConfirmingDoc window;
 
 	private JButton editButton, watchButton;
 	private String state;
-	
-	private String[] data;
-	
-	public EditWatchAchievmentPanel(JTable table) {
-		this.table = table;
-		this.data = data;
-		
-	
-		
+	private String[] values;
+
+	public EditWatchAchievmentPanel() {
 		this.setLayout(new FlowLayout());
 
 		editButton = new JButton("Редактировать");
@@ -30,7 +24,6 @@ public class EditWatchAchievmentPanel extends JPanel{
 		editButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				editButtonActionPerformed(evt);
-				table.getSelectedRow();
 			}
 		});
 
@@ -48,11 +41,12 @@ public class EditWatchAchievmentPanel extends JPanel{
 
 	private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			WatchConfirmingDoc window = new WatchConfirmingDoc("edit");
-			window.setValues(IndividualAchievementsPanel.getSelectedInfo());
-			window.setEditable(true);
-			window.setVisible(true);
-		//	window.setValues(data);
+			if(values != null) {
+				window = new WatchConfirmingDoc("edit");
+				window.setEditable(true);
+				window.setVisible(true);
+				window.setValues(values);
+			}
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -60,9 +54,11 @@ public class EditWatchAchievmentPanel extends JPanel{
 
 	private void watchButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			WatchConfirmingDoc window = new WatchConfirmingDoc("watch");
-			window.setValues(IndividualAchievementsPanel.getSelectedInfo());
-			window.setVisible(true);
+			if(values != null) {
+				window = new WatchConfirmingDoc("watch");
+				window.setValues(values);
+				window.setVisible(true);
+			}
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -70,5 +66,9 @@ public class EditWatchAchievmentPanel extends JPanel{
 
 	public String getState() {
 		return state;
+	}
+	
+	public void setValues(String[] values) {
+		this.values = values;
 	}
 }

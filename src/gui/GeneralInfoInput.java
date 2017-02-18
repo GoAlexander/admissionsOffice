@@ -458,7 +458,7 @@ public class GeneralInfoInput extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
 					try {
-						String[] selectedAbitGeneralInfo, selectedAbitPassport, selectedAbitAddressAndContacts, selectedAbitHigherEducation, selectedAbitPostGraduationEducation, selectedAbitIndividualAchievement;
+						String[] selectedAbitGeneralInfo, selectedAbitPassport, selectedAbitAddressAndContacts, selectedAbitHigherEducation, selectedAbitPostGraduationEducation;
 
 						if (dataTable.getSelectedRow() >= 0) {
 							selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(
@@ -471,8 +471,6 @@ public class GeneralInfoInput extends JFrame {
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))), "AbiturientHigherEducation");
 							selectedAbitPostGraduationEducation = ModelDBConnection.getAbiturientEducationByID(String.valueOf(
 									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))), "AbiturientPostgraduateEducation");
-							selectedAbitIndividualAchievement = ModelDBConnection.getAbiturientIndividualAchievementByID(String.valueOf(
-									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
 							
 						} else {
 							selectedAbitGeneralInfo = new String[10];
@@ -490,16 +488,13 @@ public class GeneralInfoInput extends JFrame {
 							selectedAbitPostGraduationEducation = new String[6];
 							for (int i = 0; i < selectedAbitPostGraduationEducation.length; i++)
 								selectedAbitPostGraduationEducation[i] = "";
-							selectedAbitIndividualAchievement = new String[8];
-							for (int i = 0; i < selectedAbitIndividualAchievement.length; i++)
-								selectedAbitIndividualAchievement[i] = "";
 						}
 
 						setValues(selectedAbitGeneralInfo);
 						((PassportPanel)passportPanel).setValues(selectedAbitPassport);
 						((AddressContactsPanel)contPanel).setValues(selectedAbitAddressAndContacts);
 						((EducationPanel)educPanel).setValues(selectedAbitHigherEducation, selectedAbitPostGraduationEducation);
-						((IndividualAchievementsPanel)indAchivPanel).setValues(selectedAbitIndividualAchievement[0]);
+						((IndividualAchievementsPanel)indAchivPanel).setValues((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
 					} catch (SQLException e1) {
 						MessageProcessing.displayErrorMessage(tablePanel, e1);
 					}

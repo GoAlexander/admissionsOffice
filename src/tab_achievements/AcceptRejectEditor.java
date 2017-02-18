@@ -14,7 +14,7 @@ public class AcceptRejectEditor extends AbstractCellEditor implements TableCellE
 	private EditWatchAchievmentPanel acceptRejectPane;
 
 	public AcceptRejectEditor(JTable table) {
-		acceptRejectPane = new EditWatchAchievmentPanel(table);
+		acceptRejectPane = new EditWatchAchievmentPanel();
 		/*acceptRejectPane.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -27,7 +27,7 @@ public class AcceptRejectEditor extends AbstractCellEditor implements TableCellE
 			}
 		});*/
 	}
-	
+
 	@Override
 	public Object getCellEditorValue() {
 		return acceptRejectPane.getState();
@@ -47,5 +47,9 @@ public class AcceptRejectEditor extends AbstractCellEditor implements TableCellE
 			acceptRejectPane.setBackground(table.getBackground());
 		}
 		return acceptRejectPane;
+	}
+
+	public void setValues(String[] values) {
+		acceptRejectPane.setValues(values);
 	}
 }

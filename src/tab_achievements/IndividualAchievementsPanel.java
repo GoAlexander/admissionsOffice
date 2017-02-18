@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -14,6 +15,10 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import backend.MessageProcessing;
@@ -23,14 +28,11 @@ import general_classes.GUITableModel;
 
 public class IndividualAchievementsPanel extends JPanel{
 	private String currentAbit;
-	private static JTable indAchivTable;
+	private JTable indAchivTable;
 	private JButton addNewAchievmentButton, editAchievmentButton, saveAchievmentButton;
 	private GUITableModel individAchivTM = new GUITableModel();
-	private String[] individAchivColumnNames = { "Наименование", "Балл", "Подтверждающий документ" };
+	private String[] nameIndAchivTest, individAchivColumnNames = { "Наименование", "Балл", "Подтверждающий документ" };
 
-	private static String[][] data;
-	private static String[][] data1;
-	
 	public IndividualAchievementsPanel() {
 		this.setLayout(new BorderLayout());
 
@@ -42,20 +44,28 @@ public class IndividualAchievementsPanel extends JPanel{
 		indAchivTable.setMaximumSize(new Dimension(100, 100));
 		this.add(scrPane, BorderLayout.CENTER);
 		indAchivTable.setRowHeight(37);
-		// ***test data
-
 		individAchivTM.setDataVector(null, individAchivColumnNames);
-		
-	
 
-		String[] nameIndAchivTest = ModelDBConnection.getNamesFromTableOrderedById("IndividualAchievement");
+		nameIndAchivTest = ModelDBConnection.getNamesFromTableOrderedById("IndividualAchievement");
 		createCheckboxTable(indAchivTable, 0, nameIndAchivTest);
 
 		EditWatchRenderer renderer = new EditWatchRenderer(indAchivTable);
 		indAchivTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
 		indAchivTable.getColumnModel().getColumn(2).setCellEditor(new AcceptRejectEditor(indAchivTable));
-		
-		
+
+		indAchivTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getValueIsAdjusting() == false) {
+					String[] values = new String[2];
+					values[0] = currentAbit;
+					values[1] = "1";
+					String selectedIndAch = (String) individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 0);
+					for(int j = 0; !selectedIndAch.equals(nameIndAchivTest[j]); j++, values[1] = String.valueOf(j+1));
+
+					((AcceptRejectEditor)indAchivTable.getColumnModel().getColumn(2).getCellEditor()).setValues(values);
+				}
+			}
+		});
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -109,7 +119,6 @@ public class IndividualAchievementsPanel extends JPanel{
 	private void addNewAchievmentButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
 			individAchivTM.addRow(new String[individAchivColumnNames.length]);
-			
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -125,34 +134,54 @@ public class IndividualAchievementsPanel extends JPanel{
 
 	private void saveAchievmentButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
+			Vector<Vector<Object>> data = individAchivTM.getDataVector();
+			Object[] tmpdata;
+
+			String[][]	data_new = new String[data.size()][8], 
+						data_old = ModelDBConnection.getAllAchievmentsByAbiturientId(currentAbit, true);
+
+			int	data_old_length = data_old == null ? 0 : data_old.length;
+
+			for (int i = 0; i < ((data.size() <= data_old_length) ? data.size() : data_old_length); i++) {
+				tmpdata = data.elementAt(i).toArray();
+				data_new[i][0] = currentAbit;
+				data_new[i][1] = "1";
+				for(int j = 0; !tmpdata[0].toString().equals(nameIndAchivTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
+				if (tmpdata[1] != null) data_new[i][2] = tmpdata[1].toString();
+				for(int j = 3; j < data_new[i].length; j++)
+					data_new[i][j] = data_old[i][j];
+			}
+
+			for(int i = 0; i < data_old_length; i++) {
+				String[] data_delete = {data_old[i][0], data_old[i][1]};
+				ModelDBConnection.deleteElementInTableByIds("AbiturientIndividualAchievement", data_delete);
+			}
+
+			for(int i = 0; i < data.size(); i++) {
+				ModelDBConnection.updateAbiturientIndividualAchivementByID(data_new[i]);
+			}
+
+			MessageProcessing.displaySuccessMessage(this, 4);
+
 			indAchivTable.clearSelection();
 			this.setEditable(false);
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
 	public void setValues(String aid) {
 		currentAbit = aid;
-		data = ModelDBConnection.getAllAchievmentsByAbiturientId(aid);
-	
-		individAchivTM.setDataVector(data, individAchivColumnNames);
-		
+		individAchivTM.setDataVector(ModelDBConnection.getAllAchievmentsByAbiturientId(aid, false), individAchivColumnNames);
+
+		String[] nameIndAchivTest = ModelDBConnection.getNamesFromTableOrderedById("IndividualAchievement");
+		createCheckboxTable(indAchivTable, 0, nameIndAchivTest);
+
 		EditWatchRenderer renderer = new EditWatchRenderer(indAchivTable);
 		indAchivTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
+
 		indAchivTable.getColumnModel().getColumn(2).setCellEditor(new AcceptRejectEditor(indAchivTable));
-	}
-	
-	public static String[] getSelectedInfo(){
-		try {
-			data1 = ModelDBConnection.getAllFromTable("AbiturientIndividualAchievement");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		int row  = indAchivTable.getSelectedRow();
-		return data1[row];
-		
 	}
 
 	public void setEditable(boolean state) {

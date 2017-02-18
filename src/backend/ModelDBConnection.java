@@ -88,7 +88,7 @@ public class ModelDBConnection {
 				cstmt.execute();
 
 				count = cstmt.getInt(1);
-				System.out.println(count);
+				//System.out.println(count);
 				return count;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -174,9 +174,9 @@ public class ModelDBConnection {
 				abiturientInfo[7] = rset.getDate(8).toString();
 				abiturientInfo[8] = rset.getInt(9) == 0 ? "" : String.valueOf(rset.getInt(9));
 				abiturientInfo[9] = rset.getDate(10) == null ? "" : rset.getDate(10).toString();
-				System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
+				/*System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
 						+ abiturientInfo[3] + " " + abiturientInfo[4] + " " + abiturientInfo[5] + " "
-						+ abiturientInfo[6] + " " + abiturientInfo[7] + " ");
+						+ abiturientInfo[6] + " " + abiturientInfo[7] + " ");*/
 			}
 
 			stmt.close();
@@ -532,6 +532,65 @@ public class ModelDBConnection {
 		rset.close();
 	}
 
+	public static void updateElementInTableByIds(String table, String[] data) throws SQLException {
+		String id1 = "aid_abiturient", id2 = "";
+		switch (table) {
+		case "AbiturientIndividualAchievement":
+			id1 = "aid_abiturient";
+			id2 = "id_individual_achievement";
+			break;
+		case "AbiturientEntranceTests":
+			id1 = "aid_abiturient";
+			id2 = "id_entranceTest";
+			break;
+		}
+
+		String query = "select * from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1] + ";";
+		System.out.println(query);
+		int numberOfColumns = 0;
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			ResultSetMetaData rsmd = rset.getMetaData();
+			numberOfColumns = rsmd.getColumnCount();
+
+			int countStrings = 0;
+			while (rset.next()) {
+				countStrings++;
+			}
+
+			if (countStrings > 0) {
+				query = "update " + table + " set ";
+				for (int i = 1; i < numberOfColumns; i++) {
+					if (i == numberOfColumns - 1)
+						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'";
+					else
+						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'" + ", ";
+				}
+				query = query + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1] + ";";
+			} else {
+				query = "insert into " + table + " values (" + data[0] + ", ";
+				for (int i = 1; i < numberOfColumns; i++) {
+					if (i == numberOfColumns - 1)
+						query = query + "'" + data[i] + "')";
+					else
+						query = query + "'" + data[i] + "'" + ", ";
+				}
+			}
+			stmt.close();
+			rset.close();
+		}
+
+		System.out.println(query);
+
+		stmt = con.createStatement();
+		stmt.executeUpdate(query);
+
+		stmt.close();
+		rset.close();
+	}
+
 	public static void deleteElementInTableById(String table, String data) throws SQLException {
 		String id = "id";
 		switch (table) {
@@ -565,16 +624,44 @@ public class ModelDBConnection {
 		stmt.close();
 	}
 
-	public static String[][] getAllAchievmentsByAbiturientId(String aid) {
+	public static void deleteElementInTableByIds(String table, String[] data) throws SQLException {
+		String id1 = "aid_abiturient", id2 = "";
+		switch (table) {
+		case "AbiturientIndividualAchievement":
+			id1 = "aid_abiturient";
+			id2 = "id_individual_achievement";
+			break;
+		case "AbiturientEntranceTests":
+			id1 = "aid_abiturient";
+			id2 = "id_entranceTest";
+			break;
+		}
+
+		String query = "delete from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1] + ";";
+		System.out.println(query);
+
+		stmt = con.createStatement();
+		stmt.executeUpdate(query);
+
+		stmt.close();
+	}
+
+	public static String[][] getAllAchievmentsByAbiturientId(String aid, boolean need_all_columns) {
 		String[][] data = null;
 
 		int countStrings = getCountForAbitID("AbiturientIndividualAchievement", aid);
 
 		if (countStrings > 0) {
 			try {
-				String query = "select name, AbiturientIndividualAchievement.score from IndividualAchievement, AbiturientIndividualAchievement "
-						+ "where IndividualAchievement.id = AbiturientIndividualAchievement.id_individual_achievement "
-						+ "and aid_abiturient = " + aid;
+				String query;
+				if(need_all_columns)
+					query = "select * from AbiturientIndividualAchievement "
+						+ "where aid_abiturient = " + aid;
+				else
+					query = "select name, AbiturientIndividualAchievement.score from IndividualAchievement, AbiturientIndividualAchievement "
+							+ "where IndividualAchievement.id = AbiturientIndividualAchievement.id_individual_achievement "
+							+ "and aid_abiturient = " + aid;
+
 				stmt = con.createStatement();
 				rset = stmt.executeQuery(query);
 				ResultSetMetaData rsmd = rset.getMetaData();
@@ -663,9 +750,9 @@ public class ModelDBConnection {
 				abiturientPassportInfo[5] = rset.getString(6);
 				abiturientPassportInfo[6] = rset.getString(7);
 
-				System.out.println(abiturientPassportInfo[0] + " " + abiturientPassportInfo[1] + " "
+				/*System.out.println(abiturientPassportInfo[0] + " " + abiturientPassportInfo[1] + " "
 						+ abiturientPassportInfo[2] + " " + abiturientPassportInfo[3] + " " + abiturientPassportInfo[4]
-						+ " " + abiturientPassportInfo[5] + " " + abiturientPassportInfo[6]);
+						+ " " + abiturientPassportInfo[5] + " " + abiturientPassportInfo[6]);*/
 			}
 
 			stmt.close();
@@ -686,7 +773,7 @@ public class ModelDBConnection {
 			ModelDBConnection.updateElementInTableById("AbiturientPassport", abiturientPassportInfo);
 			System.out.println(query);
 			stmt = con.createStatement();
-			stmt.executeQuery(query);
+			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -716,10 +803,10 @@ public class ModelDBConnection {
 				abiturientAddressAndContactsInfo[5] = rset.getString(6);
 				abiturientAddressAndContactsInfo[6] = rset.getString(7);
 
-				System.out.println(abiturientAddressAndContactsInfo[0] + " " + abiturientAddressAndContactsInfo[1] + " "
+				/*System.out.println(abiturientAddressAndContactsInfo[0] + " " + abiturientAddressAndContactsInfo[1] + " "
 						+ abiturientAddressAndContactsInfo[2] + " " + abiturientAddressAndContactsInfo[3] + " "
 						+ abiturientAddressAndContactsInfo[4] + " " + abiturientAddressAndContactsInfo[5] + " "
-						+ abiturientAddressAndContactsInfo[6]);
+						+ abiturientAddressAndContactsInfo[6]);*/
 			}
 
 			stmt.close();
@@ -741,7 +828,7 @@ public class ModelDBConnection {
 			ModelDBConnection.updateElementInTableById("AbiturientAddress", abiturientAddressInfo);
 			System.out.println(query);
 			stmt = con.createStatement();
-			stmt.executeQuery(query);
+			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -770,14 +857,53 @@ public class ModelDBConnection {
 				educationInfo[4] = rset.getString(5);
 				educationInfo[5] = String.valueOf(rset.getInt(6));
 
-				System.out.println(educationInfo[0] + " " + educationInfo[1] + " " + educationInfo[2] + " "
-						+ educationInfo[3] + " " + educationInfo[4] + " " + educationInfo[5]);
+				/*System.out.println(educationInfo[0] + " " + educationInfo[1] + " " + educationInfo[2] + " "
+						+ educationInfo[3] + " " + educationInfo[4] + " " + educationInfo[5]);*/
 			}
 
 			stmt.close();
 			rset.close();
 		}
 		return educationInfo;
+	}
+
+	public static String[] getElementFromTableByIDs(String table, String[] data) {
+		try {
+			String id1 = "aid_abiturient", id2 = "";
+			switch (table) {
+			case "AbiturientIndividualAchievement":
+				id1 = "aid_abiturient";
+				id2 = "id_individual_achievement";
+				break;
+			case "AbiturientEntranceTests":
+				id1 = "aid_abiturient";
+				id2 = "id_entranceTest";
+				break;
+			}
+
+			String query = "select * from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1] + ";";
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+			ResultSetMetaData rsmd = rset.getMetaData();
+			int numberOfColumns = rsmd.getColumnCount();
+
+			String[] result = new String[numberOfColumns];
+			for(int i = 0; i < result.length; i++)
+				result[i] = "";
+
+			while (rset.next()) {
+				for (int i = 0; i < numberOfColumns; i++) {
+					if (rset.getObject(i + 1) != null)
+						result[i] = rset.getObject(i + 1).toString();
+					System.out.println("Read: " + result[i]);
+				}
+			}
+			stmt.close();
+			rset.close();
+			return result;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public static void updateAbiturientEducationByID(String nameTable, String[] data) throws SQLException {
@@ -788,44 +914,9 @@ public class ModelDBConnection {
 		}
 	}
 
-	public static String[] getAbiturientIndividualAchievementByID(String aid) throws SQLException {
-		String query = "select aid_abiturient, id_individual_achievement, score, documentName, documentSeries, documentNumber, issuedBy, issueDate"
-				+ " from AbiturientIndividualAchievement where aid_abiturient = " + aid + ";";
-
-		String[] indAchivInfo = new String[8];
-		for (int i = 0; i < indAchivInfo.length; i++)
-			indAchivInfo[i] = "";
-		indAchivInfo[0] = aid;
-
-		if (initConnection()) {
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
-
-			while (rset.next()) {
-				indAchivInfo = new String[8];
-				indAchivInfo[0] = String.valueOf(rset.getInt(1));
-				indAchivInfo[1] = String.valueOf(rset.getInt(2));
-				indAchivInfo[2] = String.valueOf(rset.getInt(3));
-				indAchivInfo[3] = rset.getString(4);
-				indAchivInfo[4] = rset.getString(5);
-				indAchivInfo[5] = rset.getString(6);
-				indAchivInfo[6] = rset.getString(7);
-				indAchivInfo[7] = String.valueOf(rset.getDate(8));
-
-				System.out.println(indAchivInfo[0] + " " + indAchivInfo[1] + " " + indAchivInfo[2] + " "
-						+ indAchivInfo[3] + " " + indAchivInfo[4] + " " + indAchivInfo[5] + " " + indAchivInfo[6] + " "
-						+ indAchivInfo[7]);
-			}
-
-			stmt.close();
-			rset.close();
-		}
-		return indAchivInfo;
-	}
-
 	public static void updateAbiturientIndividualAchivementByID(String[] data) throws SQLException {
 		try {
-			ModelDBConnection.updateElementInTableById("AbiturientIndividualAchievement", data);
+			ModelDBConnection.updateElementInTableByIds("AbiturientIndividualAchievement", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

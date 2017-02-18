@@ -9,7 +9,7 @@ public class EditWatchRenderer extends DefaultTableCellRenderer {
 	private EditWatchAchievmentPanel acceptRejectPane;
 
 	public EditWatchRenderer(JTable table) {
-		acceptRejectPane = new EditWatchAchievmentPanel(table);
+		acceptRejectPane = new EditWatchAchievmentPanel();
 	}
 
 	@Override

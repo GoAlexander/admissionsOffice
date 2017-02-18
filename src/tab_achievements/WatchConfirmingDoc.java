@@ -114,30 +114,28 @@ public class WatchConfirmingDoc extends JFrame {
 
 	private void editConfirmingDocButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-
 			ModelDBConnection.updateAbiturientIndividualAchivementByID(getValues());
-
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
 	public void setValues(String[] values) {
+		String[] data = ModelDBConnection.getElementFromTableByIDs("AbiturientIndividualAchievement", values);
 
-		currentAbit = values[0];
-		currentAchievmentId = values[1];
-		score = values[2];
-		nameDocText.setText(values[3]);
-		seriaText.setText(values[4]);
-		numText.setText(values[5]);
-		textIssuedBy.setText(values[6]);
-		dateText.setText(values[7]);
-
+		currentAbit = data[0];
+		currentAchievmentId = data[1];
+		score = data[2];
+		nameDocText.setText(data[3]);
+		seriaText.setText(data[4]);
+		numText.setText(data[5]);
+		textIssuedBy.setText(data[6]);
+		dateText.setText(data[7]);
 	}
 
 	public String[] getValues() {
 		String[] data = new String[8];
-		System.out.println(currentAbit);
+
 		data[0] = currentAbit;
 		data[1] = currentAchievmentId;
 		data[2] = score;
