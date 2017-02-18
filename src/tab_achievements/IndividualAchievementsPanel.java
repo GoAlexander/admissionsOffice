@@ -55,15 +55,34 @@ public class IndividualAchievementsPanel extends JPanel{
 
 		indAchivTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				if (e.getValueIsAdjusting() == false) {
-					String[] values = new String[2];
-					values[0] = currentAbit;
-					values[1] = "1";
-					String selectedIndAch = (String) individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 0);
-					for(int j = 0; !selectedIndAch.equals(nameIndAchivTest[j]); j++, values[1] = String.valueOf(j+1));
+				if(indAchivTable.getSelectedRow() > -1)
+					if(individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 0) != null) {
+						String[] values = new String[3];
+						values[0] = currentAbit;
+						values[1] = "1";
+						String selectedIndAch = (String) individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 0);
+						for(int j = 0; !selectedIndAch.equals(nameIndAchivTest[j]); j++, values[1] = String.valueOf(j+1));
+						values[2] = (String) individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 1);
 
-					((AcceptRejectEditor)indAchivTable.getColumnModel().getColumn(2).getCellEditor()).setValues(values);
-				}
+						((AcceptRejectEditor)indAchivTable.getColumnModel().getColumn(2).getCellEditor()).setValues(values);
+					}
+			}
+		});
+
+		indAchivTable.getModel().addTableModelListener(new TableModelListener() {
+			public void tableChanged(TableModelEvent arg0) 
+			{
+				if(indAchivTable.getSelectedRow() > -1)
+					if(individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 0) != null) {
+						String[] values = new String[3];
+						values[0] = currentAbit;
+						values[1] = "1";
+						String selectedIndAch = (String) individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 0);
+						for(int j = 0; !selectedIndAch.equals(nameIndAchivTest[j]); j++, values[1] = String.valueOf(j+1));
+						values[2] = (String) individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 1);
+
+						((AcceptRejectEditor)indAchivTable.getColumnModel().getColumn(2).getCellEditor()).setValues(values);
+					}
 			}
 		});
 
@@ -141,6 +160,17 @@ public class IndividualAchievementsPanel extends JPanel{
 						data_old = ModelDBConnection.getAllAchievmentsByAbiturientId(currentAbit, true);
 
 			int	data_old_length = data_old == null ? 0 : data_old.length;
+
+			for(int i = 0; i < data.size(); i++) {
+				tmpdata = data.elementAt(i).toArray();
+				data_new[i][0] = currentAbit;
+				data_new[i][1] = "1";
+				for(int j = 0; !tmpdata[0].toString().equals(nameIndAchivTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
+				if (tmpdata[1] != null) data_new[i][2] = tmpdata[1].toString();
+				for(int j = 3; j < data_new[i].length; j++)
+					data_new[i][j] = null;
+				data_new[i][7] = "";
+			}
 
 			for (int i = 0; i < ((data.size() <= data_old_length) ? data.size() : data_old_length); i++) {
 				tmpdata = data.elementAt(i).toArray();
