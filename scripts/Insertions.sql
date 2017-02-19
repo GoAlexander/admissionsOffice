@@ -139,3 +139,9 @@ insert into [AssessmentBase] values
 (1, 'Ведомость', null);
 
 go
+
+insert into [AdmissionPlan] values
+(1, 1, 1, 1, 1, 11),
+(2, 2, 2, 2, 2, 22);
+
+go

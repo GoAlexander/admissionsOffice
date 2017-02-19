@@ -32,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -55,6 +56,7 @@ import tab_competitive_groups.CompetitiveGroupPanelListener;
 import tab_competitive_groups.CompetitiveGroupsPanel;
 import tab_competitive_groups.SimpleCompetitiveGroupPanel;
 import general_classes.GUITableModel;
+import outputDoc.AdmissionPlanOutExcel;
 import tab_achievements.IndividualAchievementsPanel;
 
 public class GeneralInfoInput extends JFrame {
@@ -230,6 +232,17 @@ public class GeneralInfoInput extends JFrame {
 		expMenu.add(expMenuCompetGroup);
 		expMenuPlan = new JMenuItem("План приема");
 		expMenu.add(expMenuPlan);
+		expMenuPlan.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					AdmissionPlanOutExcel.planOutExcel();
+					JOptionPane.showMessageDialog(null, "Success!", "", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
 		expMenuApplications = new JMenuItem("Заявления абитуриентов");
 		expMenu.add(expMenuApplications);
 		expMenuResults = new JMenuItem("Результаты конкурса");
