@@ -686,21 +686,23 @@ public class ModelDBConnection {
 		return data;
 	}
 
-	public static String[][] getAllEntranceTestsResultsByAbiturientId(String aid) {
+	public static String[][] getAllEntranceTestsResultsByAbiturientId(String aid, boolean need_all_columns) {
 		String[][] data = null;
 		String query = "select EntranceTest.name, null, null, null, null from EntranceTest";
-		int countStrings;
+		int countStrings = getCountForAbitID("AbiturientEntranceTests", aid);
 
-		if (!aid.equals("")) {
-			countStrings = getCountForAbitID("AbiturientEntranceTests", aid);
-
+		if(need_all_columns) {
+			query = "select * from AbiturientEntranceTests "
+					+ "where aid_abiturient = " + aid;
+		}
+		else {
 			if (countStrings > 0) {
-				query = "select EntranceTest.name, TestBox.name, testGroup, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox "
-						+ "where EntranceTest.id = AbiturientEntranceTests.id_entranceTest "
-						+ "and TestBox.id = AbiturientEntranceTests.id_testBox " + "and aid_abiturient = " + aid;
+				query = "select EntranceTest.name, testGroup, TestBox.name, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox "
+							+ "where EntranceTest.id = AbiturientEntranceTests.id_entranceTest "
+							+ "and TestBox.id = AbiturientEntranceTests.id_testBox " + "and aid_abiturient = " + aid;
+			} else {
+				countStrings = getCount("EntranceTest");
 			}
-		} else {
-			countStrings = getCount("EntranceTest");
 		}
 
 		try {
@@ -919,6 +921,46 @@ public class ModelDBConnection {
 			ModelDBConnection.updateElementInTableByIds("AbiturientIndividualAchievement", data);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static void updateAbiturientEntranceTestsResultsByID(String[] data) throws SQLException {
+		try {
+			String query = "update Abiturient set needSpecConditions = '" + data[data.length - 1] + "' where aid = " + data[0] + ";";
+
+			String[] abiturientEntranceTestsResultsInfo = new String[data.length - 1];
+			for (int i = 0; i < abiturientEntranceTestsResultsInfo.length; i++)
+				abiturientEntranceTestsResultsInfo[i] = data[i];
+
+			ModelDBConnection.updateElementInTableByIds("AbiturientEntranceTests", abiturientEntranceTestsResultsInfo);
+			System.out.println(query);
+			stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static boolean needAbiturientSpecialConditionsByID(String aid) {
+		boolean state = false;
+		String query = "select needSpecConditions from Abiturient where aid = " + aid + ";";
+
+		System.out.println(query);
+		try {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			while (rset.next()) {
+				state = rset.getBoolean(1);
+			}
+
+			stmt.close();
+			rset.close();
+			return state;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return state;
 		}
 	}
 }

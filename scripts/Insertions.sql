@@ -134,3 +134,8 @@ insert into [AbiturientIndividualAchievement] values
 (2, 1, 199, 'Document', '1234654', '654', 'HSE', '2016-12-12');
 
 go
+
+insert into [AssessmentBase] values
+(1, 'Ведомость', null);
+
+go

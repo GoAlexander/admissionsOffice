@@ -494,6 +494,7 @@ public class GeneralInfoInput extends JFrame {
 						((PassportPanel)passportPanel).setValues(selectedAbitPassport);
 						((AddressContactsPanel)contPanel).setValues(selectedAbitAddressAndContacts);
 						((EducationPanel)educPanel).setValues(selectedAbitHigherEducation, selectedAbitPostGraduationEducation);
+						((EntranceTestsPanel)entranceTestpPanel).setValues((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
 						((IndividualAchievementsPanel)indAchivPanel).setValues((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
 					} catch (SQLException e1) {
 						MessageProcessing.displayErrorMessage(tablePanel, e1);

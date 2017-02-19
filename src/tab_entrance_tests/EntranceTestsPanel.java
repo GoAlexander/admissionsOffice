@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -26,27 +27,27 @@ public class EntranceTestsPanel extends JPanel {
 	private GUITableModel entranceTestTM = new GUITableModel();
 	private JButton editTestResultButton, saveTestResultButton;
 	private JCheckBox specialCond;
-	private String[] entranceTestColumnNames = { "Наименование", "Группа", "Блок испытаний", "Дата испытания", "Балл" };
+	private String[] nameEntranceTest, blockEntranceTest, entranceTestColumnNames = { "Наименование", "Группа", "Блок испытаний", "Дата испытания", "Балл" };
 
 	public EntranceTestsPanel() {
 		this.setLayout(new BorderLayout());
 
 		entranceTestTable = new JTable(entranceTestTM);
 		//entranceTestTM.setDataVector(null, entranceTestColumnNames);
-		entranceTestTM.setDataVector(ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(""), entranceTestColumnNames);
+		entranceTestTM.setDataVector(ModelDBConnection.getAllEntranceTestsResultsByAbiturientId("0", false), entranceTestColumnNames);
 		JScrollPane scrPane = new JScrollPane(entranceTestTable);
 		scrPane.setPreferredSize(new Dimension(300, 0));
 		entranceTestTable.setMaximumSize(new Dimension(100, 100));
 		entranceTestTable.setRowHeight(25);
 		this.add(scrPane, BorderLayout.CENTER);
 
-		String[] nameEntranceTest = ModelDBConnection.getNamesFromTableOrderedById("EntranceTest");
+		nameEntranceTest = ModelDBConnection.getNamesFromTableOrderedById("EntranceTest");
 		createCheckboxTable(entranceTestTable, 0, nameEntranceTest);
 
 		String[] groupEntranceTest = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 		createCheckboxTable(entranceTestTable, 1, groupEntranceTest);
 
-		String[] blockEntranceTest = ModelDBConnection.getNamesFromTableOrderedById("TestBox");
+		blockEntranceTest = ModelDBConnection.getNamesFromTableOrderedById("TestBox");
 		createCheckboxTable(entranceTestTable, 2, blockEntranceTest);
 
 		JPanel butPanel = new JPanel();
@@ -94,16 +95,73 @@ public class EntranceTestsPanel extends JPanel {
 
 	private void saveTestResultButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
+			Vector<Vector<Object>> data = entranceTestTM.getDataVector();
+			Object[] tmpdata;
+
+			String[][]	data_new = new String[data.size()][10], 
+						data_old = ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(currentAbit, true);
+
+			int	data_old_length = data_old == null ? 0 : data_old.length;
+
+			for(int i = 0; i < data.size(); i++) {
+				tmpdata = data.elementAt(i).toArray();
+				data_new[i][0] = currentAbit;
+				data_new[i][1] = "1";
+				for(int j = 0; !tmpdata[0].toString().equals(nameEntranceTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
+				if (tmpdata[1] != null) data_new[i][2] = tmpdata[1].toString();
+				// !!!	Временно - внутри хранимой процедуры заменить
+				//		на автоматическое присваивание номера, исходя из свободных мест в группе
+				data_new[i][3] = "";
+				// !!!
+				if (tmpdata[2] != null) {
+					System.out.println(tmpdata[2]);
+					data_new[i][4] = "1";
+					for(int j = 0; !tmpdata[2].toString().equals(blockEntranceTest[j]); j++, data_new[i][4] = String.valueOf(j+1));
+				} else
+					data_new[i][4] = "";
+				data_new[i][5] = (tmpdata[3] != null) ? tmpdata[3].toString() : "";
+				data_new[i][6] = (tmpdata[4] != null) ? tmpdata[4].toString() : "";
+
+				data_new[i][7] = "1";
+				data_new[i][8] = "";
+
+				data_new[i][9] = (specialCond.isSelected()) ? "1" : "0";
+			}
+
+			for(int i = 0; i < data_old_length; i++) {
+				String[] data_delete = {data_old[i][0], data_old[i][1]};
+				ModelDBConnection.deleteElementInTableByIds("AbiturientEntranceTests", data_delete);
+			}
+
+			for(int i = 0; i < data.size(); i++) {
+				ModelDBConnection.updateAbiturientEntranceTestsResultsByID(data_new[i]);
+			}
+
+			MessageProcessing.displaySuccessMessage(this, 4);
+			
+			
 			entranceTestTable.clearSelection();
 			this.setEditable(false);
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
 	public void setValues(String aid) {
 		currentAbit = aid;
-		entranceTestTM.setDataVector(ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(aid), entranceTestColumnNames);
+		entranceTestTM.setDataVector(ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(aid, false), entranceTestColumnNames);
+
+		specialCond.setSelected(ModelDBConnection.needAbiturientSpecialConditionsByID(aid));
+		
+		nameEntranceTest = ModelDBConnection.getNamesFromTableOrderedById("EntranceTest");
+		createCheckboxTable(entranceTestTable, 0, nameEntranceTest);
+
+		String[] groupEntranceTest = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+		createCheckboxTable(entranceTestTable, 1, groupEntranceTest);
+
+		blockEntranceTest = ModelDBConnection.getNamesFromTableOrderedById("TestBox");
+		createCheckboxTable(entranceTestTable, 2, blockEntranceTest);
 	}
 
 	public void setEditable(boolean state) {
