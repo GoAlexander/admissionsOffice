@@ -194,6 +194,7 @@ public class IndividualAchievementsPanel extends JPanel{
 			MessageProcessing.displaySuccessMessage(this, 4);
 
 			indAchivTable.clearSelection();
+			this.setValues(currentAbit);
 			this.setEditable(false);
 		} catch (Exception e) {
 			e.printStackTrace();
