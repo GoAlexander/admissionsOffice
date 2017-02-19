@@ -56,7 +56,7 @@ import tab_competitive_groups.CompetitiveGroupPanelListener;
 import tab_competitive_groups.CompetitiveGroupsPanel;
 import tab_competitive_groups.SimpleCompetitiveGroupPanel;
 import general_classes.GUITableModel;
-import outputDoc.AdmissionPlanOutExcel;
+import outputDoc.OutputExcel;
 import tab_achievements.IndividualAchievementsPanel;
 
 public class GeneralInfoInput extends JFrame {
@@ -236,7 +236,7 @@ public class GeneralInfoInput extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					AdmissionPlanOutExcel.planOutExcel();
+					OutputExcel.outExcel("AdmissionPlan");
 					JOptionPane.showMessageDialog(null, "Success!", "", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
