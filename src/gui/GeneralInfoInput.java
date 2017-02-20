@@ -197,6 +197,17 @@ public class GeneralInfoInput extends JFrame {
 		menuBar.add(reportMenu);
 		reportMenuListCandidates = new JMenuItem("Список подавших документы");
 		reportMenu.add(reportMenuListCandidates);
+		reportMenuListCandidates.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OutputExcel.outExcel("Abiturient");
+					JOptionPane.showMessageDialog(null, "Success!", "", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
 		reportMenuListGroups = new JMenuItem("Списки групп на вступительные");
 		reportMenu.add(reportMenuListGroups);
 		reportMenuResults = new JMenuItem("Результаты вступительных");

@@ -13,22 +13,34 @@ import backend.ModelDBConnection;
 
 public class OutputExcel {
 	
-	private static String[] columnNamesAdmPlan = {"Код специальности", "Форма обучения", "Конкурсная группа", "Целевая организация", "Стандарт образования", "Количество мест"};
+	private static String[] colNamesAdmissionPlan = {"Код специальности", "Форма обучения", "Конкурсная группа", "Целевая организация", "Стандарт образования", "Количество мест"};
+	private static String[] colNamesAbiturient = {"Идентификатор", "Фамилия", "Имя", "Отчество"};
+	private static String[] columnNames;
 	
 	public static void outExcel(String tableName) throws Exception {
 
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet(tableName);
-
+		
 		int rowNum = 0;
 		Row row = sheet.createRow(rowNum);
-		for(int i = 0; i < columnNamesAdmPlan.length; i++)
-			row.createCell(i).setCellValue(columnNamesAdmPlan[i]);
+		
+		switch(tableName){
+		case "AdmissionPlan":
+			columnNames = colNamesAdmissionPlan;
+			break;
+		case "Abiturient":
+			columnNames = colNamesAbiturient;
+			break;
+		}
+		
+		for(int i = 0; i < columnNames.length; i++)
+			row.createCell(i).setCellValue(columnNames[i]);
 
-		String[][] dataPlan = ModelDBConnection.getAllFromTable(tableName);
+		String[][] data = ModelDBConnection.getAllFromTable(tableName);
 
-		for (int i = 0; i < dataPlan.length; i++) 
-			writeToRow(sheet, ++rowNum, dataPlan[i]);
+		for (int i = 0; i < data.length; i++) 
+			writeToRow(sheet, ++rowNum, data[i]);
 
 		String path = "./files/" + tableName + "File.xls";
 		File file = new File(path);
@@ -42,7 +54,7 @@ public class OutputExcel {
 	private static void writeToRow(HSSFSheet sheet, int rowNum, String[] dataRow){
 		Row row = sheet.createRow(rowNum);
 
-		for(int i = 0; i < dataRow.length; i++)
+		for(int i = 0; i < columnNames.length; i++)
 			row.createCell(i).setCellValue(dataRow[i]);
 	}
 }
