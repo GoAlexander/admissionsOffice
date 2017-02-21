@@ -20,6 +20,8 @@ public class ModelDBConnection {
 	static CallableStatement cstmt = null;
 	static ResultSet rset = null;
 	static Statement stmt = null;
+	
+	static boolean DEBUG = false;
 
 	public static void setConnectionParameters(String serverType, String serverAddress, String dbName, String login,
 			String password) {
@@ -174,9 +176,12 @@ public class ModelDBConnection {
 				abiturientInfo[7] = rset.getDate(8).toString();
 				abiturientInfo[8] = rset.getInt(9) == 0 ? "" : String.valueOf(rset.getInt(9));
 				abiturientInfo[9] = rset.getDate(10) == null ? "" : rset.getDate(10).toString();
-				/*System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
+				
+				if (DEBUG) {
+				System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
 						+ abiturientInfo[3] + " " + abiturientInfo[4] + " " + abiturientInfo[5] + " "
-						+ abiturientInfo[6] + " " + abiturientInfo[7] + " ");*/
+						+ abiturientInfo[6] + " " + abiturientInfo[7] + " ");
+				}
 			}
 
 			stmt.close();
@@ -752,9 +757,12 @@ public class ModelDBConnection {
 				abiturientPassportInfo[5] = rset.getString(6);
 				abiturientPassportInfo[6] = rset.getString(7);
 
-				/*System.out.println(abiturientPassportInfo[0] + " " + abiturientPassportInfo[1] + " "
-						+ abiturientPassportInfo[2] + " " + abiturientPassportInfo[3] + " " + abiturientPassportInfo[4]
-						+ " " + abiturientPassportInfo[5] + " " + abiturientPassportInfo[6]);*/
+				if (DEBUG) {
+					System.out.println(abiturientPassportInfo[0] + " " + abiturientPassportInfo[1] + " "
+							+ abiturientPassportInfo[2] + " " + abiturientPassportInfo[3] + " "
+							+ abiturientPassportInfo[4] + " " + abiturientPassportInfo[5] + " "
+							+ abiturientPassportInfo[6]);
+				}
 			}
 
 			stmt.close();
@@ -805,10 +813,12 @@ public class ModelDBConnection {
 				abiturientAddressAndContactsInfo[5] = rset.getString(6);
 				abiturientAddressAndContactsInfo[6] = rset.getString(7);
 
-				/*System.out.println(abiturientAddressAndContactsInfo[0] + " " + abiturientAddressAndContactsInfo[1] + " "
-						+ abiturientAddressAndContactsInfo[2] + " " + abiturientAddressAndContactsInfo[3] + " "
-						+ abiturientAddressAndContactsInfo[4] + " " + abiturientAddressAndContactsInfo[5] + " "
-						+ abiturientAddressAndContactsInfo[6]);*/
+				if (DEBUG) {
+					System.out.println(abiturientAddressAndContactsInfo[0] + " " + abiturientAddressAndContactsInfo[1]
+							+ " " + abiturientAddressAndContactsInfo[2] + " " + abiturientAddressAndContactsInfo[3]
+							+ " " + abiturientAddressAndContactsInfo[4] + " " + abiturientAddressAndContactsInfo[5]
+							+ " " + abiturientAddressAndContactsInfo[6]);
+				}
 			}
 
 			stmt.close();
@@ -859,8 +869,10 @@ public class ModelDBConnection {
 				educationInfo[4] = rset.getString(5);
 				educationInfo[5] = String.valueOf(rset.getInt(6));
 
-				/*System.out.println(educationInfo[0] + " " + educationInfo[1] + " " + educationInfo[2] + " "
-						+ educationInfo[3] + " " + educationInfo[4] + " " + educationInfo[5]);*/
+				if (DEBUG) {
+					System.out.println(educationInfo[0] + " " + educationInfo[1] + " " + educationInfo[2] + " "
+							+ educationInfo[3] + " " + educationInfo[4] + " " + educationInfo[5]);
+				}
 			}
 
 			stmt.close();
@@ -963,4 +975,69 @@ public class ModelDBConnection {
 			return state;
 		}
 	}
+	
+	
+	public static String[] getAbiturientCompetitiveGroupByID(String aid) throws SQLException {
+		StringBuilder strB = new StringBuilder();
+		strB.
+		append("Select aid_abiturient, course, speciality, educationFrom, chair, ").
+		append("competitiveGroup, targetOrganisation, educationStandard, competitiveBall, ").
+		append("availabilityIndividualAchievements, originalsReceivedDate, markEnrollment ").
+		append("From Abiturient, AbiturientCompetitiveGroup ").
+		append("Where Abiturient.aid = AbiturientCompetitiveGroup.aid_abiturient and ").
+		append("aid_abiturient = ").
+		append(aid).
+		append(";");
+		
+		String query = strB.toString();
+		
+		String[] abiturientInfo = new String[11];
+		for (int i = 0; i < abiturientInfo.length; i++)
+			abiturientInfo[i] = "";
+		abiturientInfo[0] = aid;
+
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			while (rset.next()) {
+				abiturientInfo = new String[11];
+				abiturientInfo[0] = String.valueOf(rset.getInt(1));
+				abiturientInfo[1] = String.valueOf(rset.getInt(2));
+				abiturientInfo[2] = String.valueOf(rset.getInt(3));
+				abiturientInfo[3] = String.valueOf(rset.getInt(4));
+				abiturientInfo[4] = String.valueOf(rset.getInt(5));
+				abiturientInfo[5] = String.valueOf(rset.getInt(6));
+				abiturientInfo[6] = String.valueOf(rset.getInt(7));
+				abiturientInfo[7] = String.valueOf(rset.getInt(8));
+				abiturientInfo[8] = String.valueOf(rset.getInt(9));
+				abiturientInfo[9] = rset.getDate(10) == null ? "" : rset.getDate(10).toString();
+				abiturientInfo[10] = String.valueOf(rset.getInt(11));
+
+				if (DEBUG) {
+					System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
+							+ abiturientInfo[3] + " " + abiturientInfo[4] + " " + abiturientInfo[5] + " "
+							+ abiturientInfo[6] + " " + abiturientInfo[7] + " " + abiturientInfo[8] + " "
+							+ abiturientInfo[9] + " " + abiturientInfo[10]);
+				}
+			}
+
+			stmt.close();
+			rset.close();
+		}
+		return abiturientInfo;
+	}
+
+	public static void updateAbiturientCompetitiveGroupByID(String aid, String[] data) throws SQLException {
+		try {
+			ModelDBConnection.updateElementInTableByIds("AbiturientCompetitiveGroup", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void deleteAbiturientCompetitiveGroupByID(String aid, String data) throws SQLException {
+		deleteElementInTableById("AbiturientCompetitiveGroup", data);
+	}
+	
 }
