@@ -1,4 +1,4 @@
-package outputDoc;
+п»їpackage outputDoc;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,8 +13,8 @@ import backend.ModelDBConnection;
 
 public class OutputExcel {
 	
-	private static String[] colNamesAdmissionPlan = {"Код специальности", "Форма обучения", "Конкурсная группа", "Целевая организация", "Стандарт образования", "Количество мест"};
-	private static String[] colNamesAbiturient = {"Идентификатор", "Фамилия", "Имя", "Отчество"};
+	private static String[] colNamesAdmissionPlan = {"РљРѕРґ СЃРїРµС†РёР°Р»СЊРЅРѕСЃС‚Рё", "Р¤РѕСЂРјР° РѕР±СѓС‡РµРЅРёСЏ", "РљРѕРЅРєСѓСЂСЃРЅР°СЏ РіСЂСѓРїРїР°", "Р¦РµР»РµРІР°СЏ РѕСЂРіР°РЅРёР·Р°С†РёСЏ", "РЎС‚Р°РЅРґР°СЂС‚ РѕР±СЂР°Р·РѕРІР°РЅРёСЏ", "РљРѕР»РёС‡РµСЃС‚РІРѕ РјРµСЃС‚"};
+	private static String[] colNamesAbiturient = {"РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ", "Р¤Р°РјРёР»РёСЏ", "РРјСЏ", "РћС‚С‡РµСЃС‚РІРѕ"};
 	private static String[] columnNames;
 	
 	public static void outExcel(String tableName) throws Exception {
