@@ -83,7 +83,7 @@ public class GeneralInfoInput extends JFrame {
 
 	private JMenuBar menuBar;
 	private JMenu directoryMenu, docMenu, reportMenu, compMenu, expMenu;
-	private JMenuItem docMenuApplication, docMenuOpRasp, docMenuListEntranceExam, directoryMenuEntranceTest,
+	private JMenuItem docMenuApplication, docMenuTitul, docMenuOpRasp, docMenuListEntranceExam, directoryMenuEntranceTest,
 			directoryMenuBlockTest, directoryMenuBaseMark, directoryMenuTypePasport, directoryMenuRegion,
 			directoryMenuTypeSettlements, directoryMenuSex, directoryMenuNationality, directoryMenuReturnReason,
 			directoryMenuIndividual, directoryMenuStudyFields, directoryMenuEducForm, directoryMenuSpeciality,
@@ -192,6 +192,8 @@ public class GeneralInfoInput extends JFrame {
 		docMenu.add(docMenuOpRasp);
 		docMenuListEntranceExam = new JMenuItem("Лист вступительных испытаний");
 		docMenu.add(docMenuListEntranceExam);
+		docMenuTitul = new JMenuItem("Титульный лист");
+		docMenu.add(docMenuTitul);
 
 		reportMenu = new JMenu("Отчетность");
 		menuBar.add(reportMenu);
