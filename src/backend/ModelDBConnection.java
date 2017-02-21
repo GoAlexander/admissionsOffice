@@ -537,6 +537,92 @@ public class ModelDBConnection {
 		rset.close();
 	}
 
+	public static void updateElementInTableByExpression(String table, String[] data, int countOfExprParams) throws SQLException {
+		String id = "id";
+		switch (table) {
+		case "Abiturient":
+			id = "aid";
+			break;
+		case "AbiturientIndividualAchievement":
+		case "AbiturientPostgraduateEducation":
+		case "AbiturientEntranceTests":
+		case "AbiturientPassport":
+		case "AbiturientAddress":
+		case "AbiturientCompetitiveGroup":
+		case "AbiturientHigherEducation":
+			id = "aid_abiturient";
+			break;
+		case "AdmissionPlan":
+			id = "specialtyCode";
+			break;
+		case "Users":
+			id = "userLogin";
+			break;
+		default:
+			id = "id";
+		}
+
+		String query = "select * from " + table + " where " + id + " = 0;";
+		System.out.println(query);
+		int numberOfColumns = 0;
+		if (initConnection()) {
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			ResultSetMetaData rsmd = rset.getMetaData();
+			numberOfColumns = rsmd.getColumnCount();
+
+			int countStrings = 0;
+			query = "select * from " + table + " where ";
+			for(int i = 0; i < countOfExprParams; i++)
+				if(i == countOfExprParams-1)
+					query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
+				else
+					query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
+			System.out.println(query);
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
+
+			while (rset.next()) {
+				countStrings++;
+			}
+
+			if (countStrings > 0) {
+				query = "update " + table + " set ";
+				for (int i = 1; i < numberOfColumns; i++) {
+					if (i == numberOfColumns - 1)
+						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'";
+					else
+						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'" + ", ";
+				}
+				query = query + " where ";
+				for(int i = 0; i < countOfExprParams; i++)
+					if(i == countOfExprParams-1)
+						query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
+					else
+						query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
+			} else {
+				query = "insert into " + table + " values (" + data[0] + ", ";
+				for (int i = 1; i < numberOfColumns; i++) {
+					if (i == numberOfColumns - 1)
+						query = query + "'" + data[i] + "')";
+					else
+						query = query + "'" + data[i] + "'" + ", ";
+				}
+			}
+			stmt.close();
+			rset.close();
+		}
+
+		System.out.println(query);
+
+		stmt = con.createStatement();
+		stmt.executeUpdate(query);
+
+		stmt.close();
+		rset.close();
+	}
+
 	public static void updateElementInTableByIds(String table, String[] data) throws SQLException {
 		String id1 = "aid_abiturient", id2 = "";
 		switch (table) {
@@ -621,6 +707,38 @@ public class ModelDBConnection {
 		}
 
 		String query = "delete from " + table + " where " + id + " = " + data + ";";
+		System.out.println(query);
+
+		stmt = con.createStatement();
+		stmt.executeUpdate(query);
+
+		stmt.close();
+	}
+
+	public static void deleteElementInTableByExpression(String table, String[] data, int countOfExprParams) throws SQLException {
+		String id = "aid_abiturient";
+		switch (table) {
+		case "AbiturientCompetitiveGroup":
+			id = "aid_abiturient";
+			break;
+		}
+
+		String query = "select * from " + table + " where " + id + " = 0;";
+		System.out.println(query);
+		int numberOfColumns = 0;
+
+		stmt = con.createStatement();
+		rset = stmt.executeQuery(query);
+
+		ResultSetMetaData rsmd = rset.getMetaData();
+		numberOfColumns = rsmd.getColumnCount();
+
+		query = "delete from " + table + " where ";
+		for(int i = 0; i < countOfExprParams; i++)
+			if(i == countOfExprParams-1)
+				query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
+			else
+				query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
 		System.out.println(query);
 
 		stmt = con.createStatement();
@@ -730,6 +848,45 @@ public class ModelDBConnection {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+		return data;
+	}
+
+	public static String[][] getAllCompetitiveGroupsByAbiturientId(String aid) {
+		String[][] data = null;
+
+		int countStrings = getCountForAbitID("AbiturientCompetitiveGroup", aid);
+
+		if (countStrings > 0) {
+			try {
+				String query = "Select aid_abiturient, course, speciality, educationForm, chair,"
+						+ " competitiveGroup, targetOrganisation, educationStandard, competitiveBall,"
+						+ " availabilityIndividualAchievements, originalsReceivedDate, markEnrollment"
+						+ " from Abiturient, AbiturientCompetitiveGroup"
+						+ " where Abiturient.aid = AbiturientCompetitiveGroup.aid_abiturient and"
+						+ " aid_abiturient = " + aid + ";";
+				System.out.println(query);
+
+				stmt = con.createStatement();
+				rset = stmt.executeQuery(query);
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+	
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
+				}
+				stmt.close();
+				rset.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		return data;
 	}
@@ -975,69 +1132,16 @@ public class ModelDBConnection {
 			return state;
 		}
 	}
-	
-	
-	public static String[] getAbiturientCompetitiveGroupByID(String aid) throws SQLException {
-		StringBuilder strB = new StringBuilder();
-		strB.
-		append("Select aid_abiturient, course, speciality, educationFrom, chair, ").
-		append("competitiveGroup, targetOrganisation, educationStandard, competitiveBall, ").
-		append("availabilityIndividualAchievements, originalsReceivedDate, markEnrollment ").
-		append("From Abiturient, AbiturientCompetitiveGroup ").
-		append("Where Abiturient.aid = AbiturientCompetitiveGroup.aid_abiturient and ").
-		append("aid_abiturient = ").
-		append(aid).
-		append(";");
-		
-		String query = strB.toString();
-		
-		String[] abiturientInfo = new String[11];
-		for (int i = 0; i < abiturientInfo.length; i++)
-			abiturientInfo[i] = "";
-		abiturientInfo[0] = aid;
 
-		if (initConnection()) {
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
-
-			while (rset.next()) {
-				abiturientInfo = new String[11];
-				abiturientInfo[0] = String.valueOf(rset.getInt(1));
-				abiturientInfo[1] = String.valueOf(rset.getInt(2));
-				abiturientInfo[2] = String.valueOf(rset.getInt(3));
-				abiturientInfo[3] = String.valueOf(rset.getInt(4));
-				abiturientInfo[4] = String.valueOf(rset.getInt(5));
-				abiturientInfo[5] = String.valueOf(rset.getInt(6));
-				abiturientInfo[6] = String.valueOf(rset.getInt(7));
-				abiturientInfo[7] = String.valueOf(rset.getInt(8));
-				abiturientInfo[8] = String.valueOf(rset.getInt(9));
-				abiturientInfo[9] = rset.getDate(10) == null ? "" : rset.getDate(10).toString();
-				abiturientInfo[10] = String.valueOf(rset.getInt(11));
-
-				if (DEBUG) {
-					System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
-							+ abiturientInfo[3] + " " + abiturientInfo[4] + " " + abiturientInfo[5] + " "
-							+ abiturientInfo[6] + " " + abiturientInfo[7] + " " + abiturientInfo[8] + " "
-							+ abiturientInfo[9] + " " + abiturientInfo[10]);
-				}
-			}
-
-			stmt.close();
-			rset.close();
-		}
-		return abiturientInfo;
-	}
-
-	public static void updateAbiturientCompetitiveGroupByID(String aid, String[] data) throws SQLException {
+	public static void updateAbiturientCompetitiveGroupByID(String[] data) throws SQLException {
 		try {
-			ModelDBConnection.updateElementInTableByIds("AbiturientCompetitiveGroup", data);
+			ModelDBConnection.updateElementInTableByExpression("AbiturientCompetitiveGroup", data, 8);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void deleteAbiturientCompetitiveGroupByID(String aid, String data) throws SQLException {
-		deleteElementInTableById("AbiturientCompetitiveGroup", data);
+
+	public static void deleteAbiturientCompetitiveGroupByID(String aid, String[] data) throws SQLException {
+		deleteElementInTableByExpression("AbiturientCompetitiveGroup", data, 8);
 	}
-	
 }

@@ -11,10 +11,10 @@ public class CompetitiveGroupPanelListener implements ActionListener {
 	private JPanel panel = new JPanel();
 	private AddNewCompetitiveGroup openCompetGroup;
 
-	public CompetitiveGroupPanelListener(JPanel panel, String[] data) {
+	public CompetitiveGroupPanelListener(JPanel panel, String[] data, JPanel parentPanel) {
 		this.panel = panel;
-		openCompetGroup = new AddNewCompetitiveGroup();
-		//openCompetGroup.setValues(data);
+		openCompetGroup = new AddNewCompetitiveGroup(parentPanel);
+		openCompetGroup.setValues(data);
 		panel.add(openCompetGroup.getAddNewCompetGroup());
 		panel.setVisible(false);
 	}

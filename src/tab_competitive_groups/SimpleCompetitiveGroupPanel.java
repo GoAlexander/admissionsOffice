@@ -16,12 +16,13 @@ import javax.swing.JTextField;
 
 public class SimpleCompetitiveGroupPanel extends JPanel {
 	private String currentAbit;
+	private String[] data;
 	private Dimension	dimText = new Dimension(170, 25), 
 						dimRigidArea = new Dimension(10, 0);
 
 	private JTextField textDir, textSpec, textGroup, textBall;
 
-	public SimpleCompetitiveGroupPanel(String[] data) {
+	public SimpleCompetitiveGroupPanel(String[] data, JPanel parentPanel) {
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
 
@@ -67,15 +68,19 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 		JPanel allInfoPanel = new JPanel();
 		// allInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.add(allInfoPanel, BorderLayout.PAGE_END);
-		//this.setValues(data);
-		showInfo.addActionListener(new CompetitiveGroupPanelListener(allInfoPanel, data));
+		this.setValues(data);
+		showInfo.addActionListener(new CompetitiveGroupPanelListener(allInfoPanel, data, parentPanel));
+
+		this.setMaximumSize(new Dimension(parentPanel.getWidth(), parentPanel.getHeight() / 4));
 	}
 
 	public void setValues(String[] values) {
+		this.data = values;
+
 		currentAbit = values[0];
 		textDir.setText(values[1]);
 		textSpec.setText(values[2]);
-		textGroup.setText(values[3]);
-		textBall.setText(values[4]);
+		textGroup.setText(values[5]);
+		textBall.setText(values[8]);
 	}
 }

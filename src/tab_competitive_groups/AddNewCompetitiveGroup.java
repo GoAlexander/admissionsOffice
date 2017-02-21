@@ -27,6 +27,7 @@ import backend.MessageProcessing;
 import backend.ModelDBConnection;
 
 public class AddNewCompetitiveGroup extends JFrame{
+	private JPanel parentPanel;
 	private String currentAbit;
 
 	private JPanel mainPanel, infoPanel, directPanel, specialityPanel, departmentPanel, orgPanel, educFormPanel, competGroupPanel, provisionPanel, panelDateProvide;
@@ -39,7 +40,8 @@ public class AddNewCompetitiveGroup extends JFrame{
 
 	private String[] directType, specialityType, departmentType, orgType, educFormType, competGroupType, standardType;
 
-	public AddNewCompetitiveGroup(){
+	public AddNewCompetitiveGroup(JPanel parentPanel){
+		this.parentPanel = parentPanel;
 		directType = ModelDBConnection.getNamesFromTableOrderedById("Course");
 		specialityType = ModelDBConnection.getNamesFromTableOrderedById("Speciality");
 		departmentType = ModelDBConnection.getNamesFromTableOrderedById("Chair");
@@ -78,6 +80,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 		JLabel competGroupLabel = new JLabel("Конкурсная группа");
 		competGroupPanel.add(competGroupLabel);
 		comboCompetGroupType = new JComboBox(competGroupType);
+		comboCompetGroupType.setSelectedIndex(-1);
 		competGroupPanel.add(comboCompetGroupType);
 		comboCompetGroupType.setPreferredSize(new Dimension(280,30));
 		competGroupPanel.add(Box.createRigidArea(dimRigidArea));
@@ -85,6 +88,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 		competGroupPanel.add(standardLabel);
 		comboStandardType = new JComboBox(standardType);
 		competGroupPanel.add(comboStandardType);
+		comboStandardType.setSelectedIndex(-1);
 		infoPanel.add(competGroupPanel);
 
 		orgPanel = new JPanel();
@@ -176,6 +180,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 		JComboBox comboType = new JComboBox(arrCheckBox);
 		comboType.setPreferredSize(comboBoxPrefferedSize);
 		checkboxPanel.add(comboType);
+		comboType.setSelectedIndex(-1);
 
 		return checkboxPanel;
 	}
@@ -191,7 +196,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 			}
 		});
 
-		buttonPanel.add(editCompetitiveGroupButton);
+		//buttonPanel.add(editCompetitiveGroupButton);
 
 		deleteCompetitiveGroupButton = new JButton("Удалить");
 		deleteCompetitiveGroupButton.addActionListener(new java.awt.event.ActionListener() {
@@ -207,7 +212,9 @@ public class AddNewCompetitiveGroup extends JFrame{
 
 	private void saveCompetitiveGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			//Some actions
+			ModelDBConnection.updateAbiturientCompetitiveGroupByID(getValues());
+			this.setVisible(false);
+			((CompetitiveGroupsPanel)parentPanel).setValues(currentAbit);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -223,47 +230,51 @@ public class AddNewCompetitiveGroup extends JFrame{
 
 	private void deleteCompetitiveGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			//Some actions
+			ModelDBConnection.deleteAbiturientCompetitiveGroupByID(currentAbit, getValues());
+			((CompetitiveGroupsPanel)parentPanel).setValues(currentAbit);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
 	public void setValues(String[] values) {
-		// !!!!!!!!!!!!!!!!!!!!!
-		// Need test for indexes of components right values
 		try {
 			currentAbit = values[0];
-			((JComboBox)directPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[1]));
-			((JComboBox)specialityPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[2]));
-			((JComboBox)departmentPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[3]));
-			comboCompetGroupType.setSelectedIndex(Integer.valueOf(values[4]));
-			comboStandardType.setSelectedIndex(Integer.valueOf(values[5]));
-			((JComboBox)orgPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[6]));
-			((JComboBox)educFormPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[7]));
-
-			DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-			Date date = format.parse(values[8]);
-			calendar.setDate(date);
-
-			originalBox.setSelected(Boolean.valueOf(values[9]));
+			if(values.length > 1) {
+				((JComboBox)directPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[1]) - 1);
+				((JComboBox)specialityPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[2]) - 1);
+				((JComboBox)educFormPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[3]) - 1);
+				((JComboBox)departmentPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[4]) - 1);
+				comboCompetGroupType.setSelectedIndex(Integer.valueOf(values[5]) - 1);
+				((JComboBox)orgPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[6]) - 1);
+				comboStandardType.setSelectedIndex(Integer.valueOf(values[7]) - 1);
+	
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = format.parse(values[10]);
+				calendar.setDate(date);
+	
+				originalBox.setSelected(values[10] != null ? true : false);
+			}
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
-	public static void main(String[] args) {
-		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AddNewCompetitiveGroup window = new AddNewCompetitiveGroup();
-					window.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public String[] getValues() {
+		String[] values = new String[12];
+		values[0] = currentAbit;
+		values[1] = String.valueOf(((JComboBox)directPanel.getComponent(1)).getSelectedIndex() + 1);
+		values[2] = String.valueOf(((JComboBox)specialityPanel.getComponent(1)).getSelectedIndex() + 1);
+		values[3] = String.valueOf(((JComboBox)educFormPanel.getComponent(1)).getSelectedIndex() + 1);
+		values[4] = String.valueOf(((JComboBox)departmentPanel.getComponent(1)).getSelectedIndex() + 1);
+		values[5] = String.valueOf(comboCompetGroupType.getSelectedIndex() + 1);
+		values[6] = String.valueOf(((JComboBox)orgPanel.getComponent(1)).getSelectedIndex() + 1);
+		values[7] = String.valueOf(comboStandardType.getSelectedIndex() + 1);
+		values[8] = "0";
+		values[9] = "0";
+		values[10] = originalBox.isSelected() ? new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString() : "";
+		values[11] = "0";
+
+		return values;
 	}
-	
 }

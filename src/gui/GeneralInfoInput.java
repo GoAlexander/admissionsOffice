@@ -1,27 +1,20 @@
 ﻿package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -46,18 +39,17 @@ import com.toedter.calendar.JDateChooser;
 
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
+
 import tab_education.EducationPanel;
 import tab_entrance_tests.EntranceTestsPanel;
 import tab_passport.PassportPanel;
 import tab_address_contacts.AddressContactsPanel;
 import tab_catalogs.EditMenuListener;
-import tab_competitive_groups.AddNewCompetitiveGroup;
-import tab_competitive_groups.CompetitiveGroupPanelListener;
 import tab_competitive_groups.CompetitiveGroupsPanel;
-import tab_competitive_groups.SimpleCompetitiveGroupPanel;
+import tab_achievements.IndividualAchievementsPanel;
+
 import general_classes.GUITableModel;
 import outputDoc.OutputExcel;
-import tab_achievements.IndividualAchievementsPanel;
 
 public class GeneralInfoInput extends JFrame {
 
@@ -460,7 +452,7 @@ public class GeneralInfoInput extends JFrame {
 		panelInfoBackDoc.add(checkBackDoc, gbc2);
 
 		userInfoTPane = new JTabbedPane();
-		compGroupPanel = new CompetitiveGroupsPanel("aaa");
+		compGroupPanel = new CompetitiveGroupsPanel("0");
 		entranceTestpPanel = new EntranceTestsPanel();
 		indAchivPanel = new IndividualAchievementsPanel();
 		educPanel = new EducationPanel();
@@ -483,48 +475,13 @@ public class GeneralInfoInput extends JFrame {
 		dataTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
-					try {
-						String[] selectedAbitGeneralInfo, selectedAbitPassport, selectedAbitAddressAndContacts, selectedAbitHigherEducation, selectedAbitPostGraduationEducation;
-
-						if (dataTable.getSelectedRow() >= 0) {
-							selectedAbitGeneralInfo = ModelDBConnection.getAbiturientGeneralInfoByID(String.valueOf(
-									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
-							selectedAbitPassport = ModelDBConnection.getAbiturientPassportByID(String.valueOf(
-									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
-							selectedAbitAddressAndContacts = ModelDBConnection.getAbiturientAddressAndContactsByID(String.valueOf(
-									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))));
-							selectedAbitHigherEducation = ModelDBConnection.getAbiturientEducationByID(String.valueOf(
-									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))), "AbiturientHigherEducation");
-							selectedAbitPostGraduationEducation = ModelDBConnection.getAbiturientEducationByID(String.valueOf(
-									Integer.valueOf((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0))), "AbiturientPostgraduateEducation");
-							
-						} else {
-							selectedAbitGeneralInfo = new String[10];
-							for (int i = 0; i < selectedAbitGeneralInfo.length; i++)
-								selectedAbitGeneralInfo[i] = "";
-							selectedAbitPassport = new String[7];
-							for (int i = 0; i < selectedAbitPassport.length; i++)
-								selectedAbitPassport[i] = "";
-							selectedAbitAddressAndContacts = new String[7];
-							for (int i = 0; i < selectedAbitAddressAndContacts.length; i++)
-								selectedAbitAddressAndContacts[i] = "";
-							selectedAbitHigherEducation = new String[6];
-							for (int i = 0; i < selectedAbitHigherEducation.length; i++)
-								selectedAbitHigherEducation[i] = "";
-							selectedAbitPostGraduationEducation = new String[6];
-							for (int i = 0; i < selectedAbitPostGraduationEducation.length; i++)
-								selectedAbitPostGraduationEducation[i] = "";
-						}
-
-						setValues(selectedAbitGeneralInfo);
-						((PassportPanel)passportPanel).setValues(selectedAbitPassport);
-						((AddressContactsPanel)contPanel).setValues(selectedAbitAddressAndContacts);
-						((EducationPanel)educPanel).setValues(selectedAbitHigherEducation, selectedAbitPostGraduationEducation);
-						((EntranceTestsPanel)entranceTestpPanel).setValues((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
-						((IndividualAchievementsPanel)indAchivPanel).setValues((String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
-					} catch (SQLException e1) {
-						MessageProcessing.displayErrorMessage(tablePanel, e1);
-					}
+					updateTab("GeneralInfo");
+					updateTab("Passport");
+					updateTab("AddressContacts");
+					updateTab("Education");
+					updateTab("EntranceTests");
+					updateTab("IndividualAchievements");
+					updateTab("CompetitiveGroups");
 				}
 			}
 		});
@@ -642,6 +599,63 @@ public class GeneralInfoInput extends JFrame {
 		return panelFIO;
 	}
 
+	public void setValues(String tabName, String aid, String[] values, String[] values2) {
+		switch(tabName) {
+		case "GeneralInfo":
+			this.setValues(values);
+			break;
+		case "Passport":
+			((PassportPanel)passportPanel).setValues(values);
+			break;
+		case "AddressContacts":
+			((AddressContactsPanel)contPanel).setValues(values);
+			break;
+		case "Education":
+			((EducationPanel)educPanel).setValues(values, values2);
+			break;
+		case "EntranceTests":
+			((EntranceTestsPanel)entranceTestpPanel).setValues(aid);
+			break;
+		case "IndividualAchievements":
+			((IndividualAchievementsPanel)indAchivPanel).setValues(aid);
+			break;
+		case "CompetitiveGroups":
+			((CompetitiveGroupsPanel)compGroupPanel).setValues(aid);
+			break;
+		}
+	}
+
+	public void updateTab(String tabName) {
+		try {
+			String[] data = null, data2 = null;
+			String aid = (dataTable.getSelectedRow() >= 0) ? (String) currentTM.getValueAt(dataTable.getSelectedRow(), 0) : "0";
+
+			switch (tabName) {
+			case "GeneralInfo":
+				data = ModelDBConnection.getAbiturientGeneralInfoByID(aid);
+				break;
+			case "Passport":
+				data = ModelDBConnection.getAbiturientPassportByID(aid);
+				break;
+			case "AddressContacts":
+				data = ModelDBConnection.getAbiturientAddressAndContactsByID(aid);
+				break;
+			case "Education":
+				data = ModelDBConnection.getAbiturientEducationByID(aid, "AbiturientHigherEducation");
+				data2 = ModelDBConnection.getAbiturientEducationByID(aid, "AbiturientPostgraduateEducation");
+				break;
+			case "EntranceTests":
+			case "IndividualAchievements":
+			case "CompetitiveGroups":
+				break;
+			}
+
+			setValues(tabName, aid, data, data2);
+		} catch (Exception e) {
+			MessageProcessing.displayErrorMessage(tablePanel, e);
+		}
+	}
+
 	public void setValues(String[] values) {
 		try {
 			((JTextField) panelID.getComponent(1)).setText(values[0]);
@@ -666,7 +680,7 @@ public class GeneralInfoInput extends JFrame {
 				checkBackDoc.setSelected(true);
 			textDateReturn.setEnabled(false);
 			comboReturnReason.setEnabled(false);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(tablePanel, e);
 		}
 	}

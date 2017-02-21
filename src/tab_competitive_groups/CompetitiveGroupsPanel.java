@@ -12,33 +12,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import backend.MessageProcessing;
+import backend.ModelDBConnection;
 
 public class CompetitiveGroupsPanel extends JPanel {
 	private String currentAbit;
-	
+
 	private JButton addNewGroupButton;
+	JPanel compGroupsPanel;
 
 	public CompetitiveGroupsPanel(String currentAbit) {
 		this.currentAbit = currentAbit;
 
-		JPanel compGroupsPanel = new JPanel();
+		compGroupsPanel = new JPanel();
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		compGroupsPanel.setLayout(new BoxLayout(compGroupsPanel, BoxLayout.PAGE_AXIS));
 
 		JScrollPane pane = new JScrollPane(compGroupsPanel);
-
-		if(currentAbit.equals("")) {
-			compGroupsPanel.add(new SimpleCompetitiveGroupPanel(null));
-			compGroupsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		} else {
-			// !!!!!!!!!!!!!!!!!!!!
-			// Заменить на инициализацию для конкретного абитуриента
-			int numGroup = 7;
-			for (int i = 0; i < numGroup; i++) {
-				compGroupsPanel.add(new SimpleCompetitiveGroupPanel(null));
-				compGroupsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-			}
-		}
+		setValues(currentAbit);
 
 		JPanel btnPanel = new JPanel();
 		btnPanel.setLayout(new GridLayout(0, 1));
@@ -57,11 +47,24 @@ public class CompetitiveGroupsPanel extends JPanel {
 		this.add(btnPanel);
 	}
 
+	public void setValues(String aid) {
+		currentAbit = aid;
+		compGroupsPanel.removeAll();
+		System.out.println("CA = " + currentAbit);
+		String[][] allAbiturientsGroups = ModelDBConnection.getAllCompetitiveGroupsByAbiturientId(currentAbit);
+		for (int i = 0; i < (allAbiturientsGroups!= null ? allAbiturientsGroups.length : 0); i++) {
+			compGroupsPanel.add(new SimpleCompetitiveGroupPanel(allAbiturientsGroups[i], this));
+			compGroupsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		}
+		compGroupsPanel.updateUI();
+	}
+
 	private void addNewGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			AddNewCompetitiveGroup openCompetGroup = new AddNewCompetitiveGroup();
+			AddNewCompetitiveGroup openCompetGroup = new AddNewCompetitiveGroup(this);
+			String[] data = {currentAbit};
+			openCompetGroup.setValues(data);
 			openCompetGroup.setVisible(true);
-			System.out.println(this.getSize().getHeight());
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}

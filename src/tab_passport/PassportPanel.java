@@ -39,6 +39,7 @@ public class PassportPanel extends JPanel{
 		docTypePanel.add(Box.createRigidArea(dimStartRigidArea));
 		JLabel docTypeLabel = new JLabel("Тип документа");
 		comboDocType = new JComboBox(arrDocType);
+		comboDocType.setSelectedIndex(-1);
 		docTypePanel.add(docTypeLabel);
 		docTypePanel.add(comboDocType);
 		this.add(docTypePanel);
