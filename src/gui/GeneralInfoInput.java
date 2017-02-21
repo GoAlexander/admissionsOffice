@@ -493,6 +493,7 @@ public class GeneralInfoInput extends JFrame {
 
 			addGeneralInfoFrame.setVisible(true);
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
@@ -558,14 +559,12 @@ public class GeneralInfoInput extends JFrame {
 					textDateReturn.setEnabled(true);
 					comboReturnReason.setEnabled(true);
 				}
-				// !!! Добавить !!!
-				// Фрагмент setEnable(false) для всех компонентов JTabbedPane
-
 				addButton.setEnabled(false);
 				deleteButton.setEnabled(false);
 				editButton.setText("    Сохранить     ");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
@@ -580,6 +579,7 @@ public class GeneralInfoInput extends JFrame {
 				MessageProcessing.displaySuccessMessage(this, 3);
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
@@ -652,6 +652,7 @@ public class GeneralInfoInput extends JFrame {
 
 			setValues(tabName, aid, data, data2);
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(tablePanel, e);
 		}
 	}
@@ -681,6 +682,7 @@ public class GeneralInfoInput extends JFrame {
 			textDateReturn.setEnabled(false);
 			comboReturnReason.setEnabled(false);
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(tablePanel, e);
 		}
 	}

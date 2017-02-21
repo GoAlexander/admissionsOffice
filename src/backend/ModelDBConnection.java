@@ -159,7 +159,12 @@ public class ModelDBConnection {
 	public static String[] getAbiturientGeneralInfoByID(String aid) throws SQLException {
 		String query = "select aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate, id_returnReason, returnDate from Abiturient where aid = "
 				+ aid + ";";
-		String[] abiturientInfo = null;
+
+		String[] abiturientInfo = new String[10];
+		abiturientInfo[0] = aid;
+		for(int i = 1; i < 10; i++)
+			abiturientInfo[i] = "";
+
 		if (initConnection()) {
 			stmt = con.createStatement();
 			rset = stmt.executeQuery(query);
