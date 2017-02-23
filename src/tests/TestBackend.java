@@ -10,6 +10,7 @@ public class TestBackend {
 
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
 		ModelDBConnection.getCount("Abiturient");
+		ModelDBConnection.getCountForAbitID("AbiturientPassport", "2");
 		ModelDBConnection.getAllFromTableOrderedById("Gender");
 		System.out.println("--------------------------");
 		String[] data1 = { "1", "Мужской", null };

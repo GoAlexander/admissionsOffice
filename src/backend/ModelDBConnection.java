@@ -104,23 +104,26 @@ public class ModelDBConnection {
 		if (initConnection()) {
 			try {
 				int count = 0;
-				String query = "select count(*) from " + tableName + " where aid_abiturient = " + aid;
-				stmt = con.createStatement();
-				rset = stmt.executeQuery(query);
+				cstmt = con.prepareCall("{? = call getCountForAbitID(?,?)}");
 
-				while (rset.next()) {
-					count = rset.getInt(1);
-				}
+				cstmt.registerOutParameter(1, Types.INTEGER);
+				cstmt.setString(2, tableName);
+				cstmt.setInt(3, Integer.parseInt(aid));
 
-				stmt.close();
-				rset.close();
+				cstmt.execute();
 
+				count = cstmt.getInt(1);
+				//System.out.println(count);
 				return count;
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				return -1;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return -1;
 			}
 		}
+		
 		return -1;
 	}
 
