@@ -1,7 +1,8 @@
 ﻿use Ordinator;
 go
 
-create procedure getCount(@tableName varchar(max))
+-- CHANGE ALTER TO CREATE WHEN RUNNING FOR THE FIRST TIME
+alter procedure getCount(@tableName varchar(max))
 as begin
 	if (object_id(@tableName) is null)
 	begin
@@ -20,7 +21,7 @@ end;
 go
 
 -- NEED TO CHECK IF @AID EXISTS
-create procedure getCountForAbitID(@tableName varchar(max), @aid int)
+alter procedure getCountForAbitID(@tableName varchar(max), @aid int)
 as 
   begin
 	if (object_id(@tableName) is null)
@@ -29,7 +30,7 @@ as
 	end
 
 	declare @query varchar(max), @countOf int
-	set @query = 'select count(*) from ' + @tableName + ' where aid_abiturient = ' + @aid
+	set @query = 'select count(*) from ' + @tableName + ' where aid_abiturient = ' + cast(@aid AS varchar(max))
 	execute('declare cur cursor for ' + @query)
 	open cur
 	fetch next from cur into @countOf
@@ -37,21 +38,4 @@ as
 	deallocate cur
 	return @countOf
 end;
-
-go
-
--- HOW TO RETURN?
-create procedure getAllAbiturients
-as begin
-
-	declare @query varchar(max)
-	set @query = 'select aid, SName, Fname, MName from Abiturient order by aid';
-	execute('declare cur cursor for ' + @query)
-	open cur
-	WHILE @@FETCH_STATUS = 0  
-	fetch next from cur
-	close cur
-	deallocate cur
-end;
-
 go
