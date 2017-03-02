@@ -50,7 +50,6 @@ public class CompetitiveGroupsPanel extends JPanel {
 	public void setValues(String aid) {
 		currentAbit = aid;
 		compGroupsPanel.removeAll();
-		System.out.println("CA = " + currentAbit);
 		String[][] allAbiturientsGroups = ModelDBConnection.getAllCompetitiveGroupsByAbiturientId(currentAbit);
 		for (int i = 0; i < (allAbiturientsGroups!= null ? allAbiturientsGroups.length : 0); i++) {
 			compGroupsPanel.add(new SimpleCompetitiveGroupPanel(allAbiturientsGroups[i], this));

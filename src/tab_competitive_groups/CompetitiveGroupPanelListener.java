@@ -25,10 +25,12 @@ public class CompetitiveGroupPanelListener implements ActionListener {
 			if (!isPushed) {
 				((JButton) arg0.getSource()).setText("-");
 				panel.setVisible(true);
+				((SimpleCompetitiveGroupPanel)panel.getParent()).limitMaxSize(false);
 				isPushed = true;
 			} else {
 				((JButton) arg0.getSource()).setText("+");
 				panel.setVisible(false);
+				((SimpleCompetitiveGroupPanel)panel.getParent()).limitMaxSize(true);
 				isPushed = false;
 			}
 		} catch (Exception e) {

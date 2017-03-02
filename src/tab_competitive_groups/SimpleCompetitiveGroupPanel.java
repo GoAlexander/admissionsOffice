@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class SimpleCompetitiveGroupPanel extends JPanel {
+	private JPanel parentPanel;
 	private String currentAbit;
 	private String[] data;
 	private Dimension	dimText = new Dimension(170, 25), 
@@ -23,6 +24,7 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 	private JTextField textDir, textSpec, textGroup, textBall;
 
 	public SimpleCompetitiveGroupPanel(String[] data, JPanel parentPanel) {
+		this.parentPanel = parentPanel;
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
 
@@ -71,7 +73,7 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 		this.setValues(data);
 		showInfo.addActionListener(new CompetitiveGroupPanelListener(allInfoPanel, data, parentPanel));
 
-		this.setMaximumSize(new Dimension(parentPanel.getWidth(), parentPanel.getHeight() / 4));
+		this.limitMaxSize(true);
 	}
 
 	public void setValues(String[] values) {
@@ -82,5 +84,9 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 		textSpec.setText(values[2]);
 		textGroup.setText(values[5]);
 		textBall.setText(values[8]);
+	}
+
+	public void limitMaxSize(boolean status) {
+		this.setMaximumSize(status ? new Dimension(parentPanel.getWidth(), parentPanel.getHeight() / 4) : null);
 	}
 }
