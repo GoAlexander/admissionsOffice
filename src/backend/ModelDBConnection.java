@@ -9,6 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
+/*
+ * TODO
+ * 'null' в insert и update
+ * '' дата  null ? null : 
+ */
 public class ModelDBConnection {
 	static String login;
 	static String password;
@@ -20,7 +25,7 @@ public class ModelDBConnection {
 	static CallableStatement cstmt = null;
 	static ResultSet rset = null;
 	static Statement stmt = null;
-	
+
 	static boolean DEBUG = false;
 
 	public static void setConnectionParameters(String serverType, String serverAddress, String dbName, String login,
@@ -90,7 +95,7 @@ public class ModelDBConnection {
 				cstmt.execute();
 
 				count = cstmt.getInt(1);
-				//System.out.println(count);
+				// System.out.println(count);
 				return count;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -108,12 +113,12 @@ public class ModelDBConnection {
 
 				cstmt.registerOutParameter(1, Types.INTEGER);
 				cstmt.setString(2, tableName);
-				cstmt.setInt(3, Integer.parseInt(aid));
+				cstmt.setString(3, aid);
 
 				cstmt.execute();
 
 				count = cstmt.getInt(1);
-				//System.out.println(count);
+				System.out.println(count);
 				return count;
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
@@ -123,7 +128,7 @@ public class ModelDBConnection {
 				return -1;
 			}
 		}
-		
+
 		return -1;
 	}
 
@@ -165,7 +170,7 @@ public class ModelDBConnection {
 
 		String[] abiturientInfo = new String[10];
 		abiturientInfo[0] = aid;
-		for(int i = 1; i < 10; i++)
+		for (int i = 1; i < 10; i++)
 			abiturientInfo[i] = "";
 
 		if (initConnection()) {
@@ -182,13 +187,14 @@ public class ModelDBConnection {
 				abiturientInfo[5] = String.valueOf(rset.getInt(6));
 				abiturientInfo[6] = String.valueOf(rset.getInt(7));
 				abiturientInfo[7] = rset.getDate(8).toString();
+				// TODO
 				abiturientInfo[8] = rset.getInt(9) == 0 ? "" : String.valueOf(rset.getInt(9));
 				abiturientInfo[9] = rset.getDate(10) == null ? "" : rset.getDate(10).toString();
-				
+
 				if (DEBUG) {
-				System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
-						+ abiturientInfo[3] + " " + abiturientInfo[4] + " " + abiturientInfo[5] + " "
-						+ abiturientInfo[6] + " " + abiturientInfo[7] + " ");
+					System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
+							+ abiturientInfo[3] + " " + abiturientInfo[4] + " " + abiturientInfo[5] + " "
+							+ abiturientInfo[6] + " " + abiturientInfo[7] + " ");
 				}
 			}
 
@@ -314,6 +320,7 @@ public class ModelDBConnection {
 			id_gender = info[5];
 			id_nationality = info[6];
 			registrationDate = "'" + info[7] + "'";
+			// TODO
 			returnDate = info[8] == null ? null : "'" + info[8] + "'";
 			id_returnReason = info[9];
 
@@ -343,6 +350,7 @@ public class ModelDBConnection {
 		}
 	}
 
+	// избавиться от getCount внутри
 	public static String[] getNamesFromTableOrderedById(String table) {
 		try {
 			String query = "select name from " + table + " order by id";
@@ -381,6 +389,7 @@ public class ModelDBConnection {
 	 * e.printStackTrace(); return null; } }
 	 */
 
+	// переделать в хранимой процедуре на (table, string nameid)
 	public static String[][] getAllFromTableOrderedById(String table) throws SQLException {
 		String id = "id";
 
@@ -439,7 +448,8 @@ public class ModelDBConnection {
 		return data;
 	}
 
-	// TODO insert into GUI
+	// присоединить его к предыдущей процедуре, сделав проверку на nameid = null
+	// => не сортировать
 	public static String[][] getAllFromTable(String table) throws SQLException {
 		int count = getCount(table);
 
@@ -545,7 +555,8 @@ public class ModelDBConnection {
 		rset.close();
 	}
 
-	public static void updateElementInTableByExpression(String table, String[] data, int countOfExprParams) throws SQLException {
+	public static void updateElementInTableByExpression(String table, String[] data, int countOfExprParams)
+			throws SQLException {
 		String id = "id";
 		switch (table) {
 		case "Abiturient":
@@ -582,8 +593,8 @@ public class ModelDBConnection {
 
 			int countStrings = 0;
 			query = "select * from " + table + " where ";
-			for(int i = 0; i < countOfExprParams; i++)
-				if(i == countOfExprParams-1)
+			for (int i = 0; i < countOfExprParams; i++)
+				if (i == countOfExprParams - 1)
 					query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
 				else
 					query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
@@ -604,8 +615,8 @@ public class ModelDBConnection {
 						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'" + ", ";
 				}
 				query = query + " where ";
-				for(int i = 0; i < countOfExprParams; i++)
-					if(i == countOfExprParams-1)
+				for (int i = 0; i < countOfExprParams; i++)
+					if (i == countOfExprParams - 1)
 						query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
 					else
 						query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
@@ -644,7 +655,8 @@ public class ModelDBConnection {
 			break;
 		}
 
-		String query = "select * from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1] + ";";
+		String query = "select * from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1]
+				+ ";";
 		System.out.println(query);
 		int numberOfColumns = 0;
 		if (initConnection()) {
@@ -690,6 +702,7 @@ public class ModelDBConnection {
 		rset.close();
 	}
 
+	// процедура с 3 параметрами table, nameid, id
 	public static void deleteElementInTableById(String table, String data) throws SQLException {
 		String id = "id";
 		switch (table) {
@@ -723,7 +736,8 @@ public class ModelDBConnection {
 		stmt.close();
 	}
 
-	public static void deleteElementInTableByExpression(String table, String[] data, int countOfExprParams) throws SQLException {
+	public static void deleteElementInTableByExpression(String table, String[] data, int countOfExprParams)
+			throws SQLException {
 		String id = "aid_abiturient";
 		switch (table) {
 		case "AbiturientCompetitiveGroup":
@@ -733,17 +747,17 @@ public class ModelDBConnection {
 
 		String query = "select * from " + table + " where " + id + " = 0;";
 		System.out.println(query);
-		int numberOfColumns = 0;
+		// int numberOfColumns = 0;
 
 		stmt = con.createStatement();
 		rset = stmt.executeQuery(query);
 
 		ResultSetMetaData rsmd = rset.getMetaData();
-		numberOfColumns = rsmd.getColumnCount();
+		// numberOfColumns = rsmd.getColumnCount();
 
 		query = "delete from " + table + " where ";
-		for(int i = 0; i < countOfExprParams; i++)
-			if(i == countOfExprParams-1)
+		for (int i = 0; i < countOfExprParams; i++)
+			if (i == countOfExprParams - 1)
 				query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
 			else
 				query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
@@ -755,6 +769,7 @@ public class ModelDBConnection {
 		stmt.close();
 	}
 
+	// процедура с 5 параметрами table, nameid1, id1, nameid2, id2
 	public static void deleteElementInTableByIds(String table, String[] data) throws SQLException {
 		String id1 = "aid_abiturient", id2 = "";
 		switch (table) {
@@ -768,7 +783,8 @@ public class ModelDBConnection {
 			break;
 		}
 
-		String query = "delete from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1] + ";";
+		String query = "delete from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1]
+				+ ";";
 		System.out.println(query);
 
 		stmt = con.createStatement();
@@ -785,9 +801,8 @@ public class ModelDBConnection {
 		if (countStrings > 0) {
 			try {
 				String query;
-				if(need_all_columns)
-					query = "select * from AbiturientIndividualAchievement "
-						+ "where aid_abiturient = " + aid;
+				if (need_all_columns)
+					query = "select * from AbiturientIndividualAchievement " + "where aid_abiturient = " + aid;
 				else
 					query = "select name, AbiturientIndividualAchievement.score from IndividualAchievement, AbiturientIndividualAchievement "
 							+ "where IndividualAchievement.id = AbiturientIndividualAchievement.id_individual_achievement "
@@ -817,20 +832,19 @@ public class ModelDBConnection {
 		return data;
 	}
 
+	// внутри проверить, есть ли для абитуриента хотя бы один экзамен
 	public static String[][] getAllEntranceTestsResultsByAbiturientId(String aid, boolean need_all_columns) {
 		String[][] data = null;
 		String query = "select EntranceTest.name, null, null, null, null from EntranceTest";
 		int countStrings = getCountForAbitID("AbiturientEntranceTests", aid);
 
-		if(need_all_columns) {
-			query = "select * from AbiturientEntranceTests "
-					+ "where aid_abiturient = " + aid;
-		}
-		else {
+		if (need_all_columns) {
+			query = "select * from AbiturientEntranceTests " + "where aid_abiturient = " + aid;
+		} else {
 			if (countStrings > 0) {
 				query = "select EntranceTest.name, testGroup, TestBox.name, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox "
-							+ "where EntranceTest.id = AbiturientEntranceTests.id_entranceTest "
-							+ "and TestBox.id = AbiturientEntranceTests.id_testBox " + "and aid_abiturient = " + aid;
+						+ "where EntranceTest.id = AbiturientEntranceTests.id_entranceTest "
+						+ "and TestBox.id = AbiturientEntranceTests.id_testBox " + "and aid_abiturient = " + aid;
 			} else {
 				countStrings = getCount("EntranceTest");
 			}
@@ -860,6 +874,8 @@ public class ModelDBConnection {
 		return data;
 	}
 
+	// функция должна возвращать доп. 4 значения для simple panel(расширить
+	// список возвращаемых параметров)
 	public static String[][] getAllCompetitiveGroupsByAbiturientId(String aid) {
 		String[][] data = null;
 
@@ -871,15 +887,15 @@ public class ModelDBConnection {
 						+ " competitiveGroup, targetOrganisation, educationStandard, competitiveBall,"
 						+ " availabilityIndividualAchievements, originalsReceivedDate, markEnrollment"
 						+ " from Abiturient, AbiturientCompetitiveGroup"
-						+ " where Abiturient.aid = AbiturientCompetitiveGroup.aid_abiturient and"
-						+ " aid_abiturient = " + aid + ";";
+						+ " where Abiturient.aid = AbiturientCompetitiveGroup.aid_abiturient and" + " aid_abiturient = "
+						+ aid + ";";
 				System.out.println(query);
 
 				stmt = con.createStatement();
 				rset = stmt.executeQuery(query);
 				ResultSetMetaData rsmd = rset.getMetaData();
 				int numberOfColumns = rsmd.getColumnCount();
-	
+
 				data = new String[countStrings][numberOfColumns];
 				int curPos = 0;
 				while (rset.next()) {
@@ -1046,6 +1062,7 @@ public class ModelDBConnection {
 		return educationInfo;
 	}
 
+	// 5 параметров
 	public static String[] getElementFromTableByIDs(String table, String[] data) {
 		try {
 			String id1 = "aid_abiturient", id2 = "";
@@ -1060,14 +1077,15 @@ public class ModelDBConnection {
 				break;
 			}
 
-			String query = "select * from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1] + ";";
+			String query = "select * from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = "
+					+ data[1] + ";";
 			stmt = con.createStatement();
 			rset = stmt.executeQuery(query);
 			ResultSetMetaData rsmd = rset.getMetaData();
 			int numberOfColumns = rsmd.getColumnCount();
 
 			String[] result = new String[numberOfColumns];
-			for(int i = 0; i < result.length; i++)
+			for (int i = 0; i < result.length; i++)
 				result[i] = "";
 
 			while (rset.next()) {
@@ -1103,7 +1121,8 @@ public class ModelDBConnection {
 
 	public static void updateAbiturientEntranceTestsResultsByID(String[] data) throws SQLException {
 		try {
-			String query = "update Abiturient set needSpecConditions = '" + data[data.length - 1] + "' where aid = " + data[0] + ";";
+			String query = "update Abiturient set needSpecConditions = '" + data[data.length - 1] + "' where aid = "
+					+ data[0] + ";";
 
 			String[] abiturientEntranceTestsResultsInfo = new String[data.length - 1];
 			for (int i = 0; i < abiturientEntranceTestsResultsInfo.length; i++)
@@ -1119,6 +1138,7 @@ public class ModelDBConnection {
 		}
 	}
 
+	// не переводить
 	public static boolean needAbiturientSpecialConditionsByID(String aid) {
 		boolean state = false;
 		String query = "select needSpecConditions from Abiturient where aid = " + aid + ";";

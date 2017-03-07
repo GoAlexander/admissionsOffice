@@ -20,8 +20,7 @@ as begin
 end;
 go
 
--- NEED TO CHECK IF @AID EXISTS
-alter procedure getCountForAbitID(@tableName varchar(max), @aid int)
+alter procedure getCountForAbitID(@tableName varchar(max), @aid varchar(max))
 as 
   begin
 	if (object_id(@tableName) is null)
@@ -29,8 +28,12 @@ as
 		  RAISERROR('Недопустимое имя таблицы', 16, 1)
 	end
 
+	execute('select * from ' +  @tableName + ' where aid_abiturient = ' + @aid)
+	if @@ROWCOUNT = 0
+		throw 51002, 'В таблице нет записей с данным id', 1;
+
 	declare @query varchar(max), @countOf int
-	set @query = 'select count(*) from ' + @tableName + ' where aid_abiturient = ' + cast(@aid AS varchar(max))
+	set @query = 'select count(*) from ' + @tableName + ' where aid_abiturient = ' + @aid
 	execute('declare cur cursor for ' + @query)
 	open cur
 	fetch next from cur into @countOf
