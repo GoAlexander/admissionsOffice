@@ -727,13 +727,15 @@ public class ModelDBConnection {
 			id = "id";
 		}
 
-		String query = "delete from " + table + " where " + id + " = " + data + ";";
-		System.out.println(query);
+		cstmt = con.prepareCall("{call deleteElementInTableById(?, ?, ?)}");
 
-		stmt = con.createStatement();
-		stmt.executeUpdate(query);
+		cstmt.setString(1, table);
+		cstmt.setString(2, id);
+		cstmt.setString(3, data);
 
-		stmt.close();
+		cstmt.execute();
+
+		cstmt.close();
 	}
 
 	public static void deleteElementInTableByExpression(String table, String[] data, int countOfExprParams)
@@ -783,14 +785,17 @@ public class ModelDBConnection {
 			break;
 		}
 
-		String query = "delete from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = " + data[1]
-				+ ";";
-		System.out.println(query);
+		cstmt = con.prepareCall("{call deleteElementInTableByIds(?, ?, ?, ?, ?)}");
 
-		stmt = con.createStatement();
-		stmt.executeUpdate(query);
+		cstmt.setString(1, table);
+		cstmt.setString(2, id1);
+		cstmt.setString(3, data[0]);
+		cstmt.setString(4, id2);
+		cstmt.setString(5, data[1]);
 
-		stmt.close();
+		cstmt.execute();
+
+		cstmt.close();
 	}
 
 	public static String[][] getAllAchievmentsByAbiturientId(String aid, boolean need_all_columns) {
