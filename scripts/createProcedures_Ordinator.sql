@@ -82,3 +82,40 @@ AS BEGIN
 	return
 end;
 go
+
+alter procedure getAllFromTable (@tableName varchar(max), @name_id varchar(max))
+as begin
+	if (object_id(@tableName) is null)
+	begin
+		  RAISERROR('Недопустимое имя таблицы', 16, 1)
+	end
+	if (@name_id is null)
+		begin
+			execute('select * from ' +  @tableName)
+		end
+	else
+		begin
+			execute('select * from ' +  @tableName + ' order by ' + @name_id)
+		end
+	return
+end;
+go
+
+-- Заменить на автоматическое присваивание номера, исходя из свободных мест в группе!
+alter procedure getAllEntranceTestsResultsByAbiturientId(@aid varchar(max), @needAllCollumns bit)
+as begin
+
+	if (@needAllCollumns = 1 ) 
+			execute('select * from AbiturientEntranceTests where aid_abiturient = ' + @aid)
+	else
+		begin
+			if (@@ROWCOUNT > 0)
+				execute ('select EntranceTest.name, testGroup, TestBox.name, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox 
+						where EntranceTest.id = AbiturientEntranceTests.id_entranceTest 
+							and TestBox.id = AbiturientEntranceTests.id_testBox and aid_abiturient = ' + @aid)
+			else 
+				execute ('select EntranceTest.name, null, null, null, null from EntranceTest')
+		end
+	return
+end;
+go

@@ -13,8 +13,8 @@ public class TestBackend {
 		for(int i=0;i<a.length;i++)
 				System.out.println(a[i]);
 		ModelDBConnection.getCount("Abiturient");
-		ModelDBConnection.getCountForAbitID("AbiturientPassport", "2");
-		ModelDBConnection.getAllFromTableOrderedById("Gender");
+		ModelDBConnection.getCountForAbitID("AbiturientPassport", "1");
+		ModelDBConnection.getAllFromTable("Gender");
 		System.out.println("--------------------------");
 		String[] data1 = { "1", "Мужской", null };
 		ModelDBConnection.updateElementInTableById("Gender", data1);

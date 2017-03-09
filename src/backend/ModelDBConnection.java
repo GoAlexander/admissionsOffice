@@ -118,7 +118,7 @@ public class ModelDBConnection {
 				cstmt.execute();
 
 				count = cstmt.getInt(1);
-				System.out.println(count);
+				// System.out.println(count);
 				return count;
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
@@ -389,7 +389,6 @@ public class ModelDBConnection {
 	 * e.printStackTrace(); return null; } }
 	 */
 
-	// переделать в хранимой процедуре на (table, string nameid)
 	public static String[][] getAllFromTableOrderedById(String table) throws SQLException {
 		String id = "id";
 
@@ -415,71 +414,77 @@ public class ModelDBConnection {
 			id = "id";
 		}
 
-		int count = getCount(table);
-
 		String[][] data = null;
 
-		if (count > 0) {
-			try {
+		try {
+			cstmt = con.prepareCall("{call getAllFromTable(?, ?)}", 1004, 1007);
 
-				String query = "select * from " + table + " order by " + id + " ;";
-				stmt = con.createStatement();
-				rset = stmt.executeQuery(query);
+			cstmt.setString(1, table);
+			cstmt.setString(2, id);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
 				ResultSetMetaData rsmd = rset.getMetaData();
 				int numberOfColumns = rsmd.getColumnCount();
-
-				data = new String[count][numberOfColumns];
+				data = new String[countStrings][numberOfColumns];
 				int curPos = 0;
 				while (rset.next()) {
 					for (int i = 0; i < numberOfColumns; i++) {
-						if (rset.getObject(i + 1) != null)
+						if (rset.getObject(i + 1) != null) {
 							data[curPos][i] = rset.getObject(i + 1).toString();
-						System.out.println(data[curPos][i]);
+							System.out.println(data[curPos][i]);
+						}
 					}
 					curPos++;
 				}
-				stmt.close();
-				rset.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
 			}
+			stmt.close();
+			rset.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 		return data;
 	}
 
-	// присоединить его к предыдущей процедуре, сделав проверку на nameid = null
-	// => не сортировать
 	public static String[][] getAllFromTable(String table) throws SQLException {
-		int count = getCount(table);
-
 		String[][] data = null;
 
-		if (count > 0) {
-			try {
+		try {
+			cstmt = con.prepareCall("{call getAllFromTable(?, ?)}", 1004, 1007);
 
-				String query = "select * from " + table + " ;";
-				stmt = con.createStatement();
-				rset = stmt.executeQuery(query);
+			cstmt.setString(1, table);
+			cstmt.setString(2, null);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
 				ResultSetMetaData rsmd = rset.getMetaData();
 				int numberOfColumns = rsmd.getColumnCount();
-
-				data = new String[count][numberOfColumns];
+				data = new String[countStrings][numberOfColumns];
 				int curPos = 0;
 				while (rset.next()) {
 					for (int i = 0; i < numberOfColumns; i++) {
-						if (rset.getObject(i + 1) != null)
+						if (rset.getObject(i + 1) != null) {
 							data[curPos][i] = rset.getObject(i + 1).toString();
-						System.out.println(data[curPos][i]);
+							System.out.println(data[curPos][i]);
+						}
 					}
 					curPos++;
 				}
-				stmt.close();
-				rset.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
 			}
+			stmt.close();
+			rset.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 		return data;
 	}
@@ -833,41 +838,37 @@ public class ModelDBConnection {
 		return data;
 	}
 
-	// внутри проверить, есть ли для абитуриента хотя бы один экзамен
 	public static String[][] getAllEntranceTestsResultsByAbiturientId(String aid, boolean need_all_columns) {
-		String[][] data = null;
-		String query = "select EntranceTest.name, null, null, null, null from EntranceTest";
-		int countStrings = getCountForAbitID("AbiturientEntranceTests", aid);
 
-		if (need_all_columns) {
-			query = "select * from AbiturientEntranceTests " + "where aid_abiturient = " + aid;
-		} else {
-			if (countStrings > 0) {
-				query = "select EntranceTest.name, testGroup, TestBox.name, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox "
-						+ "where EntranceTest.id = AbiturientEntranceTests.id_entranceTest "
-						+ "and TestBox.id = AbiturientEntranceTests.id_testBox " + "and aid_abiturient = " + aid;
-			} else {
-				countStrings = getCount("EntranceTest");
-			}
-		}
+		String[][] data = null;
 
 		try {
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
-			ResultSetMetaData rsmd = rset.getMetaData();
-			int numberOfColumns = rsmd.getColumnCount();
+			cstmt = con.prepareCall("{call getAllEntranceTestsResultsByAbiturientId(?, ?)}", 1004, 1007);
 
-			data = new String[countStrings][numberOfColumns];
-			int curPos = 0;
-			while (rset.next()) {
-				for (int i = 0; i < numberOfColumns; i++) {
-					if (rset.getObject(i + 1) != null)
-						data[curPos][i] = rset.getObject(i + 1).toString();
+			cstmt.setString(1, aid);
+			cstmt.setBoolean(2, need_all_columns ? true : false);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
 				}
-				curPos++;
 			}
-			stmt.close();
+			cstmt.close();
 			rset.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
