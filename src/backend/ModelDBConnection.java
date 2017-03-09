@@ -702,7 +702,6 @@ public class ModelDBConnection {
 		rset.close();
 	}
 
-	// процедура с 3 параметрами table, nameid, id
 	public static void deleteElementInTableById(String table, String data) throws SQLException {
 		String id = "id";
 		switch (table) {
@@ -771,7 +770,6 @@ public class ModelDBConnection {
 		stmt.close();
 	}
 
-	// процедура с 5 параметрами table, nameid1, id1, nameid2, id2
 	public static void deleteElementInTableByIds(String table, String[] data) throws SQLException {
 		String id1 = "aid_abiturient", id2 = "";
 		switch (table) {
@@ -801,23 +799,20 @@ public class ModelDBConnection {
 	public static String[][] getAllAchievmentsByAbiturientId(String aid, boolean need_all_columns) {
 		String[][] data = null;
 
-		int countStrings = getCountForAbitID("AbiturientIndividualAchievement", aid);
+		try {
+			cstmt = con.prepareCall("{call getAllAchievmentsByAbiturientId(?, ?)}", 1004, 1007);
 
-		if (countStrings > 0) {
-			try {
-				String query;
-				if (need_all_columns)
-					query = "select * from AbiturientIndividualAchievement " + "where aid_abiturient = " + aid;
-				else
-					query = "select name, AbiturientIndividualAchievement.score from IndividualAchievement, AbiturientIndividualAchievement "
-							+ "where IndividualAchievement.id = AbiturientIndividualAchievement.id_individual_achievement "
-							+ "and aid_abiturient = " + aid;
+			cstmt.setString(1, aid);
+			cstmt.setBoolean(2, need_all_columns ? true : false);
 
-				stmt = con.createStatement();
-				rset = stmt.executeQuery(query);
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
 				ResultSetMetaData rsmd = rset.getMetaData();
 				int numberOfColumns = rsmd.getColumnCount();
-
 				data = new String[countStrings][numberOfColumns];
 				int curPos = 0;
 				while (rset.next()) {
@@ -827,13 +822,14 @@ public class ModelDBConnection {
 					}
 					curPos++;
 				}
-				stmt.close();
-				rset.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
 			}
+			cstmt.close();
+			rset.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
+
 		return data;
 	}
 

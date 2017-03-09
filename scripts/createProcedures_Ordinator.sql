@@ -66,3 +66,19 @@ begin
 	execute('delete from ' +  @tableName + ' where ' + @name_id1 + ' = ' + @value_id1 + ' and ' + @name_id2 + ' = ' + @value_id2)
 end;
 go
+
+alter procedure getAllAchievmentsByAbiturientId(@aid varchar(max), @needAllCollumns bit)
+AS BEGIN
+	if @needAllCollumns = 1
+		begin
+			execute ('select * from AbiturientIndividualAchievement where aid_abiturient = ' + @aid)
+		end
+	else
+		begin
+			execute ('select name, AbiturientIndividualAchievement.score from IndividualAchievement, AbiturientIndividualAchievement 
+						where IndividualAchievement.id = AbiturientIndividualAchievement.id_individual_achievement 
+							and aid_abiturient = ' + @aid)
+		end
+	return
+end;
+go
