@@ -143,3 +143,15 @@ begin
 	return
 end;
 go
+
+alter procedure getAllAbiturients(@tableName varchar(max))
+as
+begin
+	if (object_id(@tableName) is null)
+	begin
+		  RAISERROR('Недопустимое имя таблицы', 16, 1)
+	end
+		execute('select aid, SName, Fname, MName from ' + @tableName + ' order by aid')
+	return
+end;
+go

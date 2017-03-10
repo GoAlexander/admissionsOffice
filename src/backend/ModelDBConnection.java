@@ -133,35 +133,60 @@ public class ModelDBConnection {
 	}
 
 	public static String[][] getAllAbiturients() {
-		int countAbits = getCount("Abiturient");
-
+		/*
+		 * int countAbits = getCount("Abiturient");
+		 * 
+		 * String[][] data = null;
+		 * 
+		 * if (countAbits > 0) { try { data = new String[countAbits][4];
+		 * 
+		 * String query =
+		 * "select aid, SName, Fname, MName from Abiturient order by aid"; stmt
+		 * = con.createStatement(); rset = stmt.executeQuery(query);
+		 * 
+		 * int curPos = 0; while (rset.next()) { data[curPos][0] =
+		 * String.valueOf(rset.getInt(1)); data[curPos][1] = rset.getString(2);
+		 * data[curPos][2] = rset.getString(3); data[curPos][3] =
+		 * rset.getString(4); curPos++; }
+		 * 
+		 * stmt.close(); rset.close(); } catch (Exception e) {
+		 * e.printStackTrace(); return null; } }
+		 * 
+		 */
 		String[][] data = null;
 
-		if (countAbits > 0) {
-			try {
-				data = new String[countAbits][4];
+		try {
+			cstmt = con.prepareCall("{call getAllAbiturients(?)}", 1004, 1007);
+			cstmt.setString(1, "Abiturient");
 
-				String query = "select aid, SName, Fname, MName from Abiturient order by aid";
-				stmt = con.createStatement();
-				rset = stmt.executeQuery(query);
+			rset = cstmt.executeQuery();
 
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				data = new String[countStrings][numberOfColumns];
 				int curPos = 0;
 				while (rset.next()) {
-					data[curPos][0] = String.valueOf(rset.getInt(1));
-					data[curPos][1] = rset.getString(2);
-					data[curPos][2] = rset.getString(3);
-					data[curPos][3] = rset.getString(4);
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null) {
+							data[curPos][i] = rset.getObject(i + 1).toString();
+							System.out.println(data[curPos][i]);
+						}
+					}
 					curPos++;
 				}
-
-				stmt.close();
-				rset.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
 			}
+			cstmt.close();
+			rset.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 		return data;
+
 	}
 
 	public static String[] getAbiturientGeneralInfoByID(String aid) throws SQLException {

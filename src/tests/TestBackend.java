@@ -10,7 +10,7 @@ public class TestBackend {
 
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
 		ModelDBConnection.initConnection();
-		String [] a = ModelDBConnection.getAbiturientGeneralInfoByID("2");
+		/*String [] a = ModelDBConnection.getAbiturientGeneralInfoByID("2");
 		for(int i=0;i<a.length;i++)
 				System.out.println(a[i]);
 		ModelDBConnection.getCount("Abiturient");
@@ -26,7 +26,16 @@ public class TestBackend {
 		ModelDBConnection.getAllFromTableOrderedById("Gender");
 		String[] data = {"1", "2"};
 		ModelDBConnection.getElementFromTableByIDs("AbiturientIndividualAchievement", data);
-		ModelDBConnection.getNamesFromTableOrderedById("TestBox");
+		ModelDBConnection.getNamesFromTableOrderedById("TestBox");*/
+		
+		String [][] b = ModelDBConnection.getAllAbiturients();
+		for(int i=0;i<b.length;i++){
+			for(int j = 0; j<b[i].length; j++){
+				System.out.print(b[i][j]);	
+			}
+			System.out.println();
+		}
+			
 	}
 
 }
