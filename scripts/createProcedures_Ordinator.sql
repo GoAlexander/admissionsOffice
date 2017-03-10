@@ -101,7 +101,7 @@ as begin
 end;
 go
 
--- Заменить на автоматическое присваивание номера, исходя из свободных мест в группе!
+-- TODO Автоматическое присваивание номера, исходя из свободных мест в группе!!!
 alter procedure getAllEntranceTestsResultsByAbiturientId(@aid varchar(max), @needAllCollumns bit)
 as begin
 
@@ -116,6 +116,30 @@ as begin
 			else 
 				execute ('select EntranceTest.name, null, null, null, null from EntranceTest')
 		end
+	return
+end;
+go
+
+alter procedure getElementFromTableByIDs(@tableName varchar(max), @name_id1 varchar(max), @value_id1 varchar(max), @name_id2 varchar(max), @value_id2 varchar(max))
+as
+begin
+	if (object_id(@tableName) is null)
+	begin
+		  RAISERROR('Недопустимое имя таблицы', 16, 1)
+	end
+		execute('select * from ' +  @tableName + ' where ' + @name_id1 + ' = ' + @value_id1 + ' and ' + @name_id2 + ' = ' + @value_id2)
+	return
+end;
+go
+
+alter procedure getNamesFromTableOrderedById(@tableName varchar(max))
+as
+begin
+	if (object_id(@tableName) is null)
+	begin
+		  RAISERROR('Недопустимое имя таблицы', 16, 1)
+	end
+		execute('select name from ' + @tableName + ' order by id')
 	return
 end;
 go

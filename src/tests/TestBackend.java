@@ -9,6 +9,7 @@ public class TestBackend {
 	public static void main(String[] args) throws SQLException {
 
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+		ModelDBConnection.initConnection();
 		String [] a = ModelDBConnection.getAbiturientGeneralInfoByID("2");
 		for(int i=0;i<a.length;i++)
 				System.out.println(a[i]);
@@ -23,6 +24,9 @@ public class TestBackend {
 		String[] data2 = { "1", "Женский", null };
 		ModelDBConnection.updateElementInTableById("Gender", data2);
 		ModelDBConnection.getAllFromTableOrderedById("Gender");
+		String[] data = {"1", "2"};
+		ModelDBConnection.getElementFromTableByIDs("AbiturientIndividualAchievement", data);
+		ModelDBConnection.getNamesFromTableOrderedById("TestBox");
 	}
 
 }

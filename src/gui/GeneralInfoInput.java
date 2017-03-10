@@ -91,6 +91,7 @@ public class GeneralInfoInput extends JFrame {
 		// ----------------------
 		// Временно
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+		ModelDBConnection.initConnection();
 		// ----------------------
 
 		arrSex = ModelDBConnection.getNamesFromTableOrderedById("Gender");

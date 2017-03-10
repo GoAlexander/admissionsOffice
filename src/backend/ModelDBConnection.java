@@ -350,23 +350,26 @@ public class ModelDBConnection {
 		}
 	}
 
-	// избавиться от getCount внутри
 	public static String[] getNamesFromTableOrderedById(String table) {
 		try {
-			String query = "select name from " + table + " order by id";
+			cstmt = con.prepareCall("{call getNamesFromTableOrderedById(?)}", 1004, 1007);
 
-			int i = 0, countTableRows = getCount(table);
-			String[] listElems = new String[countTableRows];
+			cstmt.setString(1, table);
 
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			int i = 0;
+			String[] listElems = new String[countStrings];
 
 			while (rset.next()) {
 				listElems[i] = rset.getString(1);
 				i++;
 			}
 
-			stmt.close();
+			cstmt.close();
 			rset.close();
 
 			return listElems;
@@ -375,19 +378,6 @@ public class ModelDBConnection {
 			return null;
 		}
 	}
-
-	/*
-	 * public static String[] getTableColumnNames(String table) throws
-	 * SQLException {
-	 * 
-	 * try { String query = "select * from " + table + " ;"; stmt =
-	 * con.createStatement(); rset = stmt.executeQuery(query); ResultSetMetaData
-	 * rsmd = rset.getMetaData(); int numberOfColumns = rsmd.getColumnCount();
-	 * String[] data = new String[numberOfColumns]; for (int i = 0; i <
-	 * numberOfColumns; i++) { data[i] = rsmd.getColumnLabel(i+1); }
-	 * stmt.close(); rset.close(); return data; } catch (Exception e) {
-	 * e.printStackTrace(); return null; } }
-	 */
 
 	public static String[][] getAllFromTableOrderedById(String table) throws SQLException {
 		String id = "id";
@@ -1064,7 +1054,6 @@ public class ModelDBConnection {
 		return educationInfo;
 	}
 
-	// 5 параметров
 	public static String[] getElementFromTableByIDs(String table, String[] data) {
 		try {
 			String id1 = "aid_abiturient", id2 = "";
@@ -1079,10 +1068,16 @@ public class ModelDBConnection {
 				break;
 			}
 
-			String query = "select * from " + table + " where " + id1 + " = " + data[0] + " and " + id2 + " = "
-					+ data[1] + ";";
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
+			cstmt = con.prepareCall("{call getElementFromTableByIDs(?, ?, ?, ?, ?)}", 1004, 1007);
+
+			cstmt.setString(1, table);
+			cstmt.setString(2, id1);
+			cstmt.setString(3, data[0]);
+			cstmt.setString(4, id2);
+			cstmt.setString(5, data[1]);
+
+			rset = cstmt.executeQuery();
+
 			ResultSetMetaData rsmd = rset.getMetaData();
 			int numberOfColumns = rsmd.getColumnCount();
 
@@ -1097,7 +1092,7 @@ public class ModelDBConnection {
 					System.out.println("Read: " + result[i]);
 				}
 			}
-			stmt.close();
+			cstmt.close();
 			rset.close();
 			return result;
 		} catch (Exception e) {
@@ -1140,7 +1135,6 @@ public class ModelDBConnection {
 		}
 	}
 
-	// не переводить
 	public static boolean needAbiturientSpecialConditionsByID(String aid) {
 		boolean state = false;
 		String query = "select needSpecConditions from Abiturient where aid = " + aid + ";";
