@@ -199,6 +199,4 @@ begin
 	
 	return @curPos
 end;
-=======
->>>>>>> origin/master
 go
