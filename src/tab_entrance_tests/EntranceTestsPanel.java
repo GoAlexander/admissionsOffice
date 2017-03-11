@@ -117,10 +117,9 @@ public class EntranceTestsPanel extends JPanel {
 					System.out.println(tmpdata[2]);
 					data_new[i][4] = "1";
 					for(int j = 0; !tmpdata[2].toString().equals(blockEntranceTest[j]); j++, data_new[i][4] = String.valueOf(j+1));
-				} else
-					data_new[i][4] = "";
-				data_new[i][5] = (tmpdata[3] != null) ? tmpdata[3].toString() : "";
-				data_new[i][6] = (tmpdata[4] != null) ? tmpdata[4].toString() : "";
+				}
+				if (tmpdata[3] != null) data_new[i][5] = tmpdata[3].toString();
+				if (tmpdata[4] != null) data_new[i][6] = tmpdata[4].toString();
 
 				data_new[i][7] = "1";
 				data_new[i][8] = "";
@@ -128,10 +127,7 @@ public class EntranceTestsPanel extends JPanel {
 				data_new[i][9] = (specialCond.isSelected()) ? "1" : "0";
 			}
 
-			for(int i = 0; i < data_old_length; i++) {
-				String[] data_delete = {data_old[i][0], data_old[i][1]};
-				ModelDBConnection.deleteElementInTableByIds("AbiturientEntranceTests", data_delete);
-			}
+			ModelDBConnection.deleteElementInTableById("AbiturientEntranceTests", currentAbit);
 
 			for(int i = 0; i < data.size(); i++) {
 				ModelDBConnection.updateAbiturientEntranceTestsResultsByID(data_new[i]);

@@ -712,7 +712,7 @@ public class ModelDBConnection {
 			stmt.close();
 			rset.close();
 		}
-
+		query = query.replaceAll("'null'", "null");
 		System.out.println(query);
 
 		stmt = con.createStatement();

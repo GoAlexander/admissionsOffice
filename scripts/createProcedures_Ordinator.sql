@@ -104,17 +104,26 @@ go
 -- TODO Автоматическое присваивание номера, исходя из свободных мест в группе!!!
 alter procedure getAllEntranceTestsResultsByAbiturientId(@aid varchar(max), @needAllCollumns bit)
 as begin
-
-	if (@needAllCollumns = 1 ) 
-			execute('select * from AbiturientEntranceTests where aid_abiturient = ' + @aid)
+	if (@needAllCollumns = 1) 
+		begin
+			select * from AbiturientEntranceTests where aid_abiturient = + @aid
+		end
 	else
 		begin
-			if (@@ROWCOUNT > 0)
-				execute ('select EntranceTest.name, testGroup, TestBox.name, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox 
+			if not exists(select * from AbiturientEntranceTests where aid_abiturient = + @aid)
+				begin
+					select EntranceTest.name, null, null, null, null from EntranceTest
+				end
+			else
+				begin
+					select EntranceTest.name, testGroup, TestBox.name, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests, TestBox 
 						where EntranceTest.id = AbiturientEntranceTests.id_entranceTest 
-							and TestBox.id = AbiturientEntranceTests.id_testBox and aid_abiturient = ' + @aid)
-			else 
-				execute ('select EntranceTest.name, null, null, null, null from EntranceTest')
+							and TestBox.id = AbiturientEntranceTests.id_testBox and aid_abiturient = + @aid
+					union all
+					select EntranceTest.name, testGroup, null, testDate, AbiturientEntranceTests.score from EntranceTest, AbiturientEntranceTests
+						where EntranceTest.id = AbiturientEntranceTests.id_entranceTest 
+							and AbiturientEntranceTests.id_testBox is null and aid_abiturient = + @aid
+				end
 		end
 	return
 end;
