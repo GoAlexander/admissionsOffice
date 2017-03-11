@@ -1193,4 +1193,31 @@ public class ModelDBConnection {
 	public static void deleteAbiturientCompetitiveGroupByID(String aid, String[] data) throws SQLException {
 		deleteElementInTableByExpression("AbiturientCompetitiveGroup", data, 8);
 	}
+
+	public static int getFreeNumberInGroupByExam(String idEntranceTest, String testGroup) {
+		if (initConnection()) {
+			try {
+				int freeNumber = 0;
+				cstmt = con.prepareCall("{? = call getFreeNumberInGroup(?,?)}");
+
+				cstmt.registerOutParameter(1, Types.INTEGER);
+				cstmt.setString(2, idEntranceTest);
+				cstmt.setString(3, testGroup);
+
+				cstmt.execute();
+
+				freeNumber = cstmt.getInt(1);
+				// System.out.println(count);
+				return freeNumber;
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				return -1;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+
+		return -1;
+	}
 }

@@ -108,11 +108,13 @@ public class EntranceTestsPanel extends JPanel {
 				data_new[i][0] = currentAbit;
 				data_new[i][1] = "1";
 				for(int j = 0; !tmpdata[0].toString().equals(nameEntranceTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
-				if (tmpdata[1] != null) data_new[i][2] = tmpdata[1].toString();
-				// !!!	Временно - внутри хранимой процедуры заменить
-				//		на автоматическое присваивание номера, исходя из свободных мест в группе
-				data_new[i][3] = "";
-				// !!!
+				if (tmpdata[1] != null) {
+					data_new[i][2] = tmpdata[1].toString();
+					System.out.println(data_new[i][2]);
+					data_new[i][3] = String.valueOf(ModelDBConnection.getFreeNumberInGroupByExam(data_new[i][1], data_new[i][2]));
+					System.out.println(data_new[i][3]);
+				}
+
 				if (tmpdata[2] != null) {
 					System.out.println(tmpdata[2]);
 					data_new[i][4] = "1";
@@ -134,8 +136,7 @@ public class EntranceTestsPanel extends JPanel {
 			}
 
 			MessageProcessing.displaySuccessMessage(this, 4);
-			
-			
+
 			entranceTestTable.clearSelection();
 			this.setEditable(false);
 		} catch (Exception e) {

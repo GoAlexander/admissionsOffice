@@ -164,3 +164,40 @@ begin
 	return
 end;
 go
+
+alter procedure getFreeNumberInGroup(@id_entranceTest varchar(max), @testGroup varchar(max))
+as
+begin
+	declare @query varchar(max), @freeNumber int, @curPos int
+
+	set @freeNumber = 1
+	set @curPos = 1
+	set @query = 'select indexNumber from AbiturientEntranceTests 
+				where id_entranceTest = ' + @id_entranceTest + ' and (testGroup like ''' + @testGroup +
+				''') order by indexNumber'
+
+	execute('declare cur cursor for ' + @query)
+	open cur
+	fetch next from cur into @freeNumber
+	while @@FETCH_STATUS=0
+	begin
+		print '!!!'
+		if (@freeNumber <> @curPos)
+		begin
+			set @freeNumber = @curPos
+			break
+		end
+		set @curPos = @curPos + 1
+		fetch next from cur into @freeNumber
+	end
+	close cur
+	deallocate cur
+	
+	if (@curPos > 20)
+		begin
+			set @curPos = -1
+		end
+	
+	return @curPos
+end;
+go
