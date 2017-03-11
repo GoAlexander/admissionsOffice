@@ -133,31 +133,11 @@ public class ModelDBConnection {
 	}
 
 	public static String[][] getAllAbiturients() {
-		/*
-		 * int countAbits = getCount("Abiturient");
-		 * 
-		 * String[][] data = null;
-		 * 
-		 * if (countAbits > 0) { try { data = new String[countAbits][4];
-		 * 
-		 * String query =
-		 * "select aid, SName, Fname, MName from Abiturient order by aid"; stmt
-		 * = con.createStatement(); rset = stmt.executeQuery(query);
-		 * 
-		 * int curPos = 0; while (rset.next()) { data[curPos][0] =
-		 * String.valueOf(rset.getInt(1)); data[curPos][1] = rset.getString(2);
-		 * data[curPos][2] = rset.getString(3); data[curPos][3] =
-		 * rset.getString(4); curPos++; }
-		 * 
-		 * stmt.close(); rset.close(); } catch (Exception e) {
-		 * e.printStackTrace(); return null; } }
-		 * 
-		 */
+		
 		String[][] data = null;
 
 		try {
-			cstmt = con.prepareCall("{call getAllAbiturients(?)}", 1004, 1007);
-			cstmt.setString(1, "Abiturient");
+			cstmt = con.prepareCall("{call getAllAbiturients}", 1004, 1007);
 
 			rset = cstmt.executeQuery();
 

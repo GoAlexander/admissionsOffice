@@ -153,14 +153,13 @@ begin
 end;
 go
 
-alter procedure getAllAbiturients(@tableName varchar(max))
+drop procedure getAllAbiturients
+go
+
+create procedure getAllAbiturients
 as
 begin
-	if (object_id(@tableName) is null)
-	begin
-		  RAISERROR('Недопустимое имя таблицы', 16, 1)
-	end
-		execute('select aid, SName, Fname, MName from ' + @tableName + ' order by aid')
+	select aid, SName, Fname, MName from Abiturient order by aid
 	return
 end;
 go
