@@ -15,6 +15,7 @@ public class CompetitiveGroupPanelListener implements ActionListener {
 		this.panel = panel;
 		openCompetGroup = new AddNewCompetitiveGroup(parentPanel);
 		openCompetGroup.setValues(data);
+		openCompetGroup.setEditable(false);
 		panel.add(openCompetGroup.getAddNewCompetGroup());
 		panel.setVisible(false);
 	}

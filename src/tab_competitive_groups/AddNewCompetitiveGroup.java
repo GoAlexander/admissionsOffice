@@ -1,7 +1,6 @@
 ﻿package tab_competitive_groups;
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ItemEvent;
@@ -279,5 +278,17 @@ public class AddNewCompetitiveGroup extends JFrame{
 		values[11] = "0";
 
 		return values;
+	}
+
+	public void setEditable(boolean state) {
+		((JComboBox)directPanel.getComponent(1)).setEnabled(state);
+		((JComboBox)specialityPanel.getComponent(1)).setEnabled(state);
+		((JComboBox)educFormPanel.getComponent(1)).setEnabled(state);
+		((JComboBox)departmentPanel.getComponent(1)).setEnabled(state);
+		comboCompetGroupType.setEnabled(state);
+		((JComboBox)orgPanel.getComponent(1)).setEnabled(state);
+		comboStandardType.setEnabled(state);
+		calendar.setEnabled(state);
+		originalBox.setEnabled(state);
 	}
 }

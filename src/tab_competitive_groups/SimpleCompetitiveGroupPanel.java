@@ -38,12 +38,16 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 		dirSpecPanel.add(dirLabel);
 		textDir = new JTextField();
 		textDir.setPreferredSize(dimText);
+		textDir.setEditable(false);
+		textDir.setBackground(Color.WHITE);
 		dirSpecPanel.add(textDir);
 		dirSpecPanel.add(Box.createRigidArea(dimRigidArea));
 		JLabel specLabel = new JLabel("Специальность");
 		dirSpecPanel.add(specLabel);
 		textSpec = new JTextField();
 		textSpec.setPreferredSize(dimText);
+		textSpec.setEditable(false);
+		textSpec.setBackground(Color.WHITE);
 		dirSpecPanel.add(textSpec);
 		compGroupPanel.add(dirSpecPanel);
 
@@ -53,12 +57,16 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 		groupBallPanel.add(groupLabel);
 		textGroup = new JTextField();
 		textGroup.setPreferredSize(dimText);
+		textGroup.setEditable(false);
+		textGroup.setBackground(Color.WHITE);
 		groupBallPanel.add(textGroup);
 		groupBallPanel.add(Box.createRigidArea(dimRigidArea));
 		JLabel ballLabel = new JLabel("Конкурсный балл");
 		groupBallPanel.add(ballLabel);
 		textBall = new JTextField();
 		textBall.setPreferredSize(dimText);
+		textBall.setEditable(false);
+		textBall.setBackground(Color.WHITE);
 		groupBallPanel.add(textBall);
 		compGroupPanel.add(groupBallPanel);
 
