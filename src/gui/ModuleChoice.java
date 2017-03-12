@@ -6,8 +6,13 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import backend.ModelDBConnection;
 
 public class ModuleChoice extends JFrame {
@@ -61,6 +66,26 @@ public class ModuleChoice extends JFrame {
 
 		setPreferredSize(new Dimension(550, 250));
 		pack();
+
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowListener() {
+			public void windowActivated(WindowEvent event) {}
+			public void windowClosed(WindowEvent event) {}
+			public void windowDeactivated(WindowEvent event) {}
+			public void windowDeiconified(WindowEvent event) {}
+			public void windowIconified(WindowEvent event) {}
+			public void windowOpened(WindowEvent event) {}
+
+			public void windowClosing(WindowEvent event) {
+				Object[] options = { "Да", "Нет!" };
+				int n = JOptionPane.showOptionDialog(event.getWindow(), "Выйти из приложения?", "Выход из приложения",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				if (n == 0) {
+					event.getWindow().setVisible(false);
+					System.exit(0);
+				}
+			}
+		});
 	}
 
 	public static void main(String[] args) {

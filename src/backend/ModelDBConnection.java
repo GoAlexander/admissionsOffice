@@ -35,6 +35,8 @@ public class ModelDBConnection {
 		ModelDBConnection.dbName = dbName;
 		ModelDBConnection.login = login;
 		ModelDBConnection.password = password;
+
+		ModelDBConnection.con = null;
 	}
 
 	public String getLogin() {

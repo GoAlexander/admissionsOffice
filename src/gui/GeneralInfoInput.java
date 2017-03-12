@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -484,6 +486,22 @@ public class GeneralInfoInput extends JFrame {
 					updateTab("IndividualAchievements");
 					updateTab("CompetitiveGroups");
 				}
+			}
+		});
+
+		//this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowListener() {
+			public void windowActivated(WindowEvent event) {}
+			public void windowClosed(WindowEvent event) {}
+			public void windowDeactivated(WindowEvent event) {}
+			public void windowDeiconified(WindowEvent event) {}
+			public void windowIconified(WindowEvent event) {}
+			public void windowOpened(WindowEvent event) {}
+
+			public void windowClosing(WindowEvent event) {
+				ModuleChoice window = new ModuleChoice();
+				window.setVisible(true);
+				setVisible(false);
 			}
 		});
 	}
