@@ -46,6 +46,7 @@ import tab_education.EducationPanel;
 import tab_entrance_tests.EntranceTestsPanel;
 import tab_passport.PassportPanel;
 import tab_address_contacts.AddressContactsPanel;
+import tab_catalogs.EditAdmissionPlan;
 import tab_catalogs.EditMenuListener;
 import tab_competitive_groups.CompetitiveGroupsPanel;
 import tab_achievements.IndividualAchievementsPanel;
@@ -172,7 +173,12 @@ public class GeneralInfoInput extends JFrame {
 		directoryMenu.add(directoryMenuEducStandard);
 		directoryMenu.addSeparator();
 		directoryMenuPlan = new JMenuItem("План приема");
-		directoryMenuPlan.addActionListener(new EditMenuListener("AdmissionPlan", "План приема"));
+		directoryMenuPlan.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				EditAdmissionPlan window = new EditAdmissionPlan();
+				window.setVisible(true);
+			}
+		});
 		directoryMenu.add(directoryMenuPlan);
 		directoryMenu.addSeparator();
 		directoryMenuUsers = new JMenuItem("Пользователи");

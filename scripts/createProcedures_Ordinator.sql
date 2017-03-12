@@ -197,3 +197,17 @@ begin
 	return @curPos
 end;
 go
+
+alter procedure getAdmissionPlan
+as
+begin
+	select Speciality.name, EducationForm.name, CompetitiveGroup.name, TargetOrganisation.name, EducationStandard.name, AdmissionPlan.placeCount 
+		from ((((AdmissionPlan inner join Speciality on (specialtyCode = Speciality.id)) inner join 
+				EducationForm on (educationForm = EducationForm.id)) inner join 
+				CompetitiveGroup on (competitiveGroup = CompetitiveGroup.id)) inner join 
+				EducationStandard on (educationStandard = EducationStandard.id)) left outer join 
+				TargetOrganisation on (targetOrganisation = TargetOrganisation.id)
+			order by specialtyCode, educationForm, competitiveGroup, targetOrganisation, educationStandard
+	return
+end;
+go

@@ -261,6 +261,7 @@ public class ModelDBConnection {
 		}
 
 		if (initConnection()) {
+			query = query.replaceAll("'null'", "null");
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
 
@@ -335,6 +336,7 @@ public class ModelDBConnection {
 					+ ", Birthday = " + birthday + ", id_gender = " + id_gender + ", id_nationality = " + id_nationality
 					+ ", registrationDate = " + registrationDate + ", returnDate = " + returnDate
 					+ ", id_returnReason = " + id_returnReason + " where aid = " + aid + ";";
+			query = query.replaceAll("'null'", "null");
 			System.out.println(query);
 			break;
 		}
@@ -548,6 +550,7 @@ public class ModelDBConnection {
 			rset.close();
 		}
 
+		query = query.replaceAll("'null'", "null");
 		System.out.println(query);
 
 		stmt = con.createStatement();
@@ -634,7 +637,7 @@ public class ModelDBConnection {
 			stmt.close();
 			rset.close();
 		}
-
+		query = query.replaceAll("'null'", "null");
 		System.out.println(query);
 
 		stmt = con.createStatement();
@@ -741,31 +744,36 @@ public class ModelDBConnection {
 
 	public static void deleteElementInTableByExpression(String table, String[] data, int countOfExprParams)
 			throws SQLException {
-		String id = "aid_abiturient";
+		String id = "aid_abiturient", query;
 		switch (table) {
 		case "AbiturientCompetitiveGroup":
 			id = "aid_abiturient";
 			break;
+		case "AdmissionPlan":
+			id = "specialtyCode";
+			break;
 		}
 
-		String query = "select * from " + table + " where " + id + " = 0;";
-		System.out.println(query);
-		// int numberOfColumns = 0;
+		if (countOfExprParams > 0) {
+			query = "select * from " + table + " where " + id + " = 0;";
+			System.out.println(query);
 
-		stmt = con.createStatement();
-		rset = stmt.executeQuery(query);
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(query);
 
-		ResultSetMetaData rsmd = rset.getMetaData();
-		// numberOfColumns = rsmd.getColumnCount();
+			ResultSetMetaData rsmd = rset.getMetaData();
 
-		query = "delete from " + table + " where ";
-		for (int i = 0; i < countOfExprParams; i++)
-			if (i == countOfExprParams - 1)
-				query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
-			else
-				query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
-		System.out.println(query);
+			query = "delete from " + table + " where ";
+			for (int i = 0; i < countOfExprParams; i++)
+				if (i == countOfExprParams - 1)
+					query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
+				else
+					query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
+			System.out.println(query);
+		} else
+			query = "delete from " + table;
 
+		query = query.replaceAll("= null", "is null");
 		stmt = con.createStatement();
 		stmt.executeUpdate(query);
 
@@ -1201,5 +1209,39 @@ public class ModelDBConnection {
 		}
 
 		return -1;
+	}
+
+	public static String[][] getAdmissionPlan() {
+		String[][] data = null;
+
+		try {
+			cstmt = con.prepareCall("{call getAdmissionPlan()}", 1004, 1007);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
+				}
+			}
+			cstmt.close();
+			rset.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return data;
 	}
 }

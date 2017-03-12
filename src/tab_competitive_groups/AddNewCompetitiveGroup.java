@@ -248,14 +248,17 @@ public class AddNewCompetitiveGroup extends JFrame{
 				comboCompetGroupType.setSelectedIndex(Integer.valueOf(values[5]) - 1);
 				((JComboBox)orgPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[6]) - 1);
 				comboStandardType.setSelectedIndex(Integer.valueOf(values[7]) - 1);
-	
-				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-				Date date = format.parse(values[10]);
-				calendar.setDate(date);
-	
+
+				if (values[10] != null) {
+					DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+					Date date = format.parse(values[10]);
+					calendar.setDate(date);
+				}
+
 				originalBox.setSelected(values[10] != null ? true : false);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
@@ -272,7 +275,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 		values[7] = String.valueOf(comboStandardType.getSelectedIndex() + 1);
 		values[8] = "0";
 		values[9] = "0";
-		values[10] = originalBox.isSelected() ? new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString() : "";
+		values[10] = originalBox.isSelected() ? new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString() : null;
 		values[11] = "0";
 
 		return values;

@@ -5,6 +5,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -16,18 +20,22 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import backend.MessageProcessing;
+import backend.ModelDBConnection;
 import general_classes.GUITableModel;
 
 public class EditAdmissionPlan extends JFrame {
+	private JPanel mainPanel;
 
-	private JPanel mainPanel, tablePanel;
 	private JTable dataTable;
 	private GUITableModel currentTM = new GUITableModel();
-	private String[] columnNames = { "Специальность", "Форма обучения", "Конкурсная группа", "Целевая организация",
-			"Стандарт", "План" };
+
+	private String[] arrSpeciality, arrFormEduc, arrCompetGroup, arrOrg, arrStandard, columnNames = { "Специальность",
+			"Форма обучения", "Конкурсная группа", "Целевая организация", "Стандарт", "План" };
+
+	private JButton addBtn, editBtn, saveBtn, deleteBtn;
 
 	public EditAdmissionPlan() {
-
 		setTitle("Редактирование плана приема");
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -37,7 +45,7 @@ public class EditAdmissionPlan extends JFrame {
 		mainPanel.setLayout(new BorderLayout());
 		add(mainPanel);
 
-		tablePanel = new JPanel();
+		new JPanel();
 		dataTable = new JTable(currentTM);
 		currentTM.setDataVector(null, columnNames);
 		JScrollPane scrPane = new JScrollPane(dataTable);
@@ -47,41 +55,161 @@ public class EditAdmissionPlan extends JFrame {
 		dataTable.setRowHeight(25);
 		dataTable.getColumnModel().getColumn(columnNames.length - 1).setMaxWidth(70);
 		mainPanel.add(scrPane, BorderLayout.CENTER);
-		
-		// ***test data
-		currentTM.setDataVector(new Object[][] { 
-			{ "1", "123", "123", "123", "123", "123" },
-			{ "2", "123", "123", "123", "123", "123" }, 
-			{ "3", "123", "123", "123", "123", "123" }, 
-			}, 
-				columnNames);
 
-		String[] arrSpeciality = { "s1", "s2", "s3" };
+		currentTM.setDataVector(ModelDBConnection.getAdmissionPlan(), columnNames);
+
+		arrSpeciality = ModelDBConnection.getNamesFromTableOrderedById("Speciality");
 		createCheckboxTable(dataTable, 0, arrSpeciality);
 
-		String[] arrFormEduc = { "f1", "f2", "f3" };
+		arrFormEduc = ModelDBConnection.getNamesFromTableOrderedById("EducationForm");
 		createCheckboxTable(dataTable, 1, arrFormEduc);
 
-		String[] arrCompetGroup = { "c1", "c2", "c3" };
+		arrCompetGroup = ModelDBConnection.getNamesFromTableOrderedById("CompetitiveGroup");
 		createCheckboxTable(dataTable, 2, arrCompetGroup);
-		
-		String[] arrOrg = { "o1", "o2", "o3" };
+
+		arrOrg = ModelDBConnection.getNamesFromTableOrderedById("TargetOrganisation");
 		createCheckboxTable(dataTable, 3, arrOrg);
 
-		String[] arrStandard = { "s1", "s2", "s3" };
+		arrStandard = ModelDBConnection.getNamesFromTableOrderedById("EducationStandard");
 		createCheckboxTable(dataTable, 4, arrStandard);
+
+		addBtn = new JButton("Добавить");
+		editBtn = new JButton("Редактировать");
+		saveBtn = new JButton("Сохранить");
+		deleteBtn = new JButton("Удалить");
+		saveBtn.setEnabled(false);
+		deleteBtn.setEnabled(false);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton editBtn = new JButton("Редактировать");
+
+		addBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				currentTM.addRow(new String[columnNames.length]);
+				dataTable.setEnabled(true);
+				addBtn.setEnabled(false);
+				editBtn.setEnabled(false);
+				saveBtn.setEnabled(true);
+			}
+		});
+		buttonPanel.add(addBtn);
+
+		editBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dataTable.setEnabled(true);
+				addBtn.setEnabled(false);
+				editBtn.setEnabled(false);
+				saveBtn.setEnabled(true);
+				deleteBtn.setEnabled(true);
+			}
+		});
 		buttonPanel.add(editBtn);
-		JButton saveBtn = new JButton("Сохранить");
+
+		saveBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dataTable.setEnabled(false);
+				addBtn.setEnabled(true);
+				editBtn.setEnabled(true);
+				saveBtn.setEnabled(false);
+				deleteBtn.setEnabled(false);
+				if (dataTable.isEditing())
+					dataTable.getCellEditor().stopCellEditing();
+				dataTable.clearSelection();
+				currentTM.fireTableDataChanged();
+				saveButtonActionPerformed(e);
+			}
+		});
 		buttonPanel.add(saveBtn);
+
+		deleteBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteButtonActionPerformed(e);
+				currentTM.removeRow(dataTable.getSelectedRow());
+				currentTM.fireTableDataChanged();
+			}
+		});
+		buttonPanel.add(deleteBtn);
 
 		mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
 		setPreferredSize(new Dimension(1000, 500));
 		pack();
+	}
+
+	private void saveButtonActionPerformed(ActionEvent e) {
+		try {
+			ModelDBConnection.deleteElementInTableByExpression("AdmissionPlan", null, 0);
+
+			Vector<Vector<Object>> data = currentTM.getDataVector();
+			Object[] tmpdata;
+			for (int i = 0; i < data.size(); i++) {
+				String[] rowData = new String[columnNames.length];
+				tmpdata = data.elementAt(i).toArray();
+				if(tmpdata[0] != null) {
+					rowData[0] = "1";
+					for(int j = 0; !tmpdata[0].toString().equals(arrSpeciality[j]); j++, rowData[0] = String.valueOf(j+1));
+				}
+				if(tmpdata[1] != null) {
+					rowData[1] = "1";
+					for(int j = 0; !tmpdata[1].toString().equals(arrFormEduc[j]); j++, rowData[1] = String.valueOf(j+1));
+				}
+				if(tmpdata[2] != null) {
+					rowData[2] = "1";
+					for(int j = 0; !tmpdata[2].toString().equals(arrCompetGroup[j]); j++, rowData[2] = String.valueOf(j+1));
+				}
+				if(tmpdata[3] != null) {
+					rowData[3] = "1";
+					for(int j = 0; !tmpdata[3].toString().equals(arrOrg[j]); j++, rowData[3] = String.valueOf(j+1));
+				}
+				if(tmpdata[4] != null) {
+					rowData[4] = "1";
+					for(int j = 0; !tmpdata[4].toString().equals(arrStandard[j]); j++, rowData[4] = String.valueOf(j+1));
+				}
+				if(tmpdata[5] != null) rowData[5] = tmpdata[5].toString();
+
+				ModelDBConnection.updateElementInTableByExpression("AdmissionPlan", rowData, 5);
+			}
+			MessageProcessing.displaySuccessMessage(this, 4);
+		} catch (SQLException e1) {
+			MessageProcessing.displayErrorMessage(this, 2);
+		}
+	}
+
+	private void deleteButtonActionPerformed(ActionEvent e) {
+		try {
+			Vector<Vector<Object>> data = currentTM.getDataVector();
+			Object[] tmpdata;
+			String[] rowData = new String[columnNames.length];
+			tmpdata = data.elementAt(dataTable.getSelectedRow()).toArray();
+			if(tmpdata[0] != null) {
+				rowData[0] = "1";
+				for(int j = 0; !tmpdata[0].toString().equals(arrSpeciality[j]); j++, rowData[0] = String.valueOf(j+1));
+			}
+			if(tmpdata[1] != null) {
+				rowData[1] = "1";
+				for(int j = 0; !tmpdata[1].toString().equals(arrFormEduc[j]); j++, rowData[1] = String.valueOf(j+1));
+			}
+			if(tmpdata[2] != null) {
+				rowData[2] = "1";
+				for(int j = 0; !tmpdata[2].toString().equals(arrCompetGroup[j]); j++, rowData[2] = String.valueOf(j+1));
+			}
+			if(tmpdata[3] != null) {
+				rowData[3] = "1";
+				for(int j = 0; !tmpdata[3].toString().equals(arrOrg[j]); j++, rowData[3] = String.valueOf(j+1));
+			}
+			if(tmpdata[4] != null) {
+				rowData[4] = "1";
+				for(int j = 0; !tmpdata[4].toString().equals(arrStandard[j]); j++, rowData[4] = String.valueOf(j+1));
+			}
+			if(tmpdata[5] != null) rowData[5] = tmpdata[5].toString();
+
+			ModelDBConnection.deleteElementInTableByExpression("AdmissionPlan", rowData, 5);
+
+			MessageProcessing.displaySuccessMessage(this, 5);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			MessageProcessing.displayErrorMessage(this, 3);
+		}
 	}
 
 	private void createCheckboxTable(JTable table, int numColumn, String[] dataCheck) {
@@ -114,6 +242,8 @@ public class EditAdmissionPlan extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+					ModelDBConnection.initConnection();
 					EditAdmissionPlan window = new EditAdmissionPlan();
 					window.setVisible(true);
 				} catch (Exception e) {
