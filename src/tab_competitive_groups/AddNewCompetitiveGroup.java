@@ -282,12 +282,19 @@ public class AddNewCompetitiveGroup extends JFrame{
 
 	public void setEditable(boolean state) {
 		((JComboBox)directPanel.getComponent(1)).setEnabled(state);
+		((JComboBox)directPanel.getComponent(1)).setEditable(!state);
 		((JComboBox)specialityPanel.getComponent(1)).setEnabled(state);
+		((JComboBox)specialityPanel.getComponent(1)).setEditable(!state);
 		((JComboBox)educFormPanel.getComponent(1)).setEnabled(state);
+		((JComboBox)educFormPanel.getComponent(1)).setEditable(!state);
 		((JComboBox)departmentPanel.getComponent(1)).setEnabled(state);
+		((JComboBox)departmentPanel.getComponent(1)).setEditable(!state);
 		comboCompetGroupType.setEnabled(state);
+		comboCompetGroupType.setEditable(!state);
 		((JComboBox)orgPanel.getComponent(1)).setEnabled(state);
+		((JComboBox)orgPanel.getComponent(1)).setEditable(!state);
 		comboStandardType.setEnabled(state);
+		comboStandardType.setEditable(!state);
 		calendar.setEnabled(state);
 		originalBox.setEnabled(state);
 	}

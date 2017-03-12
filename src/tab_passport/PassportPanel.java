@@ -163,13 +163,14 @@ public class PassportPanel extends JPanel{
 
 	public void setEditable(boolean state) {
 		comboDocType.setEnabled(state);
+		comboDocType.setEditable(!state);
 		textSeria.setEditable(state);
 		textNum.setEditable(state);
 		textDate.setEditable(state);
 		textIssuedBy.setEditable(state);
 		textplaceBirth.setEditable(state);
 		savePassportButton.setEnabled(state);
-		
+
 		editPassportButton.setEnabled(!state);
 	}
 }

@@ -371,6 +371,7 @@ public class GeneralInfoInput extends JFrame {
 		comboSexList = new JComboBox(arrSex);
 		comboSexList.setSelectedIndex(-1);
 		comboSexList.setEnabled(false);
+		comboSexList.setEditable(true);
 		panelSex.add(comboSexList);
 		gbc.gridx = 1;
 		gbc.gridy = 1;
@@ -399,6 +400,7 @@ public class GeneralInfoInput extends JFrame {
 		comboNationality.setSelectedIndex(-1);
 		comboNationality.setPreferredSize(dimText);
 		comboNationality.setEnabled(false);
+		comboNationality.setEditable(true);
 		panelNationality.add(comboNationality);
 		gbc.gridy = 3;
 		GIPanel.add(panelNationality, gbc);
@@ -422,6 +424,7 @@ public class GeneralInfoInput extends JFrame {
 
 		comboReturnReason = new JComboBox(arrReturnReason);
 		comboReturnReason.setEnabled(false);
+		comboReturnReason.setEditable(true);
 		comboReturnReason.setSelectedIndex(-1);
 		panelReturnReason.add(comboReturnReason);
 
@@ -561,9 +564,12 @@ public class GeneralInfoInput extends JFrame {
 				((JTextField) panelPatronymic.getComponent(1)).setEnabled(false);
 				calendar.setEnabled(false);
 				comboSexList.setEnabled(false);
+				comboSexList.setEditable(true);
 				comboNationality.setEnabled(false);
+				comboNationality.setEditable(true);
 				textDateReturn.setEnabled(false);
 				comboReturnReason.setEnabled(false);
+				comboReturnReason.setEditable(true);
 				checkBackDoc.setEnabled(false);
 
 				// !!! Добавить !!!
@@ -578,12 +584,15 @@ public class GeneralInfoInput extends JFrame {
 				((JTextField) panelPatronymic.getComponent(1)).setEnabled(true);
 				calendar.setEnabled(true);
 				comboSexList.setEnabled(true);
+				comboSexList.setEditable(false);
 				comboNationality.setEnabled(true);
+				comboNationality.setEditable(false);
 				checkBackDoc.setEnabled(true);
 				if (checkBackDoc.isSelected()) {
 					textDateReturn.setEnabled(true);
 					comboReturnReason.setEnabled(true);
 				}
+				comboReturnReason.setEditable(false);
 				addButton.setEnabled(false);
 				deleteButton.setEnabled(false);
 				editButton.setText("    Сохранить     ");

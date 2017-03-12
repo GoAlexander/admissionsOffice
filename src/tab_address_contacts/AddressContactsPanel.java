@@ -176,6 +176,8 @@ public class AddressContactsPanel extends JPanel {
 		textIndex.setEditable(state);
 		comboRegionType.setEnabled(state);
 		comboPunktType.setEnabled(state);
+		comboRegionType.setEditable(!state);
+		comboPunktType.setEditable(!state);
 		textAdressLiving.setEditable(state);
 		textPhone.setEditable(state);
 		textEmail.setEditable(state);
