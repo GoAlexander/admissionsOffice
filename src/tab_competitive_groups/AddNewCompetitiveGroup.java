@@ -110,7 +110,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 		JLabel dateProvideLabel = new JLabel("Дата предоставления:");
 		panelDateProvide.add(dateProvideLabel);
 
-		calendar = new JDateChooser();
+		calendar = new JDateChooser("dd.MM.yyyy", "##.##.####", '_');
 		calendar.setEnabled(false);
 		calendar.setFont(new Font("Dialog", Font.PLAIN, 11));
 		panelDateProvide.add(calendar);
@@ -124,6 +124,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 					calendar.setEnabled(true);
 					calendar.setDate(new Date());
 				} else {
+					calendar.setDate(null);
 					calendar.setEnabled(false);
 				}
 			}

@@ -8,6 +8,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /*
  * TODO
@@ -866,7 +868,14 @@ public class ModelDBConnection {
 				while (rset.next()) {
 					for (int i = 0; i < numberOfColumns; i++) {
 						if (rset.getObject(i + 1) != null)
-							data[curPos][i] = rset.getObject(i + 1).toString();
+							if (rset.getObject(i + 1) instanceof Date) {
+								SimpleDateFormat format = new SimpleDateFormat();
+								format.applyPattern("yyyy-MM-dd");
+								Date docDate= format.parse(rset.getObject(i + 1).toString());
+								format.applyPattern("dd.MM.yyyy");
+								data[curPos][i] = format.format(docDate);
+							} else
+								data[curPos][i] = rset.getObject(i + 1).toString();
 					}
 					curPos++;
 				}

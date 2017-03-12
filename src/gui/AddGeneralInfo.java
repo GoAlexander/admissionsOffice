@@ -142,7 +142,7 @@ public class AddGeneralInfo extends JFrame {
 		panelDB.setMaximumSize(dimPanel);
 		JLabel dbLabel = new JLabel("Дата Рождения:  ");
 		panelDB.add(dbLabel);
-		calendar = new JDateChooser();
+		calendar = new JDateChooser("dd.MM.yyyy", "##.##.####", '_');
 		calendar.setFont(new Font("Dialog", Font.PLAIN, 11));
 		panelDB.add(calendar);
 		gbc.gridy = 2;

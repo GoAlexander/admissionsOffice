@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,7 +21,7 @@ public class ModuleChoice extends JFrame {
 	private Font fontBtn = new Font("Tahoma", Font.BOLD, 18);
 	private GridBagConstraints gbc;
 
-	public ModuleChoice(){
+	public ModuleChoice() {
 		setTitle("Окно выбора модуля");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
@@ -36,11 +37,16 @@ public class ModuleChoice extends JFrame {
 		JButton ordinBtn = new JButton("Ординатура");
 		ordinBtn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
-				ModelDBConnection.initConnection();
-				GeneralInfoInput window = new GeneralInfoInput();
-				window.setVisible(true);
-				setVisible(false);
+				try {
+					ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+					ModelDBConnection.initConnection();
+					GeneralInfoInput window;
+					window = new GeneralInfoInput();
+					window.setVisible(true);
+					setVisible(false);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -51,11 +57,15 @@ public class ModuleChoice extends JFrame {
 		JButton aspirBtn = new JButton("Аспирантура");
 		aspirBtn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Aspirant", "user", "password");
-				ModelDBConnection.initConnection();
-				GeneralInfoInput window = new GeneralInfoInput();
-				window.setVisible(true);
-				setVisible(false);
+				try {
+					ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Aspirant", "user", "password");
+					ModelDBConnection.initConnection();
+					GeneralInfoInput window = new GeneralInfoInput();
+					window.setVisible(true);
+					setVisible(false);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 

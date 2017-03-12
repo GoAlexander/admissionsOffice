@@ -1,6 +1,7 @@
 ﻿package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -15,6 +16,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.BoxLayout;
@@ -22,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -37,6 +40,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.MaskFormatter;
+
 import com.toedter.calendar.JDateChooser;
 
 import backend.MessageProcessing;
@@ -90,7 +95,7 @@ public class GeneralInfoInput extends JFrame {
 
 	private JButton addButton, editButton, deleteButton;
 
-	public GeneralInfoInput() {
+	public GeneralInfoInput() throws ParseException {
 		// ----------------------
 		// Временно
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
@@ -383,7 +388,7 @@ public class GeneralInfoInput extends JFrame {
 		panelDB.setMaximumSize(dimPanel);
 		JLabel dbLabel = new JLabel("Дата Рождения:  ");
 		panelDB.add(dbLabel);
-		calendar = new JDateChooser();
+		calendar = new JDateChooser("dd.MM.yyyy", "##.##.####", '_');
 		calendar.setFont(new Font("Dialog", Font.PLAIN, 11));
 		calendar.setEnabled(false);
 		panelDB.add(calendar);
@@ -437,7 +442,9 @@ public class GeneralInfoInput extends JFrame {
 		panelDateReturn.setMaximumSize(dimPanel);
 		JLabel dateReturnLabel = new JLabel("Дата возврата документов:     ");
 		panelDateReturn.add(dateReturnLabel);
-		textDateReturn = new JTextField();
+		MaskFormatter mf = new MaskFormatter("##.##.####");
+		mf.setPlaceholderCharacter('_');
+		textDateReturn = new JFormattedTextField(mf);
 		textDateReturn.setPreferredSize(dimText);
 		textDateReturn.setEnabled(false);
 		panelDateReturn.add(textDateReturn);
@@ -452,6 +459,8 @@ public class GeneralInfoInput extends JFrame {
 						textDateReturn.setText(sdf.format(new Date()));
 					}
 				} else {
+					textDateReturn.setText(null);
+					comboReturnReason.setSelectedIndex(-1);
 					textDateReturn.setEnabled(false);
 					comboReturnReason.setEnabled(false);
 				}
@@ -708,7 +717,12 @@ public class GeneralInfoInput extends JFrame {
 			((JLabel) panelDateDoc.getComponent(1)).setText(values[7]);
 			comboReturnReason.setSelectedIndex(values[8].equals("") ? -1
 					: Integer.valueOf(values[8]) - 1);
-			textDateReturn.setText(values[9]);
+			if(!values[9].equals("")) {
+				Date docDate= format.parse(values[9]);
+				format.applyPattern("dd.MM.yyyy");
+				textDateReturn.setText(format.format(docDate));
+			} else
+				textDateReturn.setText(null);
 			if (values[8].equals(""))
 				checkBackDoc.setSelected(false);
 			else

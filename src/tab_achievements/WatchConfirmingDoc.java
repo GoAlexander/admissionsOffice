@@ -4,16 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
@@ -31,7 +36,7 @@ public class WatchConfirmingDoc extends JFrame {
 
 	private String nameButton;
 
-	public WatchConfirmingDoc(String nameButton) {
+	public WatchConfirmingDoc(String nameButton) throws ParseException {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
 
@@ -70,7 +75,9 @@ public class WatchConfirmingDoc extends JFrame {
 
 		JLabel dateLabel = new JLabel("Дата выдачи");
 		docDataPanel.add(dateLabel);
-		dateText = new JTextField();
+		MaskFormatter mf = new MaskFormatter("##.##.####");
+		mf.setPlaceholderCharacter('_');
+		dateText = new JFormattedTextField(mf);
 		dateText.setPreferredSize(dimText);
 		docDataPanel.add(dateText);
 		docDataPanel.add(Box.createRigidArea(dimRigidArea));
@@ -121,7 +128,7 @@ public class WatchConfirmingDoc extends JFrame {
 		}
 	}
 
-	public void setValues(String[] values) {
+	public void setValues(String[] values) throws ParseException {
 		currentAbit = values[0];
 		currentAchievmentId = values[1];
 		score = values[2];
@@ -131,7 +138,14 @@ public class WatchConfirmingDoc extends JFrame {
 		seriaText.setText(data[4]);
 		numText.setText(data[5]);
 		textIssuedBy.setText(data[6]);
-		dateText.setText(data[7]);
+		if(!data[7].equals("")) {
+			SimpleDateFormat format = new SimpleDateFormat();
+			format.applyPattern("yyyy-MM-dd");
+			Date docDate= format.parse(data[7]);
+			format.applyPattern("dd.MM.yyyy");
+			dateText.setText(format.format(docDate));
+		} else
+			dateText.setText(null);
 	}
 
 	public String[] getValues() {
