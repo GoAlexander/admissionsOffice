@@ -71,13 +71,13 @@ alter procedure getAllAchievmentsByAbiturientId(@aid varchar(max), @needAllCollu
 AS BEGIN
 	if @needAllCollumns = 1
 		begin
-			execute ('select * from AbiturientIndividualAchievement where aid_abiturient = ' + @aid)
+			select * from AbiturientIndividualAchievement where aid_abiturient = + @aid
 		end
 	else
 		begin
-			execute ('select name, AbiturientIndividualAchievement.score from IndividualAchievement, AbiturientIndividualAchievement 
-						where IndividualAchievement.id = AbiturientIndividualAchievement.id_individual_achievement 
-							and aid_abiturient = ' + @aid)
+			select name, AbiturientIndividualAchievement.score from IndividualAchievement, AbiturientIndividualAchievement 
+				where IndividualAchievement.id = AbiturientIndividualAchievement.id_individual_achievement 
+					and aid_abiturient =  @aid
 		end
 	return
 end;
@@ -101,7 +101,6 @@ as begin
 end;
 go
 
--- TODO Автоматическое присваивание номера, исходя из свободных мест в группе!!!
 alter procedure getAllEntranceTestsResultsByAbiturientId(@aid varchar(max), @needAllCollumns bit)
 as begin
 	if (@needAllCollumns = 1) 
@@ -136,7 +135,8 @@ begin
 	begin
 		  RAISERROR('Недопустимое имя таблицы', 16, 1)
 	end
-		execute('select * from ' +  @tableName + ' where ' + @name_id1 + ' = ' + @value_id1 + ' and ' + @name_id2 + ' = ' + @value_id2)
+
+	execute('select * from ' +  @tableName + ' where ' + @name_id1 + ' = ' + @value_id1 + ' and ' + @name_id2 + ' = ' + @value_id2)
 	return
 end;
 go
@@ -148,15 +148,13 @@ begin
 	begin
 		  RAISERROR('Недопустимое имя таблицы', 16, 1)
 	end
-		execute('select name from ' + @tableName + ' order by id')
+
+	execute('select name from ' + @tableName + ' order by id')
 	return
 end;
 go
 
-drop procedure getAllAbiturients
-go
-
-create procedure getAllAbiturients
+alter procedure getAllAbiturients
 as
 begin
 	select aid, SName, Fname, MName from Abiturient order by aid
@@ -180,7 +178,6 @@ begin
 	fetch next from cur into @freeNumber
 	while @@FETCH_STATUS=0
 	begin
-		print '!!!'
 		if (@freeNumber <> @curPos)
 		begin
 			set @freeNumber = @curPos
