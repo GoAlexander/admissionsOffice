@@ -67,6 +67,14 @@ begin
 end;
 go
 
+alter procedure deleteAbiturient(@aid varchar(max))
+as
+begin
+execute('delete from Abiturient where aid =' + @aid)
+end;
+go
+
+
 alter procedure getAllAchievmentsByAbiturientId(@aid varchar(max), @needAllCollumns bit)
 AS BEGIN
 	if @needAllCollumns = 1
@@ -161,6 +169,25 @@ begin
 	return
 end;
 go
+
+alter procedure getAbiturientGeneralInfoByID(@aid varchar(max))
+as
+begin
+	select aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate, id_returnReason, returnDate from Abiturient where aid = @aid
+	return
+end;
+go
+
+alter procedure getAbiturientPassportByID(@aid varchar(max))
+as
+begin
+	select aid_abiturient, id_passportType, paspSeries, paspNumber, paspGivenBy, paspGivenDate, Birthplace 
+				from Abiturient, AbiturientPassport where Abiturient.aid = AbiturientPassport.aid_abiturient 
+				and aid_abiturient = @aid
+	return
+end;
+go
+
 
 alter procedure getFreeNumberInGroup(@id_entranceTest varchar(max), @testGroup varchar(max))
 as

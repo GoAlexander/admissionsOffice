@@ -137,7 +137,7 @@ public class ModelDBConnection {
 	}
 
 	public static String[][] getAllAbiturients() {
-		
+
 		String[][] data = null;
 
 		try {
@@ -174,43 +174,35 @@ public class ModelDBConnection {
 	}
 
 	public static String[] getAbiturientGeneralInfoByID(String aid) throws SQLException {
-		String query = "select aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate, id_returnReason, returnDate from Abiturient where aid = "
-				+ aid + ";";
 
-		String[] abiturientInfo = new String[10];
-		abiturientInfo[0] = aid;
-		for (int i = 1; i < 10; i++)
-			abiturientInfo[i] = "";
+		try {
 
-		if (initConnection()) {
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
+			cstmt = con.prepareCall("{call getAbiturientGeneralInfoByID(?)}", 1004, 1007);
+
+			cstmt.setString(1, aid);
+
+			rset = cstmt.executeQuery();
+
+			ResultSetMetaData rsmd = rset.getMetaData();
+			int numberOfColumns = rsmd.getColumnCount();
+
+			String[] result = new String[numberOfColumns];
+			for (int i = 0; i < result.length; i++)
+				result[i] = "";
 
 			while (rset.next()) {
-				abiturientInfo = new String[10];
-				abiturientInfo[0] = String.valueOf(rset.getInt(1));
-				abiturientInfo[1] = rset.getString(2);
-				abiturientInfo[2] = rset.getString(3);
-				abiturientInfo[3] = rset.getString(4);
-				abiturientInfo[4] = rset.getDate(5).toString();
-				abiturientInfo[5] = String.valueOf(rset.getInt(6));
-				abiturientInfo[6] = String.valueOf(rset.getInt(7));
-				abiturientInfo[7] = rset.getDate(8).toString();
-				// TODO
-				abiturientInfo[8] = rset.getInt(9) == 0 ? "" : String.valueOf(rset.getInt(9));
-				abiturientInfo[9] = rset.getDate(10) == null ? "" : rset.getDate(10).toString();
-
-				if (DEBUG) {
-					System.out.println(abiturientInfo[0] + " " + abiturientInfo[1] + " " + abiturientInfo[2] + " "
-							+ abiturientInfo[3] + " " + abiturientInfo[4] + " " + abiturientInfo[5] + " "
-							+ abiturientInfo[6] + " " + abiturientInfo[7] + " ");
+				for (int i = 0; i < numberOfColumns; i++) {
+					if (rset.getObject(i + 1) != null)
+						result[i] = rset.getObject(i + 1).toString();
+					System.out.println("Read: " + result[i]);
 				}
 			}
-
-			stmt.close();
+			cstmt.close();
 			rset.close();
+			return result;
+		} catch (Exception e) {
+			return null;
 		}
-		return abiturientInfo;
 	}
 
 	public static void insertAbiturient(String[] info) throws SQLException {
@@ -352,13 +344,11 @@ public class ModelDBConnection {
 	}
 
 	public static void deleteAbiturient(String aid) throws SQLException {
-		String query = "delete from Abiturient where aid = " + aid + ";";
-		if (initConnection()) {
-			stmt = con.createStatement();
-			stmt.executeUpdate(query);
-
-			stmt.close();
-		}
+		
+		cstmt = con.prepareCall("{call deleteAbiturient(?)}");
+		cstmt.setString(1, aid);
+		cstmt.execute();
+		cstmt.close();
 	}
 
 	public static String[] getNamesFromTableOrderedById(String table) {
@@ -871,7 +861,7 @@ public class ModelDBConnection {
 							if (rset.getObject(i + 1) instanceof Date) {
 								SimpleDateFormat format = new SimpleDateFormat();
 								format.applyPattern("yyyy-MM-dd");
-								Date docDate= format.parse(rset.getObject(i + 1).toString());
+								Date docDate = format.parse(rset.getObject(i + 1).toString());
 								format.applyPattern("dd.MM.yyyy");
 								data[curPos][i] = format.format(docDate);
 							} else
@@ -932,40 +922,36 @@ public class ModelDBConnection {
 	}
 
 	public static String[] getAbiturientPassportByID(String aid) throws SQLException {
-		String query = "select aid_abiturient, id_passportType, paspSeries, paspNumber, paspGivenBy, paspGivenDate, Birthplace "
-				+ "from Abiturient, AbiturientPassport where " + "Abiturient.aid = AbiturientPassport.aid_abiturient "
-				+ "and aid_abiturient = " + aid + ";";
-		String[] abiturientPassportInfo = new String[7];
-		for (int i = 0; i < abiturientPassportInfo.length; i++)
-			abiturientPassportInfo[i] = "";
-		abiturientPassportInfo[0] = aid;
+		try {
 
-		if (initConnection()) {
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
+			cstmt = con.prepareCall("{call getAbiturientPassportByID(?)}", 1004, 1007);
+
+			cstmt.setString(1, aid);
+
+			rset = cstmt.executeQuery();
+
+			ResultSetMetaData rsmd = rset.getMetaData();
+			int numberOfColumns = rsmd.getColumnCount();
+
+			String[] result = new String[numberOfColumns];
+			for (int i = 0; i < result.length; i++)
+				result[i] = "";
 
 			while (rset.next()) {
-				abiturientPassportInfo = new String[7];
-				abiturientPassportInfo[0] = String.valueOf(rset.getInt(1));
-				abiturientPassportInfo[1] = String.valueOf(rset.getInt(2));
-				abiturientPassportInfo[2] = rset.getString(3);
-				abiturientPassportInfo[3] = rset.getString(4);
-				abiturientPassportInfo[4] = rset.getString(5);
-				abiturientPassportInfo[5] = rset.getString(6);
-				abiturientPassportInfo[6] = rset.getString(7);
-
-				if (DEBUG) {
-					System.out.println(abiturientPassportInfo[0] + " " + abiturientPassportInfo[1] + " "
-							+ abiturientPassportInfo[2] + " " + abiturientPassportInfo[3] + " "
-							+ abiturientPassportInfo[4] + " " + abiturientPassportInfo[5] + " "
-							+ abiturientPassportInfo[6]);
+				for (int i = 0; i < numberOfColumns; i++) {
+					if (rset.getObject(i + 1) != null)
+						result[i] = rset.getObject(i + 1).toString();
+					System.out.println("Read: " + result[i]);
 				}
 			}
-
-			stmt.close();
+			cstmt.close();
 			rset.close();
+			return result;
+		} catch (Exception e) {
+			return null;
 		}
-		return abiturientPassportInfo;
+		
+		
 	}
 
 	public static void updateAbiturientPassportByID(String aid, String[] data) throws SQLException {

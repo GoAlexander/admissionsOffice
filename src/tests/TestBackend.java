@@ -28,7 +28,13 @@ public class TestBackend {
 		ModelDBConnection.getElementFromTableByIDs("AbiturientIndividualAchievement", data);
 		ModelDBConnection.getNamesFromTableOrderedById("TestBox");*/
 		
-		String [][] b = ModelDBConnection.getAllAbiturients();
+		//String [][] b = ModelDBConnection.getAllAbiturients();
+		//String [] a = ModelDBConnection.getAbiturientGeneralInfoByID("2");
+		
+		String [] c = ModelDBConnection.getAbiturientPassportByID("3");
+		
+		
+		//ModelDBConnection.deleteAbiturient("2");
 			
 	}
 
