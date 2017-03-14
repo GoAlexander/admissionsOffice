@@ -1243,4 +1243,27 @@ public class ModelDBConnection {
 		}
 		return data;
 	}
+
+	public static boolean checkUser(String login, String password) {
+		if (initConnection()) {
+			try {
+				boolean result;
+				cstmt = con.prepareCall("{? = call checkUser(?, ?)}");
+
+				cstmt.registerOutParameter(1, Types.INTEGER);
+				cstmt.setString(2, login);
+				cstmt.setString(3, password);
+
+				cstmt.execute();
+
+				result = cstmt.getBoolean(1);
+				// System.out.println(count);
+				return result;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return false;
+	}
 }

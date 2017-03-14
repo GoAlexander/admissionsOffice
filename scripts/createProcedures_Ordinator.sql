@@ -238,3 +238,18 @@ begin
 	return
 end;
 go
+
+alter procedure checkUser(@login varchar(max), @password varchar(max))
+as begin
+	select * from Users where userLogin like @login and userPassword like @password
+
+	if (@@ROWCOUNT > 0)
+		begin
+			return 1
+		end
+	else
+		begin
+			return 0
+		end
+end;
+go

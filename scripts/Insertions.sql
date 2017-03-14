@@ -145,3 +145,8 @@ insert into [AdmissionPlan] values
 (2, 2, 2, 2, 2, 22);
 
 go
+
+insert into [Users] values
+('user', 'password', null);
+
+go

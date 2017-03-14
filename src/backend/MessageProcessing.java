@@ -64,6 +64,10 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат редактирования справочника";
 			message = "Элемент не может быть удален из справочника!";
 			break;
+		case 4:
+			titleMessage = "Результат авторизации";
+			message = "Ошибка входа! Неверный логин или пароль!";
+			break;
 		default:
 			titleMessage = "Неизвестная ошибка";
 			message = "Произошла неизвестная ошибка. Обратитесь к администратору!";
