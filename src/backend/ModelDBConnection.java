@@ -174,9 +174,7 @@ public class ModelDBConnection {
 	}
 
 	public static String[] getAbiturientGeneralInfoByID(String aid) throws SQLException {
-
 		try {
-
 			cstmt = con.prepareCall("{call getAbiturientGeneralInfoByID(?)}", 1004, 1007);
 
 			cstmt.setString(1, aid);
@@ -189,6 +187,7 @@ public class ModelDBConnection {
 			String[] result = new String[numberOfColumns];
 			for (int i = 0; i < result.length; i++)
 				result[i] = "";
+			result[0] = aid;
 
 			while (rset.next()) {
 				for (int i = 0; i < numberOfColumns; i++) {
@@ -344,7 +343,6 @@ public class ModelDBConnection {
 	}
 
 	public static void deleteAbiturient(String aid) throws SQLException {
-		
 		cstmt = con.prepareCall("{call deleteAbiturient(?)}");
 		cstmt.setString(1, aid);
 		cstmt.execute();
@@ -923,7 +921,6 @@ public class ModelDBConnection {
 
 	public static String[] getAbiturientPassportByID(String aid) throws SQLException {
 		try {
-
 			cstmt = con.prepareCall("{call getAbiturientPassportByID(?)}", 1004, 1007);
 
 			cstmt.setString(1, aid);
@@ -936,6 +933,7 @@ public class ModelDBConnection {
 			String[] result = new String[numberOfColumns];
 			for (int i = 0; i < result.length; i++)
 				result[i] = "";
+			result[0] = aid;
 
 			while (rset.next()) {
 				for (int i = 0; i < numberOfColumns; i++) {
@@ -950,8 +948,6 @@ public class ModelDBConnection {
 		} catch (Exception e) {
 			return null;
 		}
-		
-		
 	}
 
 	public static void updateAbiturientPassportByID(String aid, String[] data) throws SQLException {

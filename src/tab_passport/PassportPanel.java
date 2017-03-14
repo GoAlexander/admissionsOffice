@@ -134,6 +134,7 @@ public class PassportPanel extends JPanel{
 		try {
 			ModelDBConnection.updateAbiturientPassportByID(currentAbit, getValues());
 			this.setEditable(false);
+			MessageProcessing.displaySuccessMessage(this, 6);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
