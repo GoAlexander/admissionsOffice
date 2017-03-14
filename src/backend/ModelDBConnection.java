@@ -938,7 +938,15 @@ public class ModelDBConnection {
 			while (rset.next()) {
 				for (int i = 0; i < numberOfColumns; i++) {
 					if (rset.getObject(i + 1) != null)
-						result[i] = rset.getObject(i + 1).toString();
+						if (rset.getObject(i + 1) instanceof Date) {
+							SimpleDateFormat format = new SimpleDateFormat();
+							format.applyPattern("yyyy-MM-dd");
+							Date docDate = format.parse(rset.getObject(i + 1).toString());
+							format.applyPattern("dd.MM.yyyy");
+							result[i] = format.format(docDate);
+						} else
+							result[i] = rset.getObject(i + 1).toString();
+
 					System.out.println("Read: " + result[i]);
 				}
 			}

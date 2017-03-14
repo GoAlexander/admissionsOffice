@@ -3,16 +3,21 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
@@ -67,7 +72,14 @@ public class PassportPanel extends JPanel{
 
 		JLabel dateLabel = new JLabel("Дата выдачи ");
 		passportDataPanel.add(dateLabel);
-		textDate = new JTextField();
+		try {
+			MaskFormatter mf;
+			mf = new MaskFormatter("##.##.####");
+			mf.setPlaceholderCharacter('_');
+			textDate = new JFormattedTextField(mf);
+		} catch (ParseException e) {
+			textDate = new JTextField();
+		}
 		textDate.setPreferredSize(dimTextDigitInfo);
 		textDate.setBackground(Color.WHITE);
 		passportDataPanel.add(textDate);
@@ -146,6 +158,18 @@ public class PassportPanel extends JPanel{
 		textSeria.setText(values[2]);
 		textNum.setText(values[3]);
 		textIssuedBy.setText(values[4]);
+		if(!values[5].equals("")) {
+			try {
+				SimpleDateFormat format = new SimpleDateFormat();
+				format.applyPattern("dd.MM.yyyy");
+				Date docDate;
+				docDate = format.parse(values[5]);
+				textDate.setText(format.format(docDate));
+			} catch (ParseException e) {
+				textDate.setText(null);
+			}
+		} else
+			textDate.setText(null);
 		textDate.setText(values[5]);
 		textplaceBirth.setText(values[6]);
 	}
@@ -156,7 +180,7 @@ public class PassportPanel extends JPanel{
 		values[1] = textSeria.getText();
 		values[2] = textNum.getText();
 		values[3] = textIssuedBy.getText();
-		values[4] = textDate.getText();
+		values[4] = textDate.getText().equals("__.__.____") ? null : textDate.getText();
 		values[5] = textplaceBirth.getText();
 
 		return values;

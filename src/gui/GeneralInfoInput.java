@@ -95,7 +95,7 @@ public class GeneralInfoInput extends JFrame {
 
 	private JButton addButton, editButton, deleteButton;
 
-	public GeneralInfoInput() throws ParseException {
+	public GeneralInfoInput() {
 		// ----------------------
 		// Временно
 		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
@@ -442,9 +442,14 @@ public class GeneralInfoInput extends JFrame {
 		panelDateReturn.setMaximumSize(dimPanel);
 		JLabel dateReturnLabel = new JLabel("Дата возврата документов:     ");
 		panelDateReturn.add(dateReturnLabel);
-		MaskFormatter mf = new MaskFormatter("##.##.####");
-		mf.setPlaceholderCharacter('_');
-		textDateReturn = new JFormattedTextField(mf);
+		try {
+			MaskFormatter mf;
+			mf = new MaskFormatter("##.##.####");
+			mf.setPlaceholderCharacter('_');
+			textDateReturn = new JFormattedTextField(mf);
+		} catch (ParseException e1) {
+			textDateReturn = new JTextField();
+		}
 		textDateReturn.setPreferredSize(dimText);
 		textDateReturn.setEnabled(false);
 		panelDateReturn.add(textDateReturn);
@@ -549,7 +554,7 @@ public class GeneralInfoInput extends JFrame {
 				abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex() + 1);
 				abitBaseInfo[7] = ((JLabel) panelDateDoc.getComponent(1)).getText();
 				if (checkBackDoc.isSelected()) {
-					abitBaseInfo[8] = textDateReturn.getText();
+					abitBaseInfo[8] = textDateReturn.getText().equals("__.__.____") ? null : textDateReturn.getText();
 					abitBaseInfo[9] = String.valueOf(comboReturnReason.getSelectedIndex() + 1);
 				} else {
 					abitBaseInfo[8] = null;

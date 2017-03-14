@@ -37,16 +37,12 @@ public class ModuleChoice extends JFrame {
 		JButton ordinBtn = new JButton("Ординатура");
 		ordinBtn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				try {
-					ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
-					ModelDBConnection.initConnection();
-					GeneralInfoInput window;
-					window = new GeneralInfoInput();
-					window.setVisible(true);
-					setVisible(false);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+				ModelDBConnection.initConnection();
+				GeneralInfoInput window;
+				window = new GeneralInfoInput();
+				window.setVisible(true);
+				setVisible(false);
 			}
 		});
 
@@ -57,15 +53,11 @@ public class ModuleChoice extends JFrame {
 		JButton aspirBtn = new JButton("Аспирантура");
 		aspirBtn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				try {
-					ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Aspirant", "user", "password");
-					ModelDBConnection.initConnection();
-					GeneralInfoInput window = new GeneralInfoInput();
-					window.setVisible(true);
-					setVisible(false);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Aspirant", "user", "password");
+				ModelDBConnection.initConnection();
+				GeneralInfoInput window = new GeneralInfoInput();
+				window.setVisible(true);
+				setVisible(false);
 			}
 		});
 

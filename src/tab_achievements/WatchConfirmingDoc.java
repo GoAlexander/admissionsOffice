@@ -36,7 +36,7 @@ public class WatchConfirmingDoc extends JFrame {
 
 	private String nameButton;
 
-	public WatchConfirmingDoc(String nameButton) throws ParseException {
+	public WatchConfirmingDoc(String nameButton) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
 
@@ -75,9 +75,14 @@ public class WatchConfirmingDoc extends JFrame {
 
 		JLabel dateLabel = new JLabel("Дата выдачи");
 		docDataPanel.add(dateLabel);
-		MaskFormatter mf = new MaskFormatter("##.##.####");
-		mf.setPlaceholderCharacter('_');
-		dateText = new JFormattedTextField(mf);
+		try {
+			MaskFormatter mf;
+			mf = new MaskFormatter("##.##.####");
+			mf.setPlaceholderCharacter('_');
+			dateText = new JFormattedTextField(mf);
+		} catch (ParseException e) {
+			dateText = new JTextField();
+		}
 		dateText.setPreferredSize(dimText);
 		docDataPanel.add(dateText);
 		docDataPanel.add(Box.createRigidArea(dimRigidArea));
@@ -158,7 +163,7 @@ public class WatchConfirmingDoc extends JFrame {
 		data[4] = seriaText.getText();
 		data[5] = numText.getText();
 		data[6] = textIssuedBy.getText();
-		data[7] = dateText.getText();
+		data[7] = dateText.getText().equals("__.__.____") ? null : dateText.getText();
 
 		return data;
 	}
