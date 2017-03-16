@@ -207,7 +207,12 @@ public class GeneralInfoInput extends JFrame {
 					generalInfo[2] = ((JTextField) panelName.getComponent(1)).getText();
 					generalInfo[3] = ((JTextField) panelPatronymic.getComponent(1)).getText();
 
-					OutputWord.writeExams(generalInfo, ((CompetitiveGroupsPanel)compGroupPanel).getSpecialities(), ((EntranceTestsPanel)entranceTestpPanel).getExamsDates());
+					if (((CompetitiveGroupsPanel)compGroupPanel).getSpecialities().size() == 0)
+						MessageProcessing.displayErrorMessage(null, 5);
+					else if (((EntranceTestsPanel)entranceTestpPanel).getExamsDates().size() == 0)
+						MessageProcessing.displayErrorMessage(null, 6);
+					else
+						OutputWord.writeExams(generalInfo, ((CompetitiveGroupsPanel)compGroupPanel).getSpecialities(), ((EntranceTestsPanel)entranceTestpPanel).getExamsDates());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

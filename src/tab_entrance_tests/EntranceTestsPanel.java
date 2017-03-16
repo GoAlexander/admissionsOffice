@@ -176,7 +176,10 @@ public class EntranceTestsPanel extends JPanel {
 		Vector<Vector<Object>> data = entranceTestTM.getDataVector();
 
 		for(int i = 0; i < data.size(); i++) {
-			examsDates.add(data.elementAt(i).toArray()[3].toString());
+			if (data.elementAt(i).toArray()[3] != null)
+				examsDates.add(data.elementAt(i).toArray()[3].toString());
+			else
+				examsDates.add("");
 		}
 
 		for (String examsDate : examsDates)

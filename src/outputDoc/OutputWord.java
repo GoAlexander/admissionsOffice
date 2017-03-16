@@ -139,7 +139,7 @@ public class OutputWord {
 		int i = 0;
 		File theDir = new File("tmp_folder");
 		theDir.mkdir();
-		
+
 		for (String speciality : specialities)
 			for (String examDate : examDates)
 			{
@@ -299,7 +299,8 @@ public class OutputWord {
 				}
 			}
 
-		Runtime.getRuntime().exec("cmd /c start script.vbs " + theDir.getAbsolutePath().substring(0, theDir.getAbsolutePath().lastIndexOf("tmp_folder")) + " " + generalInfo[0] + "_exams.doc");
+		if (i > 0)
+			Runtime.getRuntime().exec("cmd /c start script.vbs " + theDir.getAbsolutePath().substring(0, theDir.getAbsolutePath().lastIndexOf("tmp_folder")) + " " + generalInfo[0] + "_exams.doc");
 	}
 
 	private static void copyElements(XWPFDocument doc_input, XWPFDocument doc_output) {
