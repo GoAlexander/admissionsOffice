@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -67,5 +68,19 @@ public class CompetitiveGroupsPanel extends JPanel {
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
+	}
+
+	public ArrayList<String> getSpecialities() {
+		ArrayList<String> specialities = new ArrayList<String>();
+
+		for (int i = 0; i < compGroupsPanel.getComponents().length; i++) {
+			if (compGroupsPanel.getComponent(i) instanceof SimpleCompetitiveGroupPanel)
+				if (!specialities.contains(((SimpleCompetitiveGroupPanel)(compGroupsPanel.getComponent(i))).getSpeciality()))
+					specialities.add(((SimpleCompetitiveGroupPanel)compGroupsPanel.getComponent(i)).getSpeciality());
+		}
+
+		for (String speciality : specialities)
+			System.out.println(speciality);
+		return specialities;
 	}
 }

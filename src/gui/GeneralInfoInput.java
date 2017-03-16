@@ -58,6 +58,7 @@ import tab_achievements.IndividualAchievementsPanel;
 
 import general_classes.GUITableModel;
 import outputDoc.OutputExcel;
+import outputDoc.OutputWord;
 
 public class GeneralInfoInput extends JFrame {
 
@@ -197,6 +198,21 @@ public class GeneralInfoInput extends JFrame {
 		docMenuOpRasp = new JMenuItem("Опись/расписка");
 		docMenu.add(docMenuOpRasp);
 		docMenuListEntranceExam = new JMenuItem("Лист вступительных испытаний");
+		docMenuListEntranceExam.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String[] generalInfo = new String[4];
+					generalInfo[0] = ((JTextField) panelID.getComponent(1)).getText();
+					generalInfo[1] = ((JTextField) panelSurname.getComponent(1)).getText();
+					generalInfo[2] = ((JTextField) panelName.getComponent(1)).getText();
+					generalInfo[3] = ((JTextField) panelPatronymic.getComponent(1)).getText();
+
+					OutputWord.writeExams(generalInfo, ((CompetitiveGroupsPanel)compGroupPanel).getSpecialities(), ((EntranceTestsPanel)entranceTestpPanel).getExamsDates());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		docMenu.add(docMenuListEntranceExam);
 		docMenuTitul = new JMenuItem("Титульный лист");
 		docMenu.add(docMenuTitul);

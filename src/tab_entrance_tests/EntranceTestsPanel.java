@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -19,6 +20,7 @@ import javax.swing.table.TableColumn;
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
 import general_classes.GUITableModel;
+import tab_competitive_groups.SimpleCompetitiveGroupPanel;
 import general_classes.CheckBoxCellRenderer;
 
 public class EntranceTestsPanel extends JPanel {
@@ -167,6 +169,19 @@ public class EntranceTestsPanel extends JPanel {
 		specialCond.setEnabled(state);
 
 		editTestResultButton.setEnabled(!state);
+	}
+
+	public ArrayList<String> getExamsDates() {
+		ArrayList<String> examsDates = new ArrayList<String>();
+		Vector<Vector<Object>> data = entranceTestTM.getDataVector();
+
+		for(int i = 0; i < data.size(); i++) {
+			examsDates.add(data.elementAt(i).toArray()[3].toString());
+		}
+
+		for (String examsDate : examsDates)
+			System.out.println(examsDate);
+		return examsDates;
 	}
 
 	private void createCheckboxTable(JTable table, int numColumn, String[] dataCheck) {

@@ -97,4 +97,8 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 	public void limitMaxSize(boolean status) {
 		this.setMaximumSize(status ? new Dimension(parentPanel.getWidth(), parentPanel.getHeight() / 4) : null);
 	}
+
+	public String getSpeciality() {
+		return textSpec.getText();
+	}
 }
