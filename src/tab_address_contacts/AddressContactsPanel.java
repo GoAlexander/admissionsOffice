@@ -148,40 +148,46 @@ public class AddressContactsPanel extends JPanel {
 		try {
 			String[] values = getValues(false);
 			ArrayList<Integer> mistakesIndices = checkData(values);
-			if (values[0].equals("0"))
+			if (values[0].equals("0")) {
 				values[0] = null;
-			if (values[1].equals("0"))
+				MessageProcessing.displayErrorMessage(null, 7);
+			} else if (values[1].equals("0")) {
 				values[1] = null;
-			if (mistakesIndices.contains(2))
-				textIndex.setForeground(Color.RED);
-			else
-				textIndex.setForeground(Color.BLACK);
-			if (mistakesIndices.contains(4))
-				textEmail.setForeground(Color.RED);
-			else
-				textEmail.setForeground(Color.BLACK);
-			if (mistakesIndices.contains(5))
-				textPhone.setForeground(Color.RED);
-			else
-				textPhone.setForeground(Color.BLACK);
-
-			if (mistakesIndices.isEmpty()) {
-				ModelDBConnection.updateAbiturientAddressAndContactsByID(currentAbit, values);
-				this.setEditable(false);
+				MessageProcessing.displayErrorMessage(null, 8);
+			} else {
+				if (mistakesIndices.contains(2))
+					textIndex.setForeground(Color.RED);
+				else
+					textIndex.setForeground(Color.BLACK);
+				if (mistakesIndices.contains(4))
+					textEmail.setForeground(Color.RED);
+				else
+					textEmail.setForeground(Color.BLACK);
+				if (mistakesIndices.contains(5))
+					textPhone.setForeground(Color.RED);
+				else
+					textPhone.setForeground(Color.BLACK);
+	
+				if (mistakesIndices.isEmpty()) {
+					ModelDBConnection.updateAbiturientAddressAndContactsByID(currentAbit, values);
+					this.setEditable(false);
+					MessageProcessing.displaySuccessMessage(this, 7);
+				} else {
+					MessageProcessing.displayErrorMessage(null, 9);
+				}
 			}
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
-	// TODO Where to check on isEmpty()?
 	private ArrayList<Integer> checkData(String[] values) {
 		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
 		if (!values[2].isEmpty() && !values[2].matches("^[0-9]+$"))
 			mistakesIndices.add(2);
 		if (!values[4].isEmpty() && !values[4].matches("\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}"))
 			mistakesIndices.add(4);
-		if (!values[5].isEmpty() && !values[5].matches("^[0-9()+-]+$"))
+		if (!values[5].isEmpty() && !values[5].matches("^[0-9()+-; ]+$"))
 			mistakesIndices.add(5);
 		return mistakesIndices;
 	}

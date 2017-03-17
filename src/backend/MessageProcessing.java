@@ -33,6 +33,10 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат редактирования паспортных данных";
 			message = "Данные успешно сохранены!";
 			break;
+		case 7:
+			titleMessage = "Результат редактирования контактной информации";
+			message = "Данные успешно сохранены!";
+			break;
 		}
 
         JOptionPane.showMessageDialog(parent,
@@ -75,6 +79,18 @@ public abstract class MessageProcessing {
 		case 6:
 			titleMessage = "Результат вывода листа вступительных испытаний";
 			message = "Список вступительных испытаний пуст. Вывод невозможен!";
+			break;
+		case 7:
+			titleMessage = "Результат проверки данных";
+			message = "Не указан регион проживания абитуриента!";
+			break;
+		case 8:
+			titleMessage = "Результат проверки данных";
+			message = "Не указан тип населенного пункта!";
+			break;
+		case 9:
+			titleMessage = "Результат проверки данных";
+			message = "Некорректный формат данных! Исправьте поля, выделенные красным";
 			break;
 		default:
 			titleMessage = "Неизвестная ошибка";
