@@ -144,7 +144,7 @@ public class PassportPanel extends JPanel{
 
 	private void savePassportButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			ModelDBConnection.updateAbiturientPassportByID(currentAbit, getValues());
+			ModelDBConnection.updateAbiturientPassportByID(currentAbit, getValues(false));
 			this.setEditable(false);
 			MessageProcessing.displaySuccessMessage(this, 6);
 		} catch (Exception e) {
@@ -174,9 +174,9 @@ public class PassportPanel extends JPanel{
 		textplaceBirth.setText(values[6]);
 	}
 
-	public String[] getValues() {
+	public String[] getValues(boolean forDocs) {
 		String[] values = new String[6];
-		values[0] = String.valueOf(comboDocType.getSelectedIndex() + 1);
+		values[0] = forDocs ? (comboDocType.getSelectedItem() != null ? comboDocType.getSelectedItem().toString() : null) : String.valueOf(comboDocType.getSelectedIndex() + 1);
 		values[1] = textSeria.getText();
 		values[2] = textNum.getText();
 		values[3] = textIssuedBy.getText();

@@ -16,112 +16,313 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 public class OutputWord {
-	//Прототип функции создания заявлений
-	//Need: скорректировать список входных параметров
-	//		изменить блоки switch
-	public static void writeStatement(String[] generalInfo, ArrayList<String> specialities, ArrayList<String> examDates) throws Exception {
+	public static void writeStatement(String[][] allCompetitiveGroups, String[] generalInfo, String[] passportData, String[] addressContacts, String[] highEducation, String needSpecialConditions, String[][] indAchievments) throws Exception {
 		XWPFDocument doc_out = new XWPFDocument();
-		int i = 0;
-		for (String speciality : specialities)
-			for (String examDate : examDates)
-			{
-				XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Заявление_ординатура.dotx"));
-				boolean start_replace = false;
-
-				for (XWPFParagraph p : doc.getParagraphs()) {
-					for (XWPFRun r : p.getRuns()) {
-						if (r.getText(0) != null) {
-							if(start_replace) {
-								String text;
-								switch (r.getText(0)) {
-								case "ID":
-									text = r.getText(0).replace("ID", generalInfo[0]);
-									r.setText(text, 0);
-									break;
-								case "Фамилия":
-									text = r.getText(0).replace("Фамилия", generalInfo[1]);
-									r.setText(text, 0);
-									break;
-								case "Имя":
-									text = r.getText(0).replace("Имя", generalInfo[2]);
-									r.setText(text, 0);
-									break;
-								case "Отчество":
-									text = r.getText(0).replace("Отчество", generalInfo[3]);
-									r.setText(text, 0);
-									break;
-								case "Специальность":
-									text = r.getText(0).replace("Специальность", speciality);
-									r.setText(text, 0);
-									break;
-								case "Дата_проведения_теста":
-									text = r.getText(0).replace("Дата_проведения_теста", examDate);
-									r.setText(text, 0);
-									break;
-								case "}":
-									start_replace = false;
-									r.setText("", 0);
-									break;
-								}
-							} else if(r.getText(0).equals("{")) {
-									start_replace = true;
-									r.setText("", 0);
+		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Заявление_ординатура.dotx"));
+		boolean start_replace = false;
+		for (int i = 0; i < allCompetitiveGroups.length; i++)
+		{
+			for (XWPFParagraph p : doc.getParagraphs()) {
+				for (XWPFRun r : p.getRuns()) {
+					if (r.getText(0) != null) {
+						if(start_replace) {
+							String text;
+							switch (r.getText(0)) {
+							case "Направление_подготовки":
+								text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[i][0] != null ? allCompetitiveGroups[0][0] : "");
+								r.setText(text, 0);
+								break;
+							case "Специальность":
+								text = r.getText(0).replace("Специальность", allCompetitiveGroups[i][1] != null ? allCompetitiveGroups[0][1] : "");
+								r.setText(text, 0);
+								break;
+							case "Кафедра":
+								text = r.getText(0).replace("Кафедра", allCompetitiveGroups[i][2] != null ? allCompetitiveGroups[0][2] : "");
+								r.setText(text, 0);
+								break;
+							case "Конкурсная_группа":
+								text = r.getText(0).replace("Конкурсная_группа", allCompetitiveGroups[i][3] != null ? allCompetitiveGroups[0][3] : "");
+								r.setText(text, 0);
+								break;
+							case "id":
+								text = r.getText(0).replace("id", generalInfo[0] != null ? generalInfo[0] : "");
+								r.setText(text, 0);
+								break;
+							case "Фамилия":
+								text = r.getText(0).replace("Фамилия", generalInfo[1] != null ? generalInfo[1] : "");
+								r.setText(text, 0);
+								break;
+							case "Имя":
+								text = r.getText(0).replace("Имя", generalInfo[2] != null ? generalInfo[2] : "");
+								r.setText(text, 0);
+								break;
+							case "Отчество":
+								text = r.getText(0).replace("Отчество", generalInfo[3] != null ? generalInfo[3] : "");
+								r.setText(text, 0);
+								break;
+							case "Дата_рождения":
+								text = r.getText(0).replace("Дата_рождения", generalInfo[4] != null ? generalInfo[4] : "");
+								r.setText(text, 0);
+								break;
+							case "Пол":
+								text = r.getText(0).replace("Пол", generalInfo[5] != null ? generalInfo[5] : "");
+								r.setText(text, 0);
+								break;
+							case "Гражданство":
+								text = r.getText(0).replace("Гражданство", generalInfo[6] != null ? generalInfo[6] : "");
+								r.setText(text, 0);
+								break;
+							case "Дата_зап":
+								text = r.getText(0).replace("Дата_зап", generalInfo[7] != null ? generalInfo[7] : "");
+								r.setText(text, 0);
+								break;
+							case "паспорт":
+								text = r.getText(0).replace("паспорт", passportData[0] != null ? passportData[0] : "");
+								r.setText(text, 0);
+								break;
+							case "Серия":
+								text = r.getText(0).replace("Серия", passportData[1] != null ? passportData[1] : "");
+								r.setText(text, 0);
+								break;
+							case "Номер":
+								text = r.getText(0).replace("Номер", passportData[2] != null ? passportData[2] : "");
+								r.setText(text, 0);
+								break;
+							case "Когда_и_кем_выдан":
+								text = r.getText(0).replace("Когда_и_кем_выдан", (passportData[3] != null ? passportData[3] + ", " : "") + (passportData[4] != null ? passportData[4] + " г." : ""));
+								r.setText(text, 0);
+								break;
+							case "Место_рождения":
+								text = r.getText(0).replace("Место_рождения", passportData[5] != null ? passportData[5] : "");
+								r.setText(text, 0);
+								break;
+							case "Почтовый_адрес":
+								text = r.getText(0).replace("Почтовый_адрес", (addressContacts[2] != null ? addressContacts[2] + ", " : "") + (addressContacts[0] != null ? addressContacts[0] + ", " : "") + (addressContacts[3] != null ? addressContacts[3] : ""));
+								r.setText(text, 0);
+								break;
+							case "Электронный_адрес":
+								text = r.getText(0).replace("Электронный_адрес", addressContacts[4] != null ? addressContacts[4] : "");
+								r.setText(text, 0);
+								break;
+							case "Телефоны":
+								text = r.getText(0).replace("Телефоны", addressContacts[5] != null ? addressContacts[5] : "");
+								r.setText(text, 0);
+								break;
+							case "Диплом_серия":
+								text = r.getText(0).replace("Диплом_серия", highEducation[1] != null ? highEducation[1] : "");
+								r.setText(text, 0);
+								break;
+							case "Диплом_номер":
+								text = r.getText(0).replace("Диплом_номер", highEducation[2] != null ? highEducation[2] : "");
+								r.setText(text, 0);
+								break;
+							case "Диплом_специальность":
+								text = r.getText(0).replace("Диплом_специальность", highEducation[3] != null ? highEducation[3] : "");
+								r.setText(text, 0);
+								break;
+							case "Название_уч_заведения":
+								text = r.getText(0).replace("Название_уч_заведения", highEducation[4] != null ? highEducation[4] : "");
+								r.setText(text, 0);
+								break;
+							case "Год_оконч_ВУЗа":
+								text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
+								r.setText(text, 0);
+								break;
+							case "Спецусловия_испытаний":
+								text = r.getText(0).replace("Спецусловия_испытаний", needSpecialConditions);
+								r.setText(text, 0);
+								break;
+							case "Инд_достижения":
+								String indAchivments = "";
+								for(int j = 0; j < (indAchievments != null ? indAchievments.length : 0); j++)
+									indAchivments += (indAchievments[j][1] + "; ");
+								text = r.getText(0).replace("Инд_достижения", indAchivments);
+								r.setText(text, 0);
+								break;
+							case "Док_подтв_инд_достиж":
+								String indAchivmentsDocs = "";
+								for(int j = 0; j < (indAchievments != null ? indAchievments.length : 0); j++)
+									indAchivmentsDocs += ((indAchievments[j][3] != null ? indAchievments[j][3] + ", "
+											: "")
+											+ (indAchievments[j][4] != null ? "серия: " + indAchievments[j][4] + ", "
+													: "")
+											+ (indAchievments[j][5] != null ? "номер: " + indAchievments[j][5] + ", "
+													: "")
+											+ (indAchievments[j][6] != null || indAchievments[j][7] != null ? "выдан: "
+													: "")
+											+ (indAchievments[j][6] != null ? indAchievments[j][6] + ", " : "")
+											+ (indAchievments[j][7] != null ? indAchievments[j][7] + " г.;" : ";"));
+								text = r.getText(0).replace("Док_подтв_инд_достиж", indAchivmentsDocs);
+								r.setText(text, 0);
+								break;
+							case "}":
+								start_replace = false;
+								r.setText("", 0);
+								break;
 							}
+						} else if(r.getText(0).equals("{")) {
+								start_replace = true;
+								r.setText("", 0);
 						}
 					}
 				}
-
-				for (XWPFTable tbl : doc.getTables()) {
-					for (XWPFTableRow row : tbl.getRows()) {
-						for (XWPFTableCell cell : row.getTableCells()) {
-							for (XWPFParagraph p : cell.getParagraphs()) {
-								for (XWPFRun r : p.getRuns()) {
-									System.out.println(r.getText(0));
-									if (r.getText(0) != null) {
-										if(start_replace) {
-											String text;
-											switch (r.getText(0)) {
-											case "ID":
-												text = r.getText(0).replace("ID", generalInfo[0]);
-												r.setText(text, 0);
-												break;
-											case "Фамилия":
-												text = r.getText(0).replace("Фамилия", generalInfo[1]);
-												r.setText(text, 0);
-												break;
-											case "Имя":
-												text = r.getText(0).replace("Имя", generalInfo[2]);
-												r.setText(text, 0);
-												break;
-											case "Отчество":
-												text = r.getText(0).replace("Отчество", generalInfo[3]);
-												r.setText(text, 0);
-												break;
-											case "Специальность":
-												text = r.getText(0).replace("Специальность", speciality);
-												r.setText(text, 0);
-												break;
-											case "Дата_проведения_теста":
-												text = r.getText(0).replace("Дата_проведения_теста", examDate);
-												r.setText(text, 0);
-												break;
-											case "}":
-												start_replace = false;
-												r.setText("", 0);
-												break;
-											}
-										} else if(r.getText(0).equals("{")) {
-												start_replace = true;
-												r.setText("", 0);
+			}
+	
+			for (XWPFTable tbl : doc.getTables()) {
+				for (XWPFTableRow row : tbl.getRows()) {
+					for (XWPFTableCell cell : row.getTableCells()) {
+						for (XWPFParagraph p : cell.getParagraphs()) {
+							for (XWPFRun r : p.getRuns()) {
+								if (r.getText(0) != null) {
+									if(start_replace) {
+										String text;
+										switch (r.getText(0)) {
+										case "Направление_подготовки":
+											text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[i][0] != null ? allCompetitiveGroups[0][0] : "");
+											r.setText(text, 0);
+											break;
+										case "Специальность":
+											text = r.getText(0).replace("Специальность", allCompetitiveGroups[i][1] != null ? allCompetitiveGroups[0][1] : "");
+											r.setText(text, 0);
+											break;
+										case "Кафедра":
+											text = r.getText(0).replace("Кафедра", allCompetitiveGroups[i][2] != null ? allCompetitiveGroups[0][2] : "");
+											r.setText(text, 0);
+											break;
+										case "Конкурсная_группа":
+											text = r.getText(0).replace("Конкурсная_группа", allCompetitiveGroups[i][3] != null ? allCompetitiveGroups[0][3] : "");
+											r.setText(text, 0);
+											break;
+										case "id":
+											text = r.getText(0).replace("id", generalInfo[0] != null ? generalInfo[0] : "");
+											r.setText(text, 0);
+											break;
+										case "Фамилия":
+											text = r.getText(0).replace("Фамилия", generalInfo[1] != null ? generalInfo[1] : "");
+											r.setText(text, 0);
+											break;
+										case "Имя":
+											text = r.getText(0).replace("Имя", generalInfo[2] != null ? generalInfo[2] : "");
+											r.setText(text, 0);
+											break;
+										case "Отчество":
+											text = r.getText(0).replace("Отчество", generalInfo[3] != null ? generalInfo[3] : "");
+											r.setText(text, 0);
+											break;
+										case "Дата_рождения":
+											text = r.getText(0).replace("Дата_рождения", generalInfo[4] != null ? generalInfo[4] : "");
+											r.setText(text, 0);
+											break;
+										case "Пол":
+											text = r.getText(0).replace("Пол", generalInfo[5] != null ? generalInfo[5] : "");
+											r.setText(text, 0);
+											break;
+										case "Гражданство":
+											text = r.getText(0).replace("Гражданство", generalInfo[6] != null ? generalInfo[6] : "");
+											r.setText(text, 0);
+											break;
+										case "Дата_зап":
+											text = r.getText(0).replace("Дата_зап", generalInfo[7] != null ? generalInfo[7] : "");
+											r.setText(text, 0);
+											break;
+										case "паспорт":
+											text = r.getText(0).replace("паспорт", passportData[0] != null ? passportData[0] : "");
+											r.setText(text, 0);
+											break;
+										case "Серия":
+											text = r.getText(0).replace("Серия", passportData[1] != null ? passportData[1] : "");
+											r.setText(text, 0);
+											break;
+										case "Номер":
+											text = r.getText(0).replace("Номер", passportData[2] != null ? passportData[2] : "");
+											r.setText(text, 0);
+											break;
+										case "Когда_и_кем_выдан":
+											text = r.getText(0).replace("Когда_и_кем_выдан", (passportData[3] != null ? passportData[3] + ", " : "") + (passportData[4] != null ? passportData[4] + " г." : ""));
+											r.setText(text, 0);
+											break;
+										case "Место_рождения":
+											text = r.getText(0).replace("Место_рождения", passportData[5] != null ? passportData[5] : "");
+											r.setText(text, 0);
+											break;
+										case "Почтовый_адрес":
+											text = r.getText(0).replace("Почтовый_адрес", (addressContacts[2] != null ? addressContacts[2] + ", " : "") + (addressContacts[0] != null ? addressContacts[0] + ", " : "") + (addressContacts[3] != null ? addressContacts[3] : ""));
+											r.setText(text, 0);
+											break;
+										case "Электронный_адрес":
+											text = r.getText(0).replace("Электронный_адрес", addressContacts[4] != null ? addressContacts[4] : "");
+											r.setText(text, 0);
+											break;
+										case "Телефоны":
+											text = r.getText(0).replace("Телефоны", addressContacts[5] != null ? addressContacts[5] : "");
+											r.setText(text, 0);
+											break;
+										case "Диплом_серия":
+											text = r.getText(0).replace("Диплом_серия", highEducation[1] != null ? highEducation[1] : "");
+											r.setText(text, 0);
+											break;
+										case "Диплом_номер":
+											text = r.getText(0).replace("Диплом_номер", highEducation[2] != null ? highEducation[2] : "");
+											r.setText(text, 0);
+											break;
+										case "Диплом_специальность":
+											text = r.getText(0).replace("Диплом_специальность", highEducation[3] != null ? highEducation[3] : "");
+											r.setText(text, 0);
+											break;
+										case "Название_уч_заведения":
+											text = r.getText(0).replace("Название_уч_заведения", highEducation[4] != null ? highEducation[4] : "");
+											r.setText(text, 0);
+											break;
+										case "Год_оконч_ВУЗа":
+											text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
+											r.setText(text, 0);
+											break;
+										case "Спецусловия_испытаний":
+											text = r.getText(0).replace("Спецусловия_испытаний", needSpecialConditions);
+											r.setText(text, 0);
+											break;
+										case "Инд_достижения":
+											String indAchivments = "";
+											for(int j = 0; j < (indAchievments != null ? indAchievments.length : 0); j++)
+												indAchivments += (indAchievments[j][1] + "; ");
+											text = r.getText(0).replace("Инд_достижения", indAchivments);
+											r.setText(text, 0);
+											break;
+										case "Док_подтв_инд_достиж":
+											String indAchivmentsDocs = "";
+											for(int j = 0; j < (indAchievments != null ? indAchievments.length : 0); j++)
+												indAchivmentsDocs += ((indAchievments[j][3] != null
+														? indAchievments[j][3] + ", " : "")
+														+ (indAchievments[j][4] != null
+																? "серия: " + indAchievments[j][4] + ", " : "")
+														+ (indAchievments[j][5] != null
+																? "номер: " + indAchievments[j][5] + ", " : "")
+														+ (indAchievments[j][6] != null || indAchievments[j][7] != null
+																? "выдан: " : "")
+														+ (indAchievments[j][6] != null ? indAchievments[j][6] + ", "
+																: "")
+														+ (indAchievments[j][7] != null ? indAchievments[j][7] + " г.;"
+																: ";"));
+											text = r.getText(0).replace("Док_подтв_инд_достиж", indAchivmentsDocs);
+											r.setText(text, 0);
+											break;
+										case "}":
+											start_replace = false;
+											r.setText("", 0);
+											break;
 										}
+									} else if(r.getText(0).equals("{")) {
+											start_replace = true;
+											r.setText("", 0);
 									}
 								}
 							}
 						}
 					}
 				}
-				copyElements(doc, doc_out);
 			}
+			copyElements(doc, doc_out);
+		}
 
 		File file = new File(generalInfo[0] + "_statement.doc");
 

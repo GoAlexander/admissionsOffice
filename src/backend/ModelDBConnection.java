@@ -1035,7 +1035,7 @@ public class ModelDBConnection {
 	}
 
 	public static String[] getAbiturientEducationByID(String aid, String nameTable) throws SQLException {
-		String query = "select aid_abiturient, diplomaSeries, diplomaNumber, instituteName, diplomaSpeciality, graduationYear "
+		String query = "select aid_abiturient, diplomaSeries, diplomaNumber, diplomaSpeciality, instituteName, graduationYear "
 				+ "from " + nameTable + " where aid_abiturient = " + aid + ";";
 
 		String[] educationInfo = new String[6];

@@ -22,6 +22,8 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 						dimRigidArea = new Dimension(10, 0);
 
 	private JTextField textDir, textSpec, textGroup, textBall;
+	JPanel allInfoPanel;
+	JButton showInfo;
 
 	public SimpleCompetitiveGroupPanel(String[] data, JPanel parentPanel) {
 		this.parentPanel = parentPanel;
@@ -70,12 +72,12 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 		groupBallPanel.add(textBall);
 		compGroupPanel.add(groupBallPanel);
 
-		JButton showInfo = new JButton("+");
+		showInfo = new JButton("+");
 		showInfo.setForeground(Color.BLACK);
 		showInfo.setFont(new Font("Tahoma", Font.BOLD, 20));
 		this.add(showInfo, BorderLayout.LINE_END);
 
-		JPanel allInfoPanel = new JPanel();
+		allInfoPanel = new JPanel();
 		// allInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.add(allInfoPanel, BorderLayout.PAGE_END);
 		this.setValues(data);
@@ -100,5 +102,17 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 
 	public String getSpeciality() {
 		return textSpec.getText();
+	}
+
+	public String[] getCompetitiveGroupWithDetails() {
+		String[] competitiveGroupWithDetails = ((CompetitiveGroupPanelListener)(showInfo.getActionListeners()[0])).getValues(true);
+
+		String[] result = new String[4];
+		result[0] = competitiveGroupWithDetails[1];
+		result[1] = competitiveGroupWithDetails[2];
+		result[2] = competitiveGroupWithDetails[4];
+		result[3] = competitiveGroupWithDetails[5];
+
+		return result;
 	}
 }

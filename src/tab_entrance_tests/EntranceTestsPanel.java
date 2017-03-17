@@ -195,4 +195,8 @@ public class EntranceTestsPanel extends JPanel {
 		tmpColumn.setCellEditor(defaultCellEditor);
 		tmpColumn.setCellRenderer(new CheckBoxCellRenderer(comboBox));
 	}
+
+	public String getNeedSpecialConditions() {
+		return (specialCond.isSelected()) ? "Нуждаюсь" : "Не нуждаюсь";
+	}
 }

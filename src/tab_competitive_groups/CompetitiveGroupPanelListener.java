@@ -38,4 +38,8 @@ public class CompetitiveGroupPanelListener implements ActionListener {
 			e.printStackTrace();
 		}
 	}
+
+	public String[] getValues(boolean forDocs) {
+		return openCompetGroup.getValues(forDocs);
+	}
 }

@@ -83,4 +83,17 @@ public class CompetitiveGroupsPanel extends JPanel {
 			System.out.println(speciality);
 		return specialities;
 	}
+
+	public String[][] getAllCompetitiveGroups() {
+		int curentCompGroup = 0;
+		String[][] allCompetitiveGroups = new String[compGroupsPanel.getComponents().length/2][];
+
+		for (int i = 0; i < compGroupsPanel.getComponents().length; i++) {
+			if (compGroupsPanel.getComponent(i) instanceof SimpleCompetitiveGroupPanel) {
+				allCompetitiveGroups[curentCompGroup] = ((SimpleCompetitiveGroupPanel)compGroupsPanel.getComponent(i)).getCompetitiveGroupWithDetails();
+			}
+		}
+
+		return allCompetitiveGroups;
+	}
 }

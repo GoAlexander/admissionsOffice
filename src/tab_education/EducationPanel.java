@@ -77,4 +77,14 @@ public class EducationPanel extends JPanel{
 		highEducPanel.setValues(abiturientHigherEducationData);
 		afterDiplEducPanel.setValues(abiturientPostgraduateEducationData);
 	}
+
+	public String[] getValues(int educationType) {
+		switch (educationType) {
+		case 0:
+			return highEducPanel.getValues();
+		case 1:
+			return afterDiplEducPanel.getValues();
+		}
+		return null;
+	}
 }

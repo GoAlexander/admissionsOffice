@@ -194,6 +194,36 @@ public class GeneralInfoInput extends JFrame {
 		docMenu = new JMenu("Документы");
 		menuBar.add(docMenu);
 		docMenuApplication = new JMenuItem("Заявление");
+		docMenuApplication.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String[] generalInfo = new String[8];
+					generalInfo[0] = ((JTextField) panelID.getComponent(1)).getText();
+					generalInfo[1] = ((JTextField) panelSurname.getComponent(1)).getText();
+					generalInfo[2] = ((JTextField) panelName.getComponent(1)).getText();
+					generalInfo[3] = ((JTextField) panelPatronymic.getComponent(1)).getText();
+					generalInfo[4] = new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString();
+					generalInfo[5] = String.valueOf(comboSexList.getSelectedItem().toString());
+					generalInfo[6] = String.valueOf(comboNationality.getSelectedItem().toString());
+					generalInfo[7] = ((JLabel) panelDateDoc.getComponent(1)).getText();
+
+					String[] passportData = ((PassportPanel)passportPanel).getValues(true);
+					String[] addressContacts = ((AddressContactsPanel)contPanel).getValues(true);
+					String[] highEducation = ((EducationPanel)educPanel).getValues(0);
+					
+					String needSpecialConditions = ((EntranceTestsPanel)entranceTestpPanel).getNeedSpecialConditions();
+					String[][] indAchievments = ((IndividualAchievementsPanel)indAchivPanel).getValues(true);
+					String[][] allCompetitiveGroups = ((CompetitiveGroupsPanel)compGroupPanel).getAllCompetitiveGroups();
+					
+					if (allCompetitiveGroups.length == 0)
+						MessageProcessing.displayErrorMessage(null, 5);
+
+					OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, needSpecialConditions, indAchievments);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		docMenu.add(docMenuApplication);
 		docMenuOpRasp = new JMenuItem("Опись/расписка");
 		docMenu.add(docMenuOpRasp);

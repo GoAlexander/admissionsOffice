@@ -169,7 +169,7 @@ public class IndividualAchievementsPanel extends JPanel{
 				if (tmpdata[1] != null) data_new[i][2] = tmpdata[1].toString();
 				for(int j = 3; j < data_new[i].length; j++)
 					data_new[i][j] = null;
-				data_new[i][7] = "";
+				data_new[i][7] = null;
 			}
 
 			for (int i = 0; i < ((data.size() <= data_old_length) ? data.size() : data_old_length); i++) {
@@ -230,5 +230,16 @@ public class IndividualAchievementsPanel extends JPanel{
 		DefaultCellEditor defaultCellEditor = new DefaultCellEditor(comboBox);
 		tmpColumn.setCellEditor(defaultCellEditor);
 		tmpColumn.setCellRenderer(new CheckBoxCellRenderer(comboBox));
+	}
+
+	public String[][] getValues(boolean forDocs) {
+		String[][] indAchievments = ModelDBConnection.getAllAchievmentsByAbiturientId(currentAbit, true);;
+		if (forDocs) {
+			Vector<Vector<Object>> data = individAchivTM.getDataVector();
+			for(int i = 0; i < data.size(); i++) {
+				indAchievments[i][1] = data.elementAt(i).toArray()[0].toString();
+			}
+		}
+		return indAchievments;
 	}
 }
