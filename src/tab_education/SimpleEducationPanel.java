@@ -108,11 +108,11 @@ public class SimpleEducationPanel extends JPanel{
 		String[] values = new String[6];
 
 		values[0] = currentAbit;
-		values[1] = textSeria.getText();
-		values[2] = textNum.getText();
-		values[3] = textSpeciality.getText();
-		values[4] = textIssuedBy.getText();
-		values[5] = textYear.getText();
+		values[1] = (!textSeria.getText().equals("") ? textSeria.getText() : null);
+		values[2] = (!textNum.getText().equals("") ? textNum.getText() : null);
+		values[3] = (!textSpeciality.getText().equals("") ? textSpeciality.getText() : null);
+		values[4] = (!textIssuedBy.getText().equals("") ? textIssuedBy.getText() : null);
+		values[5] = (!textYear.getText().equals("") ? textYear.getText() : null);
 
 		return values;
 	}

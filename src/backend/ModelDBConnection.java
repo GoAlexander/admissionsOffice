@@ -157,7 +157,6 @@ public class ModelDBConnection {
 					for (int i = 0; i < numberOfColumns; i++) {
 						if (rset.getObject(i + 1) != null) {
 							data[curPos][i] = rset.getObject(i + 1).toString();
-							System.out.println(data[curPos][i]);
 						}
 					}
 					curPos++;
@@ -193,7 +192,6 @@ public class ModelDBConnection {
 				for (int i = 0; i < numberOfColumns; i++) {
 					if (rset.getObject(i + 1) != null)
 						result[i] = rset.getObject(i + 1).toString();
-					System.out.println("Read: " + result[i]);
 				}
 			}
 			cstmt.close();
@@ -931,8 +929,6 @@ public class ModelDBConnection {
 			int numberOfColumns = rsmd.getColumnCount();
 
 			String[] result = new String[numberOfColumns];
-			for (int i = 0; i < result.length; i++)
-				result[i] = "";
 			result[0] = aid;
 
 			while (rset.next()) {
@@ -946,8 +942,6 @@ public class ModelDBConnection {
 							result[i] = format.format(docDate);
 						} else
 							result[i] = rset.getObject(i + 1).toString();
-
-					System.out.println("Read: " + result[i]);
 				}
 			}
 			cstmt.close();
@@ -968,6 +962,7 @@ public class ModelDBConnection {
 				abiturientPassportInfo[i] = data[i - 1];
 
 			ModelDBConnection.updateElementInTableById("AbiturientPassport", abiturientPassportInfo);
+			query = query.replaceAll("'null'", "null");
 			System.out.println(query);
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
@@ -1039,26 +1034,22 @@ public class ModelDBConnection {
 				+ "from " + nameTable + " where aid_abiturient = " + aid + ";";
 
 		String[] educationInfo = new String[6];
-		for (int i = 0; i < educationInfo.length; i++)
-			educationInfo[i] = "";
 		educationInfo[0] = aid;
 
 		if (initConnection()) {
 			stmt = con.createStatement();
 			rset = stmt.executeQuery(query);
 
-			while (rset.next()) {
-				educationInfo = new String[6];
-				educationInfo[0] = String.valueOf(rset.getInt(1));
-				educationInfo[1] = rset.getString(2);
-				educationInfo[2] = rset.getString(3);
-				educationInfo[3] = rset.getString(4);
-				educationInfo[4] = rset.getString(5);
-				educationInfo[5] = String.valueOf(rset.getInt(6));
+			ResultSetMetaData rsmd = rset.getMetaData();
+			int numberOfColumns = rsmd.getColumnCount();
 
-				if (DEBUG) {
-					System.out.println(educationInfo[0] + " " + educationInfo[1] + " " + educationInfo[2] + " "
-							+ educationInfo[3] + " " + educationInfo[4] + " " + educationInfo[5]);
+			String[] result = new String[numberOfColumns];
+			result[0] = aid;
+
+			while (rset.next()) {
+				for (int i = 0; i < numberOfColumns; i++) {
+					if (rset.getObject(i + 1) != null)
+						result[i] = rset.getObject(i + 1).toString();
 				}
 			}
 

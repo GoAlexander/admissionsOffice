@@ -335,6 +335,160 @@ public class OutputWord {
 		java.awt.Desktop.getDesktop().open(file);
 	}
 
+	public static void writeInventory(String[] generalInfo, String[] highEducation, String[] postGraduateEducation) throws Exception {
+		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Опись-расписка.dotx"));
+		boolean start_replace = false;
+		for (XWPFParagraph p : doc.getParagraphs()) {
+			for (XWPFRun r : p.getRuns()) {
+				if (r.getText(0) != null) {
+					if(start_replace) {
+						String text;
+						switch (r.getText(0)) {
+						case "id":
+							text = r.getText(0).replace("id", generalInfo[0] != null ? generalInfo[0] : "");
+							r.setText(text, 0);
+							break;
+						case "Фамилия":
+							text = r.getText(0).replace("Фамилия", generalInfo[1] != null ? generalInfo[1] : "");
+							r.setText(text, 0);
+							break;
+						case "Имя":
+							text = r.getText(0).replace("Имя", generalInfo[2] != null ? generalInfo[2] : "");
+							r.setText(text, 0);
+							break;
+						case "Отчество":
+							text = r.getText(0).replace("Отчество", generalInfo[3] != null ? generalInfo[3] : "");
+							r.setText(text, 0);
+							break;
+						case "Диплом_серия":
+							text = r.getText(0).replace("Диплом_серия", highEducation[1] != null ? highEducation[1] : "");
+							r.setText(text, 0);
+							break;
+						case "Диплом_номер":
+							text = r.getText(0).replace("Диплом_номер", highEducation[2] != null ? highEducation[2] : "");
+							r.setText(text, 0);
+							break;
+						case "Название_уч_заведения":
+							text = r.getText(0).replace("Название_уч_заведения", highEducation[4] != null ? highEducation[4] : "");
+							r.setText(text, 0);
+							break;
+						case "Год_оконч_ВУЗа":
+							text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
+							r.setText(text, 0);
+							break;
+						case "Дипл_серия_интерн":
+							text = r.getText(0).replace("Дипл_серия_интерн", postGraduateEducation[1] != null ? postGraduateEducation[1] : "");
+							r.setText(text, 0);
+							break;
+						case "Дипл_номер_интерн":
+							text = r.getText(0).replace("Дипл_номер_интерн", postGraduateEducation[2] != null ? postGraduateEducation[2] : "");
+							r.setText(text, 0);
+							break;
+						case "Название_ординатура":
+							text = r.getText(0).replace("Название_ординатура", postGraduateEducation[4] != null ? postGraduateEducation[4] : "");
+							r.setText(text, 0);
+							break;
+						case "Год_оконч_интерн":
+							text = r.getText(0).replace("Год_оконч_интерн", postGraduateEducation[5] != null ? postGraduateEducation[5] : "");
+							r.setText(text, 0);
+							break;
+						case "}":
+							start_replace = false;
+							r.setText("", 0);
+							break;
+						}
+					} else if(r.getText(0).equals("{")) {
+							start_replace = true;
+							r.setText("", 0);
+					}
+				}
+			}
+		}
+
+		for (XWPFTable tbl : doc.getTables()) {
+			for (XWPFTableRow row : tbl.getRows()) {
+				for (XWPFTableCell cell : row.getTableCells()) {
+					for (XWPFParagraph p : cell.getParagraphs()) {
+						for (XWPFRun r : p.getRuns()) {
+							if (r.getText(0) != null) {
+								if(start_replace) {
+									String text;
+									switch (r.getText(0)) {
+									case "id":
+										text = r.getText(0).replace("id", generalInfo[0] != null ? generalInfo[0] : "");
+										r.setText(text, 0);
+										break;
+									case "Фамилия":
+										text = r.getText(0).replace("Фамилия", generalInfo[1] != null ? generalInfo[1] : "");
+										r.setText(text, 0);
+										break;
+									case "Имя":
+										text = r.getText(0).replace("Имя", generalInfo[2] != null ? generalInfo[2] : "");
+										r.setText(text, 0);
+										break;
+									case "Отчество":
+										text = r.getText(0).replace("Отчество", generalInfo[3] != null ? generalInfo[3] : "");
+										r.setText(text, 0);
+										break;
+									case "Диплом_серия":
+										text = r.getText(0).replace("Диплом_серия", highEducation[1] != null ? highEducation[1] : "");
+										r.setText(text, 0);
+										break;
+									case "Диплом_номер":
+										text = r.getText(0).replace("Диплом_номер", highEducation[2] != null ? highEducation[2] : "");
+										r.setText(text, 0);
+										break;
+									case "Название_уч_заведения":
+										text = r.getText(0).replace("Название_уч_заведения", highEducation[4] != null ? highEducation[4] : "");
+										r.setText(text, 0);
+										break;
+									case "Год_оконч_ВУЗа":
+										text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
+										r.setText(text, 0);
+										break;
+									case "Дипл_серия_интерн":
+										text = r.getText(0).replace("Дипл_серия_интерн", postGraduateEducation[1] != null ? postGraduateEducation[1] : "");
+										r.setText(text, 0);
+										break;
+									case "Дипл_номер_интерн":
+										text = r.getText(0).replace("Дипл_номер_интерн", postGraduateEducation[2] != null ? postGraduateEducation[2] : "");
+										r.setText(text, 0);
+										break;
+									case "Название_ординатура":
+										text = r.getText(0).replace("Название_ординатура", postGraduateEducation[4] != null ? postGraduateEducation[4] : "");
+										r.setText(text, 0);
+										break;
+									case "Год_оконч_интерн":
+										text = r.getText(0).replace("Год_оконч_интерн", postGraduateEducation[5] != null ? postGraduateEducation[5] : "");
+										r.setText(text, 0);
+										break;
+									case "}":
+										start_replace = false;
+										r.setText("", 0);
+										break;
+									}
+								} else if(r.getText(0).equals("{")) {
+										start_replace = true;
+										r.setText("", 0);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		File file = new File(generalInfo[0] + "_inventory.doc");
+
+		if (file != null) {
+			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));
+			doc.write(outputStream);
+			outputStream.flush();
+			outputStream.close();
+		}
+		java.awt.Desktop.getDesktop().open(file);
+	}
+
 	public static void writeExams(String[] generalInfo, ArrayList<String> specialities, ArrayList<String> examDates) throws Exception {
 		XWPFDocument doc_out = new XWPFDocument();
 		int i = 0;
@@ -502,6 +656,160 @@ public class OutputWord {
 
 		if (i > 0)
 			Runtime.getRuntime().exec("cmd /c start script.vbs " + theDir.getAbsolutePath().substring(0, theDir.getAbsolutePath().lastIndexOf("tmp_folder")) + " " + generalInfo[0] + "_exams.doc");
+	}
+
+	public static void writeTitul(String[] generalInfo, String[] highEducation, String[] postGraduateEducation) throws Exception {
+		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Опись-расписка.dotx"));
+		boolean start_replace = false;
+		for (XWPFParagraph p : doc.getParagraphs()) {
+			for (XWPFRun r : p.getRuns()) {
+				if (r.getText(0) != null) {
+					if(start_replace) {
+						String text;
+						switch (r.getText(0)) {
+						case "id":
+							text = r.getText(0).replace("id", generalInfo[0] != null ? generalInfo[0] : "");
+							r.setText(text, 0);
+							break;
+						case "Фамилия":
+							text = r.getText(0).replace("Фамилия", generalInfo[1] != null ? generalInfo[1] : "");
+							r.setText(text, 0);
+							break;
+						case "Имя":
+							text = r.getText(0).replace("Имя", generalInfo[2] != null ? generalInfo[2] : "");
+							r.setText(text, 0);
+							break;
+						case "Отчество":
+							text = r.getText(0).replace("Отчество", generalInfo[3] != null ? generalInfo[3] : "");
+							r.setText(text, 0);
+							break;
+						case "Диплом_серия":
+							text = r.getText(0).replace("Диплом_серия", highEducation[1] != null ? highEducation[1] : "");
+							r.setText(text, 0);
+							break;
+						case "Диплом_номер":
+							text = r.getText(0).replace("Диплом_номер", highEducation[2] != null ? highEducation[2] : "");
+							r.setText(text, 0);
+							break;
+						case "Название_уч_заведения":
+							text = r.getText(0).replace("Название_уч_заведения", highEducation[4] != null ? highEducation[4] : "");
+							r.setText(text, 0);
+							break;
+						case "Год_оконч_ВУЗа":
+							text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
+							r.setText(text, 0);
+							break;
+						case "Дипл_серия_интерн":
+							text = r.getText(0).replace("Дипл_серия_интерн", postGraduateEducation[1] != null ? postGraduateEducation[1] : "");
+							r.setText(text, 0);
+							break;
+						case "Дипл_номер_интерн":
+							text = r.getText(0).replace("Дипл_номер_интерн", postGraduateEducation[2] != null ? postGraduateEducation[2] : "");
+							r.setText(text, 0);
+							break;
+						case "Название_ординатура":
+							text = r.getText(0).replace("Название_ординатура", postGraduateEducation[4] != null ? postGraduateEducation[4] : "");
+							r.setText(text, 0);
+							break;
+						case "Год_оконч_интерн":
+							text = r.getText(0).replace("Год_оконч_интерн", postGraduateEducation[5] != null ? postGraduateEducation[5] : "");
+							r.setText(text, 0);
+							break;
+						case "}":
+							start_replace = false;
+							r.setText("", 0);
+							break;
+						}
+					} else if(r.getText(0).equals("{")) {
+							start_replace = true;
+							r.setText("", 0);
+					}
+				}
+			}
+		}
+
+		for (XWPFTable tbl : doc.getTables()) {
+			for (XWPFTableRow row : tbl.getRows()) {
+				for (XWPFTableCell cell : row.getTableCells()) {
+					for (XWPFParagraph p : cell.getParagraphs()) {
+						for (XWPFRun r : p.getRuns()) {
+							if (r.getText(0) != null) {
+								if(start_replace) {
+									String text;
+									switch (r.getText(0)) {
+									case "id":
+										text = r.getText(0).replace("id", generalInfo[0] != null ? generalInfo[0] : "");
+										r.setText(text, 0);
+										break;
+									case "Фамилия":
+										text = r.getText(0).replace("Фамилия", generalInfo[1] != null ? generalInfo[1] : "");
+										r.setText(text, 0);
+										break;
+									case "Имя":
+										text = r.getText(0).replace("Имя", generalInfo[2] != null ? generalInfo[2] : "");
+										r.setText(text, 0);
+										break;
+									case "Отчество":
+										text = r.getText(0).replace("Отчество", generalInfo[3] != null ? generalInfo[3] : "");
+										r.setText(text, 0);
+										break;
+									case "Диплом_серия":
+										text = r.getText(0).replace("Диплом_серия", highEducation[1] != null ? highEducation[1] : "");
+										r.setText(text, 0);
+										break;
+									case "Диплом_номер":
+										text = r.getText(0).replace("Диплом_номер", highEducation[2] != null ? highEducation[2] : "");
+										r.setText(text, 0);
+										break;
+									case "Название_уч_заведения":
+										text = r.getText(0).replace("Название_уч_заведения", highEducation[4] != null ? highEducation[4] : "");
+										r.setText(text, 0);
+										break;
+									case "Год_оконч_ВУЗа":
+										text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
+										r.setText(text, 0);
+										break;
+									case "Дипл_серия_интерн":
+										text = r.getText(0).replace("Дипл_серия_интерн", postGraduateEducation[1] != null ? postGraduateEducation[1] : "");
+										r.setText(text, 0);
+										break;
+									case "Дипл_номер_интерн":
+										text = r.getText(0).replace("Дипл_номер_интерн", postGraduateEducation[2] != null ? postGraduateEducation[2] : "");
+										r.setText(text, 0);
+										break;
+									case "Название_ординатура":
+										text = r.getText(0).replace("Название_ординатура", postGraduateEducation[4] != null ? postGraduateEducation[4] : "");
+										r.setText(text, 0);
+										break;
+									case "Год_оконч_интерн":
+										text = r.getText(0).replace("Год_оконч_интерн", postGraduateEducation[5] != null ? postGraduateEducation[5] : "");
+										r.setText(text, 0);
+										break;
+									case "}":
+										start_replace = false;
+										r.setText("", 0);
+										break;
+									}
+								} else if(r.getText(0).equals("{")) {
+										start_replace = true;
+										r.setText("", 0);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		File file = new File(generalInfo[0] + "_inventory.doc");
+
+		if (file != null) {
+			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));
+			doc.write(outputStream);
+			outputStream.flush();
+			outputStream.close();
+		}
+		java.awt.Desktop.getDesktop().open(file);
 	}
 
 	private static void copyElements(XWPFDocument doc_input, XWPFDocument doc_output) {

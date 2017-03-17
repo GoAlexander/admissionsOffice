@@ -154,11 +154,11 @@ public class PassportPanel extends JPanel{
 
 	public void setValues(String[] values) {
 		currentAbit = values[0];
-		comboDocType.setSelectedIndex(values[1].equals("") ? -1 : Integer.valueOf(values[1]) - 1);
+		comboDocType.setSelectedIndex(values[1] != null ? Integer.valueOf(values[1]) - 1 : -1);
 		textSeria.setText(values[2]);
 		textNum.setText(values[3]);
 		textIssuedBy.setText(values[4]);
-		if(!values[5].equals("")) {
+		if(values[5] != null) {
 			try {
 				SimpleDateFormat format = new SimpleDateFormat();
 				format.applyPattern("dd.MM.yyyy");
@@ -170,18 +170,17 @@ public class PassportPanel extends JPanel{
 			}
 		} else
 			textDate.setText(null);
-		textDate.setText(values[5]);
 		textplaceBirth.setText(values[6]);
 	}
 
 	public String[] getValues(boolean forDocs) {
 		String[] values = new String[6];
 		values[0] = forDocs ? (comboDocType.getSelectedItem() != null ? comboDocType.getSelectedItem().toString() : null) : String.valueOf(comboDocType.getSelectedIndex() + 1);
-		values[1] = textSeria.getText();
-		values[2] = textNum.getText();
-		values[3] = textIssuedBy.getText();
+		values[1] = !textSeria.getText().equals("") ? textSeria.getText() : null;
+		values[2] = !textNum.getText().equals("") ? textNum.getText() : null;
+		values[3] = !textIssuedBy.getText().equals("") ? textIssuedBy.getText() : null;
 		values[4] = textDate.getText().equals("__.__.____") ? null : textDate.getText();
-		values[5] = textplaceBirth.getText();
+		values[5] = !textplaceBirth.getText().equals("") ? textplaceBirth.getText() : null;
 
 		return values;
 	}
