@@ -91,6 +91,7 @@ public class CompetitiveGroupsPanel extends JPanel {
 		for (int i = 0; i < compGroupsPanel.getComponents().length; i++) {
 			if (compGroupsPanel.getComponent(i) instanceof SimpleCompetitiveGroupPanel) {
 				allCompetitiveGroups[curentCompGroup] = ((SimpleCompetitiveGroupPanel)compGroupsPanel.getComponent(i)).getCompetitiveGroupWithDetails();
+				curentCompGroup++;
 			}
 		}
 

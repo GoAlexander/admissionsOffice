@@ -268,6 +268,28 @@ public class GeneralInfoInput extends JFrame {
 		});
 		docMenu.add(docMenuListEntranceExam);
 		docMenuTitul = new JMenuItem("Титульный лист");
+		docMenuTitul.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String[] generalInfo = new String[6];
+					generalInfo[0] = ((JTextField) panelID.getComponent(1)).getText();
+					generalInfo[1] = ((JTextField) panelSurname.getComponent(1)).getText();
+					generalInfo[2] = ((JTextField) panelName.getComponent(1)).getText();
+					generalInfo[3] = ((JTextField) panelPatronymic.getComponent(1)).getText();
+					generalInfo[4] = new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString();
+					generalInfo[5] = ((JLabel) panelDateDoc.getComponent(1)).getText();
+
+					String[][] allCompetitiveGroups = ((CompetitiveGroupsPanel)compGroupPanel).getAllCompetitiveGroups();
+
+					if (allCompetitiveGroups.length == 0)
+						MessageProcessing.displayErrorMessage(null, 5);
+					else
+						OutputWord.writeTitul(generalInfo, allCompetitiveGroups);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		docMenu.add(docMenuTitul);
 
 		reportMenu = new JMenu("Отчетность");

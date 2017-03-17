@@ -18,10 +18,11 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 public class OutputWord {
 	public static void writeStatement(String[][] allCompetitiveGroups, String[] generalInfo, String[] passportData, String[] addressContacts, String[] highEducation, String needSpecialConditions, String[][] indAchievments) throws Exception {
 		XWPFDocument doc_out = new XWPFDocument();
-		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Заявление_ординатура.dotx"));
-		boolean start_replace = false;
+
 		for (int i = 0; i < allCompetitiveGroups.length; i++)
 		{
+			XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Заявление_ординатура.dotx"));
+			boolean start_replace = false;
 			for (XWPFParagraph p : doc.getParagraphs()) {
 				for (XWPFRun r : p.getRuns()) {
 					if (r.getText(0) != null) {
@@ -29,19 +30,19 @@ public class OutputWord {
 							String text;
 							switch (r.getText(0)) {
 							case "Направление_подготовки":
-								text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[i][0] != null ? allCompetitiveGroups[0][0] : "");
+								text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[i][0] != null ? allCompetitiveGroups[i][0] : "");
 								r.setText(text, 0);
 								break;
 							case "Специальность":
-								text = r.getText(0).replace("Специальность", allCompetitiveGroups[i][1] != null ? allCompetitiveGroups[0][1] : "");
+								text = r.getText(0).replace("Специальность", allCompetitiveGroups[i][1] != null ? allCompetitiveGroups[i][1] : "");
 								r.setText(text, 0);
 								break;
 							case "Кафедра":
-								text = r.getText(0).replace("Кафедра", allCompetitiveGroups[i][2] != null ? allCompetitiveGroups[0][2] : "");
+								text = r.getText(0).replace("Кафедра", allCompetitiveGroups[i][2] != null ? allCompetitiveGroups[i][2] : "");
 								r.setText(text, 0);
 								break;
 							case "Конкурсная_группа":
-								text = r.getText(0).replace("Конкурсная_группа", allCompetitiveGroups[i][3] != null ? allCompetitiveGroups[0][3] : "");
+								text = r.getText(0).replace("Конкурсная_группа", allCompetitiveGroups[i][3] != null ? allCompetitiveGroups[i][3] : "");
 								r.setText(text, 0);
 								break;
 							case "id":
@@ -178,19 +179,19 @@ public class OutputWord {
 										String text;
 										switch (r.getText(0)) {
 										case "Направление_подготовки":
-											text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[i][0] != null ? allCompetitiveGroups[0][0] : "");
+											text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[i][0] != null ? allCompetitiveGroups[i][0] : "");
 											r.setText(text, 0);
 											break;
 										case "Специальность":
-											text = r.getText(0).replace("Специальность", allCompetitiveGroups[i][1] != null ? allCompetitiveGroups[0][1] : "");
+											text = r.getText(0).replace("Специальность", allCompetitiveGroups[i][1] != null ? allCompetitiveGroups[i][1] : "");
 											r.setText(text, 0);
 											break;
 										case "Кафедра":
-											text = r.getText(0).replace("Кафедра", allCompetitiveGroups[i][2] != null ? allCompetitiveGroups[0][2] : "");
+											text = r.getText(0).replace("Кафедра", allCompetitiveGroups[i][2] != null ? allCompetitiveGroups[i][2] : "");
 											r.setText(text, 0);
 											break;
 										case "Конкурсная_группа":
-											text = r.getText(0).replace("Конкурсная_группа", allCompetitiveGroups[i][3] != null ? allCompetitiveGroups[0][3] : "");
+											text = r.getText(0).replace("Конкурсная_группа", allCompetitiveGroups[i][3] != null ? allCompetitiveGroups[i][3] : "");
 											r.setText(text, 0);
 											break;
 										case "id":
@@ -658,8 +659,8 @@ public class OutputWord {
 			Runtime.getRuntime().exec("cmd /c start script.vbs " + theDir.getAbsolutePath().substring(0, theDir.getAbsolutePath().lastIndexOf("tmp_folder")) + " " + generalInfo[0] + "_exams.doc");
 	}
 
-	public static void writeTitul(String[] generalInfo, String[] highEducation, String[] postGraduateEducation) throws Exception {
-		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Опись-расписка.dotx"));
+	public static void writeTitul(String[] generalInfo, String[][] allCompetitiveGroups) throws Exception {
+		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Титульный_лист_дела.dotx"));
 		boolean start_replace = false;
 		for (XWPFParagraph p : doc.getParagraphs()) {
 			for (XWPFRun r : p.getRuns()) {
@@ -683,36 +684,24 @@ public class OutputWord {
 							text = r.getText(0).replace("Отчество", generalInfo[3] != null ? generalInfo[3] : "");
 							r.setText(text, 0);
 							break;
-						case "Диплом_серия":
-							text = r.getText(0).replace("Диплом_серия", highEducation[1] != null ? highEducation[1] : "");
+						case "Дата_рождения":
+							text = r.getText(0).replace("Дата_рождения", generalInfo[4] != null ? generalInfo[4] : "");
 							r.setText(text, 0);
 							break;
-						case "Диплом_номер":
-							text = r.getText(0).replace("Диплом_номер", highEducation[2] != null ? highEducation[2] : "");
+						case "Дата_зап":
+							text = r.getText(0).replace("Дата_зап", generalInfo[5] != null ? generalInfo[5] : "");
 							r.setText(text, 0);
 							break;
-						case "Название_уч_заведения":
-							text = r.getText(0).replace("Название_уч_заведения", highEducation[4] != null ? highEducation[4] : "");
+						case "Направление_подготовки":
+							text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[0][0] != null ? allCompetitiveGroups[0][0] : "");
 							r.setText(text, 0);
 							break;
-						case "Год_оконч_ВУЗа":
-							text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
+						case "Специальность":
+							text = r.getText(0).replace("Специальность", allCompetitiveGroups[0][1] != null ? allCompetitiveGroups[0][1] : "");
 							r.setText(text, 0);
 							break;
-						case "Дипл_серия_интерн":
-							text = r.getText(0).replace("Дипл_серия_интерн", postGraduateEducation[1] != null ? postGraduateEducation[1] : "");
-							r.setText(text, 0);
-							break;
-						case "Дипл_номер_интерн":
-							text = r.getText(0).replace("Дипл_номер_интерн", postGraduateEducation[2] != null ? postGraduateEducation[2] : "");
-							r.setText(text, 0);
-							break;
-						case "Название_ординатура":
-							text = r.getText(0).replace("Название_ординатура", postGraduateEducation[4] != null ? postGraduateEducation[4] : "");
-							r.setText(text, 0);
-							break;
-						case "Год_оконч_интерн":
-							text = r.getText(0).replace("Год_оконч_интерн", postGraduateEducation[5] != null ? postGraduateEducation[5] : "");
+						case "Кафедра":
+							text = r.getText(0).replace("Кафедра", allCompetitiveGroups[0][2] != null ? allCompetitiveGroups[0][2] : "");
 							r.setText(text, 0);
 							break;
 						case "}":
@@ -753,36 +742,24 @@ public class OutputWord {
 										text = r.getText(0).replace("Отчество", generalInfo[3] != null ? generalInfo[3] : "");
 										r.setText(text, 0);
 										break;
-									case "Диплом_серия":
-										text = r.getText(0).replace("Диплом_серия", highEducation[1] != null ? highEducation[1] : "");
+									case "Дата_рождения":
+										text = r.getText(0).replace("Дата_рождения", generalInfo[4] != null ? generalInfo[4] : "");
 										r.setText(text, 0);
 										break;
-									case "Диплом_номер":
-										text = r.getText(0).replace("Диплом_номер", highEducation[2] != null ? highEducation[2] : "");
+									case "Дата_зап":
+										text = r.getText(0).replace("Дата_зап", generalInfo[5] != null ? generalInfo[5] : "");
 										r.setText(text, 0);
 										break;
-									case "Название_уч_заведения":
-										text = r.getText(0).replace("Название_уч_заведения", highEducation[4] != null ? highEducation[4] : "");
+									case "Направление_подготовки":
+										text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[0][0] != null ? allCompetitiveGroups[0][0] : "");
 										r.setText(text, 0);
 										break;
-									case "Год_оконч_ВУЗа":
-										text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
+									case "Специальность":
+										text = r.getText(0).replace("Специальность", allCompetitiveGroups[0][1] != null ? allCompetitiveGroups[0][1] : "");
 										r.setText(text, 0);
 										break;
-									case "Дипл_серия_интерн":
-										text = r.getText(0).replace("Дипл_серия_интерн", postGraduateEducation[1] != null ? postGraduateEducation[1] : "");
-										r.setText(text, 0);
-										break;
-									case "Дипл_номер_интерн":
-										text = r.getText(0).replace("Дипл_номер_интерн", postGraduateEducation[2] != null ? postGraduateEducation[2] : "");
-										r.setText(text, 0);
-										break;
-									case "Название_ординатура":
-										text = r.getText(0).replace("Название_ординатура", postGraduateEducation[4] != null ? postGraduateEducation[4] : "");
-										r.setText(text, 0);
-										break;
-									case "Год_оконч_интерн":
-										text = r.getText(0).replace("Год_оконч_интерн", postGraduateEducation[5] != null ? postGraduateEducation[5] : "");
+									case "Кафедра":
+										text = r.getText(0).replace("Кафедра", allCompetitiveGroups[0][2] != null ? allCompetitiveGroups[0][2] : "");
 										r.setText(text, 0);
 										break;
 									case "}":
@@ -801,7 +778,7 @@ public class OutputWord {
 			}
 		}
 
-		File file = new File(generalInfo[0] + "_inventory.doc");
+		File file = new File(generalInfo[0] + "_titul.doc");
 
 		if (file != null) {
 			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));
