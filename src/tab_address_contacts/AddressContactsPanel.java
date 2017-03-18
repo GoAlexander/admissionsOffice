@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -167,7 +165,7 @@ public class AddressContactsPanel extends JPanel {
 					textPhone.setForeground(Color.RED);
 				else
 					textPhone.setForeground(Color.BLACK);
-	
+
 				if (mistakesIndices.isEmpty()) {
 					ModelDBConnection.updateAbiturientAddressAndContactsByID(currentAbit, values);
 					this.setEditable(false);
@@ -210,8 +208,12 @@ public class AddressContactsPanel extends JPanel {
 
 	public String[] getValues(boolean forDocs) {
 		String[] values = new String[6];
-		values[0] = forDocs ? (comboRegionType.getSelectedItem()!= null ? comboRegionType.getSelectedItem().toString() : null) : String.valueOf(comboRegionType.getSelectedIndex() + 1);
-		values[1] = forDocs ? (comboPunktType.getSelectedItem()!= null ? comboPunktType.getSelectedItem().toString() : null) : String.valueOf(comboPunktType.getSelectedIndex() + 1);
+		values[0] = forDocs
+				? (comboRegionType.getSelectedItem() != null ? comboRegionType.getSelectedItem().toString() : null)
+				: String.valueOf(comboRegionType.getSelectedIndex() + 1);
+		values[1] = forDocs
+				? (comboPunktType.getSelectedItem() != null ? comboPunktType.getSelectedItem().toString() : null)
+				: String.valueOf(comboPunktType.getSelectedIndex() + 1);
 		values[2] = (!textIndex.getText().equals("") ? textIndex.getText() : null);
 		values[3] = (!textAdressLiving.getText().equals("") ? textAdressLiving.getText() : null);
 		values[4] = (!textEmail.getText().equals("") ? textEmail.getText() : null);

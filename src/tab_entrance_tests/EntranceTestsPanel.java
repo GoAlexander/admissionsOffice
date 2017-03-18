@@ -20,7 +20,6 @@ import javax.swing.table.TableColumn;
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
 import general_classes.GUITableModel;
-import tab_competitive_groups.SimpleCompetitiveGroupPanel;
 import general_classes.CheckBoxCellRenderer;
 
 public class EntranceTestsPanel extends JPanel {
@@ -29,14 +28,16 @@ public class EntranceTestsPanel extends JPanel {
 	private GUITableModel entranceTestTM = new GUITableModel();
 	private JButton editTestResultButton, saveTestResultButton;
 	private JCheckBox specialCond;
-	private String[] nameEntranceTest, blockEntranceTest, entranceTestColumnNames = { "Наименование", "Группа", "Блок испытаний", "Дата испытания", "Балл" };
+	private String[] nameEntranceTest, blockEntranceTest,
+			entranceTestColumnNames = { "Наименование", "Группа", "Блок испытаний", "Дата испытания", "Балл" };
 
 	public EntranceTestsPanel() {
 		this.setLayout(new BorderLayout());
 
 		entranceTestTable = new JTable(entranceTestTM);
-		//entranceTestTM.setDataVector(null, entranceTestColumnNames);
-		entranceTestTM.setDataVector(ModelDBConnection.getAllEntranceTestsResultsByAbiturientId("0", false), entranceTestColumnNames);
+		// entranceTestTM.setDataVector(null, entranceTestColumnNames);
+		entranceTestTM.setDataVector(ModelDBConnection.getAllEntranceTestsResultsByAbiturientId("0", false),
+				entranceTestColumnNames);
 		JScrollPane scrPane = new JScrollPane(entranceTestTable);
 		scrPane.setPreferredSize(new Dimension(300, 0));
 		entranceTestTable.setMaximumSize(new Dimension(100, 100));
@@ -100,28 +101,37 @@ public class EntranceTestsPanel extends JPanel {
 			Vector<Vector<Object>> data = entranceTestTM.getDataVector();
 			Object[] tmpdata;
 
-			String[][]	data_new = new String[data.size()][10], 
-						data_old = ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(currentAbit, true);
+			String[][] data_new = new String[data.size()][10];
+			// , data_old =
+			// ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(currentAbit,
+			// true);
 
-			int	data_old_length = data_old == null ? 0 : data_old.length;
+			// int data_old_length = data_old == null ? 0 : data_old.length;
 
-			for(int i = 0; i < data.size(); i++) {
+			for (int i = 0; i < data.size(); i++) {
 				tmpdata = data.elementAt(i).toArray();
 				data_new[i][0] = currentAbit;
 				data_new[i][1] = "1";
-				for(int j = 0; !tmpdata[0].toString().equals(nameEntranceTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
+				for (int j = 0; !tmpdata[0].toString().equals(nameEntranceTest[j]); j++, data_new[i][1] = String
+						.valueOf(j + 1))
+					;
 				if (tmpdata[1] != null) {
 					data_new[i][2] = tmpdata[1].toString();
-					data_new[i][3] = String.valueOf(ModelDBConnection.getFreeNumberInGroupByExam(data_new[i][1], data_new[i][2]));
+					data_new[i][3] = String
+							.valueOf(ModelDBConnection.getFreeNumberInGroupByExam(data_new[i][1], data_new[i][2]));
 					System.out.println(data_new[i][3]);
 				}
 
 				if (tmpdata[2] != null) {
 					data_new[i][4] = "1";
-					for(int j = 0; !tmpdata[2].toString().equals(blockEntranceTest[j]); j++, data_new[i][4] = String.valueOf(j+1));
+					for (int j = 0; !tmpdata[2].toString().equals(blockEntranceTest[j]); j++, data_new[i][4] = String
+							.valueOf(j + 1))
+						;
 				}
-				if (tmpdata[3] != null) data_new[i][5] = tmpdata[3].toString();
-				if (tmpdata[4] != null) data_new[i][6] = tmpdata[4].toString();
+				if (tmpdata[3] != null)
+					data_new[i][5] = tmpdata[3].toString();
+				if (tmpdata[4] != null)
+					data_new[i][6] = tmpdata[4].toString();
 
 				data_new[i][7] = "1";
 				data_new[i][8] = null;
@@ -129,28 +139,58 @@ public class EntranceTestsPanel extends JPanel {
 				data_new[i][9] = (specialCond.isSelected()) ? "1" : "0";
 			}
 
-			ModelDBConnection.deleteElementInTableById("AbiturientEntranceTests", currentAbit);
+			ArrayList<Integer> mistakesIndices = checkData(data_new);
+			if (mistakesIndices.contains(0))
+				MessageProcessing.displayErrorMessage(null, 14);
+			if (mistakesIndices.contains(2))
+				MessageProcessing.displayErrorMessage(null, 12);
+			if (mistakesIndices.contains(4))
+				MessageProcessing.displayErrorMessage(null, 10);
+			if (mistakesIndices.contains(5))
+				MessageProcessing.displayErrorMessage(null, 13);
+			if (mistakesIndices.contains(6))
+				MessageProcessing.displayErrorMessage(null, 11);
 
-			for(int i = 0; i < data.size(); i++) {
-				ModelDBConnection.updateAbiturientEntranceTestsResultsByID(data_new[i]);
+			if (mistakesIndices.isEmpty()) {
+				ModelDBConnection.deleteElementInTableById("AbiturientEntranceTests", currentAbit);
+				for (int i = 0; i < data.size(); i++) {
+					ModelDBConnection.updateAbiturientEntranceTestsResultsByID(data_new[i]);
+				}
+				MessageProcessing.displaySuccessMessage(this, 9);
+				entranceTestTable.clearSelection();
+				this.setEditable(false);
 			}
-
-			MessageProcessing.displaySuccessMessage(this, 4);
-
-			entranceTestTable.clearSelection();
-			this.setEditable(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
+	private ArrayList<Integer> checkData(String[][] data) {
+		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
+		if (data.length > 1 && data[0][4].equals(data[1][4]))
+			mistakesIndices.add(0);
+		for (int i = 0; i < data.length; i++) {
+			if (data[i][2] == null)
+				mistakesIndices.add(2);
+			if (data[i][4] == null)
+				mistakesIndices.add(4);
+			if (data[i][5] != null && (!data[i][5].matches("^[0-9.]+$")
+					|| !data[i][5].matches("(0?[1-9]|[12][0-9]|3[01]).(0?[1-9]|1[012]).((19|20)\\d\\d)")))
+				mistakesIndices.add(5);
+			if (data[i][6] == null || !data[i][6].matches("^[0-9]+$"))
+				mistakesIndices.add(6);
+		}
+		return mistakesIndices;
+	}
+
 	public void setValues(String aid) {
 		currentAbit = aid;
-		entranceTestTM.setDataVector(ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(aid, false), entranceTestColumnNames);
+		entranceTestTM.setDataVector(ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(aid, false),
+				entranceTestColumnNames);
 
 		specialCond.setSelected(ModelDBConnection.needAbiturientSpecialConditionsByID(aid));
-		
+
 		nameEntranceTest = ModelDBConnection.getNamesFromTableOrderedById("EntranceTest");
 		createCheckboxTable(entranceTestTable, 0, nameEntranceTest);
 
@@ -175,7 +215,7 @@ public class EntranceTestsPanel extends JPanel {
 		ArrayList<String> examsDates = new ArrayList<String>();
 		Vector<Vector<Object>> data = entranceTestTM.getDataVector();
 
-		for(int i = 0; i < data.size(); i++) {
+		for (int i = 0; i < data.size(); i++) {
 			if (data.elementAt(i).toArray()[3] != null)
 				examsDates.add(data.elementAt(i).toArray()[3].toString());
 			else
