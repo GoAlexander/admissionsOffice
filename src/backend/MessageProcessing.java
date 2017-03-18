@@ -37,6 +37,10 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат редактирования контактной информации";
 			message = "Данные успешно сохранены!";
 			break;
+		case 8:
+			titleMessage = "Результат редактирования информации по образованию";
+			message = "Данные успешно сохранены!";
+			break;
 		}
 
         JOptionPane.showMessageDialog(parent,

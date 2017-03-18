@@ -60,6 +60,7 @@ public class EducationPanel extends JPanel{
 			this.setEditable(false);
 			ModelDBConnection.updateAbiturientEducationByID("AbiturientHigherEducation", highEducPanel.getValues());
 			ModelDBConnection.updateAbiturientEducationByID("AbiturientPostgraduateEducation", afterDiplEducPanel.getValues());
+			MessageProcessing.displaySuccessMessage(this, 8);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
