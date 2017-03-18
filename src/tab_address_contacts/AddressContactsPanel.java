@@ -204,6 +204,8 @@ public class AddressContactsPanel extends JPanel {
 		textIndex.setForeground(Color.BLACK);
 		textEmail.setForeground(Color.BLACK);
 		textPhone.setForeground(Color.BLACK);
+
+		this.setEditable(false);
 	}
 
 	public String[] getValues(boolean forDocs) {

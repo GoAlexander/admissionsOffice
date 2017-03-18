@@ -171,6 +171,8 @@ public class PassportPanel extends JPanel{
 		} else
 			textDate.setText(null);
 		textplaceBirth.setText(values[6]);
+
+		this.setEditable(false);
 	}
 
 	public String[] getValues(boolean forDocs) {

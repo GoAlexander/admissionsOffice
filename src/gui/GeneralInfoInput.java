@@ -608,6 +608,7 @@ public class GeneralInfoInput extends JFrame {
 					updateTab("EntranceTests");
 					updateTab("IndividualAchievements");
 					updateTab("CompetitiveGroups");
+					setEditable(false);
 				}
 			}
 		});
@@ -672,44 +673,9 @@ public class GeneralInfoInput extends JFrame {
 
 				MessageProcessing.displaySuccessMessage(this, 2);
 
-				// Обновление интерфейса
-				((JTextField) panelSurname.getComponent(1)).setEnabled(false);
-				((JTextField) panelName.getComponent(1)).setEnabled(false);
-				((JTextField) panelPatronymic.getComponent(1)).setEnabled(false);
-				calendar.setEnabled(false);
-				comboSexList.setEnabled(false);
-				comboSexList.setEditable(true);
-				comboNationality.setEnabled(false);
-				comboNationality.setEditable(true);
-				textDateReturn.setEnabled(false);
-				comboReturnReason.setEnabled(false);
-				comboReturnReason.setEditable(true);
-				checkBackDoc.setEnabled(false);
-
-				// !!! Добавить !!!
-				// Фрагмент setEnable(false) для всех компонентов JTabbedPane
-
-				addButton.setEnabled(true);
-				deleteButton.setEnabled(true);
-				editButton.setText("Редактировать");
+				setEditable(false);
 			} else {
-				((JTextField) panelSurname.getComponent(1)).setEnabled(true);
-				((JTextField) panelName.getComponent(1)).setEnabled(true);
-				((JTextField) panelPatronymic.getComponent(1)).setEnabled(true);
-				calendar.setEnabled(true);
-				comboSexList.setEnabled(true);
-				comboSexList.setEditable(false);
-				comboNationality.setEnabled(true);
-				comboNationality.setEditable(false);
-				checkBackDoc.setEnabled(true);
-				if (checkBackDoc.isSelected()) {
-					textDateReturn.setEnabled(true);
-					comboReturnReason.setEnabled(true);
-				}
-				comboReturnReason.setEditable(false);
-				addButton.setEnabled(false);
-				deleteButton.setEnabled(false);
-				editButton.setText("    Сохранить     ");
+				setEditable(true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -838,6 +804,26 @@ public class GeneralInfoInput extends JFrame {
 			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(tablePanel, e);
 		}
+	}
+
+	public void setEditable(boolean status) {
+		((JTextField) panelSurname.getComponent(1)).setEnabled(status);
+		((JTextField) panelName.getComponent(1)).setEnabled(status);
+		((JTextField) panelPatronymic.getComponent(1)).setEnabled(status);
+		calendar.setEnabled(status);
+		comboSexList.setEnabled(status);
+		comboSexList.setEditable(!status);
+		comboNationality.setEnabled(status);
+		comboNationality.setEditable(!status);
+		checkBackDoc.setEnabled(status);
+		if (checkBackDoc.isSelected()) {
+			textDateReturn.setEnabled(status);
+			comboReturnReason.setEnabled(status);
+		}
+		comboReturnReason.setEditable(!status);
+		addButton.setEnabled(!status);
+		deleteButton.setEnabled(!status);
+		editButton.setText(status ? "    Сохранить     " : "Редактировать");
 	}
 
 	public static void main(String[] args) {

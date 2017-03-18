@@ -77,6 +77,7 @@ public class EducationPanel extends JPanel{
 	public void setValues(String[] abiturientHigherEducationData, String[] abiturientPostgraduateEducationData){
 		highEducPanel.setValues(abiturientHigherEducationData);
 		afterDiplEducPanel.setValues(abiturientPostgraduateEducationData);
+		this.setEditable(false);
 	}
 
 	public String[] getValues(int educationType) {

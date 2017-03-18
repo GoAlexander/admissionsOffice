@@ -213,6 +213,8 @@ public class IndividualAchievementsPanel extends JPanel{
 		indAchivTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
 
 		indAchivTable.getColumnModel().getColumn(2).setCellEditor(new AcceptRejectEditor(indAchivTable));
+
+		this.setEditable(false);
 	}
 
 	public void setEditable(boolean state) {

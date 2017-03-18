@@ -159,6 +159,8 @@ public class EntranceTestsPanel extends JPanel {
 
 		blockEntranceTest = ModelDBConnection.getNamesFromTableOrderedById("TestBox");
 		createCheckboxTable(entranceTestTable, 2, blockEntranceTest);
+
+		this.setEditable(false);
 	}
 
 	public void setEditable(boolean state) {
