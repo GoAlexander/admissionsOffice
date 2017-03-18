@@ -11,11 +11,7 @@ import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/*
- * TODO
- * 'null' в insert и update
- * '' дата  null ? null : 
- */
+
 public class ModelDBConnection {
 	static String login;
 	static String password;
@@ -223,7 +219,7 @@ public class ModelDBConnection {
 			phoneNumbers = "'" + info[9] + "'";
 			needHostel = info[10];
 			registrationDate = "'" + info[11] + "'";
-			returnDate = "'" + info[12] + "'";
+			returnDate = info[12] == null ? null : "'" + info[12] + "'";
 			id_returnReason = info[13];
 			needSpecConditions = info[14];
 			is_enrolled = info[15];
@@ -319,7 +315,6 @@ public class ModelDBConnection {
 			id_gender = info[5];
 			id_nationality = info[6];
 			registrationDate = "'" + info[7] + "'";
-			// TODO
 			returnDate = info[8] == null ? null : "'" + info[8] + "'";
 			id_returnReason = info[9];
 
