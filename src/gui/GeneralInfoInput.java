@@ -40,6 +40,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 
 import com.toedter.calendar.JDateChooser;
@@ -366,6 +369,12 @@ public class GeneralInfoInput extends JFrame {
 		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
 
+        TableRowSorter sorter=new TableRowSorter(dataTable.getModel());
+        sorter.setSortable(0, true);
+        sorter.setSortable(1, true);
+        sorter.setSortable(2, false);
+        sorter.setSortable(3, false);
+        dataTable.setRowSorter(sorter); 
 		JScrollPane scrPane = new JScrollPane(dataTable);
 		scrPane.setPreferredSize(new Dimension(300, 0));
 		tablePanel.add(scrPane, BorderLayout.CENTER);

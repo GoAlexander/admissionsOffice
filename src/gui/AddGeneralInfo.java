@@ -1,6 +1,5 @@
 ﻿package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -11,17 +10,13 @@ import java.awt.Insets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
@@ -33,30 +28,24 @@ import general_classes.GUITableModel;
 
 public class AddGeneralInfo extends JFrame {
 	private GUITableModel currentTM;
-	
-	private JPanel mainPanel, GIPanel, panelID, dateRecDocPanel, panelSurname, panelName, panelPatronymic, panelSex, panelDB,
-			panelNationality, panelInfoBackDoc, panelReturnReason, panelDateReturn;
-	private JButton applyButton;
-	private JTextField textID, textDateReturn, textDateRecDoc;
-	private JComboBox comboSexList, comboNationality, comboReturnReason;
-	private JCheckBox checkBackDoc;
 
+	private JPanel mainPanel, GIPanel, panelID, dateRecDocPanel, panelSurname, panelName, panelPatronymic, panelSex, panelDB,
+			panelNationality;
+	private JButton applyButton;
+	private JTextField textID, textDateRecDoc;
+	private JComboBox comboSexList, comboNationality;
 	private GridBagConstraints gbc;
 
-	private Dimension dimTextDigitInfo = new Dimension(400, 25);
-	private Dimension dimRigidArea = new Dimension(10, 0);
 	private Dimension dimText = new Dimension(107, 25);
 	private Dimension dimPanel = new Dimension(300, 40);
 
-	private String[] arrSex, arrNationality, arrReturnReason, arrDocType;
+	private String[] arrSex, arrNationality;
 
 	private JDateChooser calendar;
 
 	public AddGeneralInfo(GUITableModel currentTM) {
 		arrSex = ModelDBConnection.getNamesFromTableOrderedById("Gender");
 		arrNationality = ModelDBConnection.getNamesFromTableOrderedById("Nationality");
-		arrReturnReason = ModelDBConnection.getNamesFromTableOrderedById("ReturnReasons");
-		arrDocType = ModelDBConnection.getNamesFromTableOrderedById("PassportType");
 
 		this.currentTM = currentTM;
 
@@ -92,7 +81,7 @@ public class AddGeneralInfo extends JFrame {
 		textID.setPreferredSize(new Dimension(60, 25));
 		panelID.add(textID);
 		GIPanel.add(panelID, gbc);
-		
+
 		dateRecDocPanel = new JPanel();
 		dateRecDocPanel.setLayout(new FlowLayout());
 		dateRecDocPanel.setAlignmentY(JComponent.LEFT_ALIGNMENT);
@@ -160,46 +149,7 @@ public class AddGeneralInfo extends JFrame {
 		panelNationality.add(comboNationality);
 		gbc.gridy = 3;
 		GIPanel.add(panelNationality, gbc);
-/*
-		panelInfoBackDoc = new JPanel();
-		panelInfoBackDoc.setBorder(new TitledBorder(null, "Сведения о возврате документов", TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
 
-		GIPanelMain.add(panelInfoBackDoc);
-		panelInfoBackDoc.setLayout(new GridBagLayout());
-
-		GridBagConstraints gbc2 = new GridBagConstraints();
-		gbc2.anchor = GridBagConstraints.WEST;
-		gbc2.insets = new Insets(0, 0, 5, 65);
-
-		panelReturnReason = new JPanel();
-		panelReturnReason.setLayout(new FlowLayout());
-
-		JLabel returnReasonlbl = new JLabel("Причина возврата   ");
-		panelReturnReason.add(returnReasonlbl);
-
-		comboReturnReason = new JComboBox(arrReturnReason);
-		comboReturnReason.setSelectedIndex(-1);
-		panelReturnReason.add(comboReturnReason);
-
-		panelInfoBackDoc.add(panelReturnReason, gbc2);
-
-		panelDateReturn = new JPanel();
-		panelDateReturn.setLayout(new FlowLayout());
-
-		panelDateReturn.setAlignmentY(JComponent.LEFT_ALIGNMENT);
-		panelDateReturn.setMaximumSize(dimPanel);
-		JLabel dateReturnLabel = new JLabel("Дата возврата документов:     ");
-		panelDateReturn.add(dateReturnLabel);
-		textDateReturn = new JTextField();
-		textDateReturn.setPreferredSize(dimText);
-		panelDateReturn.add(textDateReturn);
-		checkBackDoc = new JCheckBox("Забрал документы");
-		gbc2.gridy = 1;
-		panelInfoBackDoc.add(panelDateReturn, gbc2);
-		gbc2.gridx = 1;
-		panelInfoBackDoc.add(checkBackDoc, gbc2);
-*/
 		JPanel btnPanel = new JPanel();
 		btnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
@@ -230,9 +180,9 @@ public class AddGeneralInfo extends JFrame {
     		abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex()+1);
     		abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex()+1);
     		abitBaseInfo[7] = textDateRecDoc.getText();
-    		
+
     		ModelDBConnection.insertAbiturient(abitBaseInfo);
-    		
+
     		//Обновление таблицы главного фрейма
     		String[] abit_ID_FIO = {abitBaseInfo[0], abitBaseInfo[1], abitBaseInfo[2], abitBaseInfo[3]};
     		this.currentTM.addRow(abit_ID_FIO);
