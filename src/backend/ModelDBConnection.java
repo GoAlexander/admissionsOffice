@@ -832,7 +832,6 @@ public class ModelDBConnection {
 	}
 
 	public static String[][] getAllEntranceTestsResultsByAbiturientId(String aid, boolean need_all_columns) {
-
 		String[][] data = null;
 
 		try {
@@ -876,28 +875,22 @@ public class ModelDBConnection {
 		return data;
 	}
 
-	// функция должна возвращать доп. 4 значения для simple panel(расширить
-	// список возвращаемых параметров)
 	public static String[][] getAllCompetitiveGroupsByAbiturientId(String aid) {
 		String[][] data = null;
 
-		int countStrings = getCountForAbitID("AbiturientCompetitiveGroup", aid);
+		try {
+			cstmt = con.prepareCall("{call getAllAllCompetitiveGroupsByAbiturientId(?)}", 1004, 1007);
 
-		if (countStrings > 0) {
-			try {
-				String query = "Select aid_abiturient, course, speciality, educationForm, chair,"
-						+ " competitiveGroup, targetOrganisation, educationStandard, competitiveBall,"
-						+ " availabilityIndividualAchievements, originalsReceivedDate, markEnrollment"
-						+ " from Abiturient, AbiturientCompetitiveGroup"
-						+ " where Abiturient.aid = AbiturientCompetitiveGroup.aid_abiturient and" + " aid_abiturient = "
-						+ aid + ";";
-				System.out.println(query);
+			cstmt.setString(1, aid);
 
-				stmt = con.createStatement();
-				rset = stmt.executeQuery(query);
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
 				ResultSetMetaData rsmd = rset.getMetaData();
 				int numberOfColumns = rsmd.getColumnCount();
-
 				data = new String[countStrings][numberOfColumns];
 				int curPos = 0;
 				while (rset.next()) {
@@ -907,12 +900,13 @@ public class ModelDBConnection {
 					}
 					curPos++;
 				}
-				stmt.close();
-				rset.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
 			}
+			cstmt.close();
+			rset.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 		return data;
 	}

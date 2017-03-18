@@ -90,9 +90,9 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 		this.data = values;
 
 		currentAbit = values[0];
-		textDir.setText(values[1]);
-		textSpec.setText(values[2]);
-		textGroup.setText(values[5]);
+		textDir.setText(values[12]);
+		textSpec.setText(values[13]);
+		textGroup.setText(values[14]);
 		textBall.setText(values[8]);
 	}
 

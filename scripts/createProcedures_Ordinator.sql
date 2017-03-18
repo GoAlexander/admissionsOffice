@@ -253,3 +253,16 @@ as begin
 		end
 end;
 go
+
+alter procedure getAllAllCompetitiveGroupsByAbiturientId(@aid varchar(max))
+as begin
+	select	aid_abiturient, course, speciality, educationForm, chair, competitiveGroup, targetOrganisation, 
+			educationStandard, competitiveBall, availabilityIndividualAchievements, originalsReceivedDate, markEnrollment, Course.name, Speciality.name, CompetitiveGroup.name
+		from	Abiturient, AbiturientCompetitiveGroup, Course, Speciality, CompetitiveGroup 
+			where	Abiturient.aid = AbiturientCompetitiveGroup.aid_abiturient and 
+					Course.id = AbiturientCompetitiveGroup.course and 
+					Speciality.id = AbiturientCompetitiveGroup.speciality and 
+					CompetitiveGroup.id = AbiturientCompetitiveGroup.competitiveGroup and aid_abiturient = @aid
+	return
+end;
+go
