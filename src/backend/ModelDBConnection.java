@@ -429,7 +429,7 @@ public class ModelDBConnection {
 					curPos++;
 				}
 			}
-			stmt.close();
+			cstmt.close();
 			rset.close();
 		} catch (Exception e) {
 			e.printStackTrace();

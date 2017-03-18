@@ -271,7 +271,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 		values[3] = forDocs ? ((JComboBox)educFormPanel.getComponent(1)).getSelectedItem().toString() : String.valueOf(((JComboBox)educFormPanel.getComponent(1)).getSelectedIndex() + 1);
 		values[4] = forDocs ? ((JComboBox)departmentPanel.getComponent(1)).getSelectedItem().toString() : String.valueOf(((JComboBox)departmentPanel.getComponent(1)).getSelectedIndex() + 1);
 		values[5] = forDocs ? comboCompetGroupType.getSelectedItem().toString() : String.valueOf(comboCompetGroupType.getSelectedIndex() + 1);
-		values[6] = forDocs ? ((JComboBox)orgPanel.getComponent(1)).getSelectedItem().toString() : (((JComboBox)orgPanel.getComponent(1)).getSelectedIndex() > -1 ? String.valueOf(((JComboBox)orgPanel.getComponent(1)).getSelectedIndex() + 1) : null);
+		values[6] = forDocs ? (((JComboBox)orgPanel.getComponent(1)).getSelectedItem() != null ? ((JComboBox)orgPanel.getComponent(1)).getSelectedItem().toString() : null) : (((JComboBox)orgPanel.getComponent(1)).getSelectedIndex() > -1 ? String.valueOf(((JComboBox)orgPanel.getComponent(1)).getSelectedIndex() + 1) : null);
 		values[7] = forDocs ? comboStandardType.getSelectedItem().toString() : String.valueOf(comboStandardType.getSelectedIndex() + 1);
 		values[8] = null;
 		values[9] = null;

@@ -112,13 +112,11 @@ public class EntranceTestsPanel extends JPanel {
 				for(int j = 0; !tmpdata[0].toString().equals(nameEntranceTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
 				if (tmpdata[1] != null) {
 					data_new[i][2] = tmpdata[1].toString();
-					System.out.println(data_new[i][2]);
 					data_new[i][3] = String.valueOf(ModelDBConnection.getFreeNumberInGroupByExam(data_new[i][1], data_new[i][2]));
 					System.out.println(data_new[i][3]);
 				}
 
 				if (tmpdata[2] != null) {
-					System.out.println(tmpdata[2]);
 					data_new[i][4] = "1";
 					for(int j = 0; !tmpdata[2].toString().equals(blockEntranceTest[j]); j++, data_new[i][4] = String.valueOf(j+1));
 				}
@@ -126,7 +124,7 @@ public class EntranceTestsPanel extends JPanel {
 				if (tmpdata[4] != null) data_new[i][6] = tmpdata[4].toString();
 
 				data_new[i][7] = "1";
-				data_new[i][8] = "";
+				data_new[i][8] = null;
 
 				data_new[i][9] = (specialCond.isSelected()) ? "1" : "0";
 			}
