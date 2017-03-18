@@ -438,7 +438,6 @@ public class GeneralInfoInput extends JFrame {
 		panelID.add(idLabel);
 		textID = new JTextField();
 		textID.setPreferredSize(new Dimension(60, 25));
-		textID.setEnabled(false);
 		panelID.add(textID);
 		GIPanel.add(panelID, gbc);
 
@@ -475,8 +474,6 @@ public class GeneralInfoInput extends JFrame {
 		panelSex.add(sexLabel);
 		comboSexList = new JComboBox(arrSex);
 		comboSexList.setSelectedIndex(-1);
-		comboSexList.setEnabled(false);
-		comboSexList.setEditable(true);
 		panelSex.add(comboSexList);
 		gbc.gridx = 1;
 		gbc.gridy = 1;
@@ -490,7 +487,6 @@ public class GeneralInfoInput extends JFrame {
 		panelDB.add(dbLabel);
 		calendar = new JDateChooser("dd.MM.yyyy", "##.##.####", '_');
 		calendar.setFont(new Font("Dialog", Font.PLAIN, 11));
-		calendar.setEnabled(false);
 		panelDB.add(calendar);
 		gbc.gridy = 2;
 		GIPanel.add(panelDB, gbc);
@@ -504,8 +500,6 @@ public class GeneralInfoInput extends JFrame {
 		comboNationality = new JComboBox(arrNationality);
 		comboNationality.setSelectedIndex(-1);
 		comboNationality.setPreferredSize(dimText);
-		comboNationality.setEnabled(false);
-		comboNationality.setEditable(true);
 		panelNationality.add(comboNationality);
 		gbc.gridy = 3;
 		GIPanel.add(panelNationality, gbc);
@@ -528,8 +522,6 @@ public class GeneralInfoInput extends JFrame {
 		panelReturnReason.add(returnReasonlbl);
 
 		comboReturnReason = new JComboBox(arrReturnReason);
-		comboReturnReason.setEnabled(false);
-		comboReturnReason.setEditable(true);
 		comboReturnReason.setSelectedIndex(-1);
 		panelReturnReason.add(comboReturnReason);
 
@@ -551,7 +543,6 @@ public class GeneralInfoInput extends JFrame {
 			textDateReturn = new JTextField();
 		}
 		textDateReturn.setPreferredSize(dimText);
-		textDateReturn.setEnabled(false);
 		panelDateReturn.add(textDateReturn);
 		checkBackDoc = new JCheckBox("Забрал документы");
 		checkBackDoc.addItemListener(new ItemListener() {
@@ -559,7 +550,8 @@ public class GeneralInfoInput extends JFrame {
 				if (checkBackDoc.isSelected()) {
 					textDateReturn.setEnabled(true);
 					comboReturnReason.setEnabled(true);
-					if (textDateReturn.getText().equals("")) {
+					comboReturnReason.setEditable(false);
+					if (textDateReturn.getText().equals("__.__.____")) {
 						SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 						textDateReturn.setText(sdf.format(new Date()));
 					}
@@ -568,10 +560,10 @@ public class GeneralInfoInput extends JFrame {
 					comboReturnReason.setSelectedIndex(-1);
 					textDateReturn.setEnabled(false);
 					comboReturnReason.setEnabled(false);
+					comboReturnReason.setEditable(true);
 				}
 			}
 		});
-		checkBackDoc.setEnabled(false);
 		gbc2.gridy = 1;
 		panelInfoBackDoc.add(panelDateReturn, gbc2);
 		gbc2.gridx = 1;
@@ -628,6 +620,8 @@ public class GeneralInfoInput extends JFrame {
 				setVisible(false);
 			}
 		});
+
+		this.setEditable(false);
 	}
 
 	private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -816,11 +810,14 @@ public class GeneralInfoInput extends JFrame {
 		comboNationality.setEnabled(status);
 		comboNationality.setEditable(!status);
 		checkBackDoc.setEnabled(status);
+		comboReturnReason.setEnabled(false);
+		textDateReturn.setEnabled(false);
 		if (checkBackDoc.isSelected()) {
 			textDateReturn.setEnabled(status);
 			comboReturnReason.setEnabled(status);
+			comboReturnReason.setEditable(!status);
 		}
-		comboReturnReason.setEditable(!status);
+		comboReturnReason.setEditable(true);
 		addButton.setEnabled(!status);
 		deleteButton.setEnabled(!status);
 		editButton.setText(status ? "    Сохранить     " : "Редактировать");
