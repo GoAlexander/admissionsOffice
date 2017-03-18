@@ -1043,13 +1043,13 @@ public class ModelDBConnection {
 			ResultSetMetaData rsmd = rset.getMetaData();
 			int numberOfColumns = rsmd.getColumnCount();
 
-			String[] result = new String[numberOfColumns];
-			result[0] = aid;
+			educationInfo = new String[numberOfColumns];
+			educationInfo[0] = aid;
 
 			while (rset.next()) {
 				for (int i = 0; i < numberOfColumns; i++) {
 					if (rset.getObject(i + 1) != null)
-						result[i] = rset.getObject(i + 1).toString();
+						educationInfo[i] = rset.getObject(i + 1).toString();
 				}
 			}
 
