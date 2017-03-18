@@ -246,7 +246,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 				((JComboBox)educFormPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[3]) - 1);
 				((JComboBox)departmentPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[4]) - 1);
 				comboCompetGroupType.setSelectedIndex(Integer.valueOf(values[5]) - 1);
-				((JComboBox)orgPanel.getComponent(1)).setSelectedIndex(Integer.valueOf(values[6]) - 1);
+				((JComboBox)orgPanel.getComponent(1)).setSelectedIndex(values[6] != null ? (Integer.valueOf(values[6]) - 1) : -1);
 				comboStandardType.setSelectedIndex(Integer.valueOf(values[7]) - 1);
 
 				if (values[10] != null) {
@@ -271,12 +271,12 @@ public class AddNewCompetitiveGroup extends JFrame{
 		values[3] = forDocs ? ((JComboBox)educFormPanel.getComponent(1)).getSelectedItem().toString() : String.valueOf(((JComboBox)educFormPanel.getComponent(1)).getSelectedIndex() + 1);
 		values[4] = forDocs ? ((JComboBox)departmentPanel.getComponent(1)).getSelectedItem().toString() : String.valueOf(((JComboBox)departmentPanel.getComponent(1)).getSelectedIndex() + 1);
 		values[5] = forDocs ? comboCompetGroupType.getSelectedItem().toString() : String.valueOf(comboCompetGroupType.getSelectedIndex() + 1);
-		values[6] = forDocs ? ((JComboBox)orgPanel.getComponent(1)).getSelectedItem().toString() : String.valueOf(((JComboBox)orgPanel.getComponent(1)).getSelectedIndex() + 1);
+		values[6] = forDocs ? ((JComboBox)orgPanel.getComponent(1)).getSelectedItem().toString() : (((JComboBox)orgPanel.getComponent(1)).getSelectedIndex() > -1 ? String.valueOf(((JComboBox)orgPanel.getComponent(1)).getSelectedIndex() + 1) : null);
 		values[7] = forDocs ? comboStandardType.getSelectedItem().toString() : String.valueOf(comboStandardType.getSelectedIndex() + 1);
-		values[8] = "0";
-		values[9] = "0";
+		values[8] = null;
+		values[9] = null;
 		values[10] = originalBox.isSelected() ? new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString() : null;
-		values[11] = "0";
+		values[11] = null;
 
 		return values;
 	}

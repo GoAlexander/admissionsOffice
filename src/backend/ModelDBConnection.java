@@ -1020,6 +1020,7 @@ public class ModelDBConnection {
 				abiturientAddressInfo[i] = data[i - 1];
 
 			ModelDBConnection.updateElementInTableById("AbiturientAddress", abiturientAddressInfo);
+			query = query.replaceAll("'null'", "null");
 			System.out.println(query);
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);

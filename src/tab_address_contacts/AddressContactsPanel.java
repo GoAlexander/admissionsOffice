@@ -177,17 +177,18 @@ public class AddressContactsPanel extends JPanel {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
 
 	private ArrayList<Integer> checkData(String[] values) {
 		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
-		if (!values[2].isEmpty() && !values[2].matches("^[0-9]+$"))
+		if (values[2] != null && !values[2].matches("^[0-9]+$"))
 			mistakesIndices.add(2);
-		if (!values[4].isEmpty() && !values[4].matches("\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}"))
+		if (values[4] != null && !values[4].matches("\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}"))
 			mistakesIndices.add(4);
-		if (!values[5].isEmpty() && !values[5].matches("^[0-9()+-; ]+$"))
+		if (values[5] != null && !values[5].matches("^[0-9()+-; ]+$"))
 			mistakesIndices.add(5);
 		return mistakesIndices;
 	}
@@ -209,10 +210,10 @@ public class AddressContactsPanel extends JPanel {
 		String[] values = new String[6];
 		values[0] = forDocs ? (comboRegionType.getSelectedItem()!= null ? comboRegionType.getSelectedItem().toString() : null) : String.valueOf(comboRegionType.getSelectedIndex() + 1);
 		values[1] = forDocs ? (comboPunktType.getSelectedItem()!= null ? comboPunktType.getSelectedItem().toString() : null) : String.valueOf(comboPunktType.getSelectedIndex() + 1);
-		values[2] = textIndex.getText();
-		values[3] = textAdressLiving.getText();
-		values[4] = textEmail.getText();
-		values[5] = textPhone.getText();
+		values[2] = (!textIndex.getText().equals("") ? textIndex.getText() : null);
+		values[3] = (!textAdressLiving.getText().equals("") ? textAdressLiving.getText() : null);
+		values[4] = (!textEmail.getText().equals("") ? textEmail.getText() : null);
+		values[5] = (!textPhone.getText().equals("") ? textPhone.getText() : null);
 
 		return values;
 	}
