@@ -192,12 +192,19 @@ alter procedure getAbiturientAddressAndContactsByID(@aid varchar(max))
 as
 begin
 	select aid_abiturient, id_region, id_localityType, indexAddress, factAddress, email, phoneNumbers
-				from Abiturient, AbiturientAddress  where Abiturient.aid = AbiturientAddress.aid_abiturient
+				from Abiturient, AbiturientAddress where Abiturient.aid = AbiturientAddress.aid_abiturient
 				and aid_abiturient = @aid
 	return
 end;
 go
 
+alter procedure getAbiturientEducationByID(@aid varchar(max), @nameTable varchar(max))
+as
+begin
+	select aid_abiturient, diplomaSeries, diplomaNumber, diplomaSpeciality, instituteName, graduationYear
+				from @nameTable where aid_abiturient = @aid
+end;
+go
 
 
 alter procedure getFreeNumberInGroup(@id_entranceTest varchar(max), @testGroup varchar(max))
