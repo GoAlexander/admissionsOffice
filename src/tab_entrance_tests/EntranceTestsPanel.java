@@ -102,31 +102,23 @@ public class EntranceTestsPanel extends JPanel {
 			Object[] tmpdata;
 
 			String[][] data_new = new String[data.size()][10];
-			// , data_old =
-			// ModelDBConnection.getAllEntranceTestsResultsByAbiturientId(currentAbit,
-			// true);
-
-			// int data_old_length = data_old == null ? 0 : data_old.length;
 
 			for (int i = 0; i < data.size(); i++) {
 				tmpdata = data.elementAt(i).toArray();
 				data_new[i][0] = currentAbit;
 				data_new[i][1] = "1";
 				for (int j = 0; !tmpdata[0].toString().equals(nameEntranceTest[j]); j++, data_new[i][1] = String
-						.valueOf(j + 1))
-					;
+						.valueOf(j + 1));
 				if (tmpdata[1] != null) {
 					data_new[i][2] = tmpdata[1].toString();
 					data_new[i][3] = String
 							.valueOf(ModelDBConnection.getFreeNumberInGroupByExam(data_new[i][1], data_new[i][2]));
-					System.out.println(data_new[i][3]);
 				}
 
 				if (tmpdata[2] != null) {
 					data_new[i][4] = "1";
 					for (int j = 0; !tmpdata[2].toString().equals(blockEntranceTest[j]); j++, data_new[i][4] = String
-							.valueOf(j + 1))
-						;
+							.valueOf(j + 1));
 				}
 				if (tmpdata[3] != null)
 					data_new[i][5] = tmpdata[3].toString();
@@ -142,13 +134,13 @@ public class EntranceTestsPanel extends JPanel {
 			ArrayList<Integer> mistakesIndices = checkData(data_new);
 			if (mistakesIndices.contains(0))
 				MessageProcessing.displayErrorMessage(null, 14);
-			if (mistakesIndices.contains(2))
+			else if (mistakesIndices.contains(2))
 				MessageProcessing.displayErrorMessage(null, 12);
-			if (mistakesIndices.contains(4))
+			else if (mistakesIndices.contains(4))
 				MessageProcessing.displayErrorMessage(null, 10);
-			if (mistakesIndices.contains(5))
+			else if (mistakesIndices.contains(5))
 				MessageProcessing.displayErrorMessage(null, 13);
-			if (mistakesIndices.contains(6))
+			else if (mistakesIndices.contains(6))
 				MessageProcessing.displayErrorMessage(null, 11);
 
 			if (mistakesIndices.isEmpty()) {
@@ -168,17 +160,23 @@ public class EntranceTestsPanel extends JPanel {
 
 	private ArrayList<Integer> checkData(String[][] data) {
 		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
-		if (data.length > 1 && data[0][1].equals(data[1][1]))
+
+		ArrayList<String> uniqueEntranceResults = new ArrayList<String>();
+		for (int i = 0; i < data.length; i++)
+			if (!uniqueEntranceResults.contains(data[i][1]))
+				uniqueEntranceResults.add(data[i][1]);
+
+		if (data.length != uniqueEntranceResults.size())
 			mistakesIndices.add(0);
 		for (int i = 0; i < data.length; i++) {
 			if (data[i][2] == null)
-				mistakesIndices.add(2);
+				//mistakesIndices.add(2);
 			if (data[i][4] == null)
-				mistakesIndices.add(4);
+				//mistakesIndices.add(4);
 			if (data[i][5] != null && (!data[i][5].matches("^[0-9.]+$")
 					|| !data[i][5].matches("(0?[1-9]|[12][0-9]|3[01]).(0?[1-9]|1[012]).((19|20)\\d\\d)")))
 				mistakesIndices.add(5);
-			if (data[i][6] == null || !data[i][6].matches("^[0-9]+$"))
+			if (/*data[i][6] == null || */data[i][6] != null && !data[i][6].matches("^[0-9]+$"))
 				mistakesIndices.add(6);
 		}
 		return mistakesIndices;
