@@ -54,6 +54,7 @@ public class EditAdmissionPlan extends JFrame {
 		dataTable.setMaximumSize(new Dimension(100, 100));
 		dataTable.setRowHeight(25);
 		dataTable.getColumnModel().getColumn(columnNames.length - 1).setMaxWidth(70);
+		dataTable.setEnabled(false);
 		mainPanel.add(scrPane, BorderLayout.CENTER);
 
 		currentTM.setDataVector(ModelDBConnection.getAdmissionPlan(), columnNames);

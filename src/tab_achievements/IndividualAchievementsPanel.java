@@ -153,6 +153,9 @@ public class IndividualAchievementsPanel extends JPanel{
 
 	private void saveAchievmentButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
+			if (indAchivTable.isEditing())
+				indAchivTable.getCellEditor().stopCellEditing();
+
 			Vector<Vector<Object>> data = individAchivTM.getDataVector();
 			Object[] tmpdata;
 

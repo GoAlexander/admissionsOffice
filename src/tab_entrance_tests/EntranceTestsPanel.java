@@ -98,6 +98,9 @@ public class EntranceTestsPanel extends JPanel {
 
 	private void saveTestResultButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
+			if (entranceTestTable.isEditing())
+				entranceTestTable.getCellEditor().stopCellEditing();
+
 			Vector<Vector<Object>> data = entranceTestTM.getDataVector();
 			Object[] tmpdata;
 
