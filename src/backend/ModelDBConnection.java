@@ -1016,33 +1016,37 @@ public class ModelDBConnection {
 	}
 
 	public static String[] getAbiturientEducationByID(String aid, String nameTable) throws SQLException {
-		String query = "select aid_abiturient, diplomaSeries, diplomaNumber, diplomaSpeciality, instituteName, graduationYear "
-				+ "from " + nameTable + " where aid_abiturient = " + aid + ";";
-
-		String[] educationInfo = new String[6];
-		educationInfo[0] = aid;
-
-		if (initConnection()) {
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
+		try {
+			cstmt = con.prepareCall("{call getAbiturientEducationByID(?, ?)}", 1004, 1007);
+			cstmt.setString(1, aid);
+			cstmt.setString(2, nameTable);
+			rset = cstmt.executeQuery();
 
 			ResultSetMetaData rsmd = rset.getMetaData();
 			int numberOfColumns = rsmd.getColumnCount();
 
-			educationInfo = new String[numberOfColumns];
-			educationInfo[0] = aid;
+			String[] result = new String[numberOfColumns];
+			result[0] = aid;
 
 			while (rset.next()) {
 				for (int i = 0; i < numberOfColumns; i++) {
 					if (rset.getObject(i + 1) != null)
-						educationInfo[i] = rset.getObject(i + 1).toString();
+						if (rset.getObject(i + 1) instanceof Date) {
+							SimpleDateFormat format = new SimpleDateFormat();
+							format.applyPattern("yyyy-MM-dd");
+							Date docDate = format.parse(rset.getObject(i + 1).toString());
+							format.applyPattern("dd.MM.yyyy");
+							result[i] = format.format(docDate);
+						} else
+							result[i] = rset.getObject(i + 1).toString();
 				}
 			}
-
-			stmt.close();
+			cstmt.close();
 			rset.close();
+			return result;
+		} catch (Exception e) {
+			return null;
 		}
-		return educationInfo;
 	}
 
 	public static String[] getElementFromTableByIDs(String table, String[] data) {
