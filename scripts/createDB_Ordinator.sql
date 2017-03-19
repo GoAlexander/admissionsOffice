@@ -329,6 +329,7 @@ go
 
 --План приема
 create table AdmissionPlan (
+	course int,				--направление
 	specialtyCode int,		--код специальности
 	educationForm int,		--форма обучения
 	competitiveGroup int,	--конкурсная группа
@@ -337,6 +338,7 @@ create table AdmissionPlan (
 	placeCount int,			--количество мест
 	
 	--Внешние ключи
+	foreign key (course) references Course(id) on update cascade,
 	foreign key (specialtyCode) references Speciality(id) on update cascade,
 	foreign key (educationForm) references EducationForm(id) on update cascade,
 	foreign key (competitiveGroup) references CompetitiveGroup(id) on update cascade,

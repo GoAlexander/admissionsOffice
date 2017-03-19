@@ -15,13 +15,26 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
+import backend.ModelDBConnection;
+
 public class OutputWord {
-	public static void writeStatement(String[][] allCompetitiveGroups, String[] generalInfo, String[] passportData, String[] addressContacts, String[] highEducation, String needSpecialConditions, String[][] indAchievments) throws Exception {
+	private static String currentPath = new File("").getAbsolutePath();
+
+	public static void writeStatement(String[][] allCompetitiveGroups, String[] generalInfo, String[] passportData, String[] addressContacts, String[] highEducation, String[] postGraduateEducation, String needSpecialConditions, String[][] indAchievments) throws Exception {
 		XWPFDocument doc_out = new XWPFDocument();
+
+		String moduleType = ModelDBConnection.getDBName().equals("Aspirant") ? "аспирантура" : "ординатура";
+		String hasPublications = "Нет";
+		if (ModelDBConnection.getDBName().equals("Aspirant"))
+			for (int i = 0; i < (indAchievments != null ? indAchievments.length : 0); i++)
+				if (indAchievments[i][1].equals("Научные публикации") || indAchievments[i][1].equals("Научные труды")) {
+					hasPublications = "Да";
+					break;
+				}
 
 		for (int i = 0; i < allCompetitiveGroups.length; i++)
 		{
-			XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Заявление_ординатура.dotx"));
+			XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Заявление_" + moduleType + ".dotx"));
 			boolean start_replace = false;
 			for (XWPFParagraph p : doc.getParagraphs()) {
 				for (XWPFRun r : p.getRuns()) {
@@ -129,8 +142,32 @@ public class OutputWord {
 								text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
 								r.setText(text, 0);
 								break;
+							case "Дипл_серия_интерн":
+								text = r.getText(0).replace("Дипл_серия_интерн", postGraduateEducation[1] != null ? postGraduateEducation[1] : "");
+								r.setText(text, 0);
+								break;
+							case "Дипл_номер_интерн":
+								text = r.getText(0).replace("Дипл_номер_интерн", postGraduateEducation[2] != null ? postGraduateEducation[2] : "");
+								r.setText(text, 0);
+								break;
+							case "Спец_интерн_дипл":
+								text = r.getText(0).replace("Спец_интерн_дипл", postGraduateEducation[3] != null ? postGraduateEducation[3] : "");
+								r.setText(text, 0);
+								break;
+							case "Название_интернатура":
+								text = r.getText(0).replace("Название_интернатура", postGraduateEducation[4] != null ? postGraduateEducation[4] : "");
+								r.setText(text, 0);
+								break;
+							case "Год_оконч_интерн":
+								text = r.getText(0).replace("Год_оконч_интерн", postGraduateEducation[5] != null ? postGraduateEducation[5] : "");
+								r.setText(text, 0);
+								break;
 							case "Спецусловия_испытаний":
 								text = r.getText(0).replace("Спецусловия_испытаний", needSpecialConditions);
+								r.setText(text, 0);
+								break;
+							case "Труды_и_др":
+								text = r.getText(0).replace("Труды_и_др", hasPublications);
 								r.setText(text, 0);
 								break;
 							case "Инд_достижения":
@@ -278,8 +315,32 @@ public class OutputWord {
 											text = r.getText(0).replace("Год_оконч_ВУЗа", highEducation[5] != null ? highEducation[5] : "");
 											r.setText(text, 0);
 											break;
+										case "Дипл_серия_интерн":
+											text = r.getText(0).replace("Дипл_серия_интерн", postGraduateEducation[1] != null ? postGraduateEducation[1] : "");
+											r.setText(text, 0);
+											break;
+										case "Дипл_номер_интерн":
+											text = r.getText(0).replace("Дипл_номер_интерн", postGraduateEducation[2] != null ? postGraduateEducation[2] : "");
+											r.setText(text, 0);
+											break;
+										case "Спец_интерн_дипл":
+											text = r.getText(0).replace("Спец_интерн_дипл", postGraduateEducation[3] != null ? postGraduateEducation[3] : "");
+											r.setText(text, 0);
+											break;
+										case "Название_интернатура":
+											text = r.getText(0).replace("Название_интернатура", postGraduateEducation[4] != null ? postGraduateEducation[4] : "");
+											r.setText(text, 0);
+											break;
+										case "Год_оконч_интерн":
+											text = r.getText(0).replace("Год_оконч_интерн", postGraduateEducation[5] != null ? postGraduateEducation[5] : "");
+											r.setText(text, 0);
+											break;
 										case "Спецусловия_испытаний":
 											text = r.getText(0).replace("Спецусловия_испытаний", needSpecialConditions);
+											r.setText(text, 0);
+											break;
+										case "Труды_и_др":
+											text = r.getText(0).replace("Труды_и_др", hasPublications);
 											r.setText(text, 0);
 											break;
 										case "Инд_достижения":
@@ -325,7 +386,7 @@ public class OutputWord {
 			copyElements(doc, doc_out);
 		}
 
-		File file = new File(generalInfo[0] + "_statement.doc");
+		File file = new File(currentPath + "/files/" + generalInfo[0] + "_statement.doc");
 
 		if (file != null) {
 			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));
@@ -337,7 +398,7 @@ public class OutputWord {
 	}
 
 	public static void writeInventory(String[] generalInfo, String[] highEducation, String[] postGraduateEducation) throws Exception {
-		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Опись-расписка.dotx"));
+		XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Опись-расписка.dotx"));
 		boolean start_replace = false;
 		for (XWPFParagraph p : doc.getParagraphs()) {
 			for (XWPFRun r : p.getRuns()) {
@@ -479,7 +540,7 @@ public class OutputWord {
 			}
 		}
 
-		File file = new File(generalInfo[0] + "_inventory.doc");
+		File file = new File(currentPath + "/files/" + generalInfo[0] + "_inventory.doc");
 
 		if (file != null) {
 			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));
@@ -490,16 +551,18 @@ public class OutputWord {
 		java.awt.Desktop.getDesktop().open(file);
 	}
 
-	public static void writeExams(String[] generalInfo, ArrayList<String> specialities, ArrayList<String> examDates) throws Exception {
+	public static void writeExams(String[] generalInfo, ArrayList<String> specialities, ArrayList<String> examNames, ArrayList<String> examDates) throws Exception {
 		XWPFDocument doc_out = new XWPFDocument();
+
+		String moduleType = ModelDBConnection.getDBName().equals("Aspirant") ? "аспирантура" : "ординатура";
 		int i = 0;
-		File theDir = new File("tmp_folder");
+		File theDir = new File(currentPath + "/tmp_folder");
 		theDir.mkdir();
 
 		for (String speciality : specialities)
-			for (String examDate : examDates)
+			for (String examName : examNames)
 			{
-				XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Лист_вступительных_испытаний.dotm"));
+				XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Лист_вступительных_" + moduleType +".dotm"));
 				boolean start_replace = false;
 
 				for (XWPFParagraph p : doc.getParagraphs()) {
@@ -529,7 +592,11 @@ public class OutputWord {
 									r.setText(text, 0);
 									break;
 								case "Дата_проведения_теста":
-									text = r.getText(0).replace("Дата_проведения_теста", examDate);
+									text = r.getText(0).replace("Дата_проведения_теста", examDates.get(examNames.indexOf(examName)));
+									r.setText(text, 0);
+									break;
+								case "Дисциплина":
+									text = r.getText(0).replace("Дисциплина", (!examName.equals("Специальная дисциплина") ? examName : ""));
 									r.setText(text, 0);
 									break;
 								case "}":
@@ -550,7 +617,6 @@ public class OutputWord {
 						for (XWPFTableCell cell : row.getTableCells()) {
 							for (XWPFParagraph p : cell.getParagraphs()) {
 								for (XWPFRun r : p.getRuns()) {
-									System.out.println(r.getText(0));
 									if (r.getText(0) != null) {
 										if(start_replace) {
 											String text;
@@ -576,7 +642,11 @@ public class OutputWord {
 												r.setText(text, 0);
 												break;
 											case "Дата_проведения_теста":
-												text = r.getText(0).replace("Дата_проведения_теста", examDate);
+												text = r.getText(0).replace("Дата_проведения_теста", examDates.get(examNames.indexOf(examName)));
+												r.setText(text, 0);
+												break;
+											case "Дисциплина":
+												text = r.getText(0).replace("Дисциплина", (!examName.equals("Специальная дисциплина") ? examName : ""));
 												r.setText(text, 0);
 												break;
 											case "}":
@@ -596,7 +666,6 @@ public class OutputWord {
 									for (XWPFTableCell cell1 : row1.getTableCells()) {
 										for (XWPFParagraph p1 : cell1.getParagraphs()) {
 											for (XWPFRun r1 : p1.getRuns()) {
-												System.out.println(r1.getText(0));
 												if (r1.getText(0) != null) {
 													if(start_replace) {
 														String text;
@@ -622,7 +691,11 @@ public class OutputWord {
 															r1.setText(text, 0);
 															break;
 														case "Дата_проведения_теста":
-															text = r1.getText(0).replace("Дата_проведения_теста", examDate);
+															text = r1.getText(0).replace("Дата_проведения_теста", examDates.get(examNames.indexOf(examName)));
+															r1.setText(text, 0);
+															break;
+														case "Дисциплина":
+															text = r1.getText(0).replace("Дисциплина", (!examName.equals("Специальная дисциплина") ? examName : ""));
 															r1.setText(text, 0);
 															break;
 														case "}":
@@ -644,7 +717,7 @@ public class OutputWord {
 						}
 					}
 				}
-				File file = new File(theDir.getAbsolutePath() + "\\" + generalInfo[0] + "_exams" + (i == 0 ? "" : i) + ".doc");
+				File file = new File(theDir.getAbsolutePath() + "/" + generalInfo[0] + "_exams" + (i == 0 ? "" : i) + ".doc");
 				i++;
 
 				if (file != null) {
@@ -656,12 +729,15 @@ public class OutputWord {
 			}
 
 		if (i > 0)
-			Runtime.getRuntime().exec("cmd /c start script.vbs " + theDir.getAbsolutePath().substring(0, theDir.getAbsolutePath().lastIndexOf("tmp_folder")) + " " + generalInfo[0] + "_exams.doc");
+			Runtime.getRuntime().exec("cmd /c start script.vbs " + currentPath + "\\ " + generalInfo[0] + "_exams.doc");
 	}
 
 	public static void writeTitul(String[] generalInfo, String[][] allCompetitiveGroups) throws Exception {
-		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Титульный_лист_дела.dotx"));
+		XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Титульный_лист_дела.dotx"));
+
+		String program = ModelDBConnection.getDBName().equals("Aspirant") ? "подготовка научно-педагогических кадров в аспирантуре" : "ординатура";
 		boolean start_replace = false;
+
 		for (XWPFParagraph p : doc.getParagraphs()) {
 			for (XWPFRun r : p.getRuns()) {
 				if (r.getText(0) != null) {
@@ -690,6 +766,10 @@ public class OutputWord {
 							break;
 						case "Дата_зап":
 							text = r.getText(0).replace("Дата_зап", generalInfo[5] != null ? generalInfo[5] : "");
+							r.setText(text, 0);
+							break;
+						case "Программа":
+							text = r.getText(0).replace("Программа", program != null ? program : "");
 							r.setText(text, 0);
 							break;
 						case "Направление_подготовки":
@@ -750,6 +830,10 @@ public class OutputWord {
 										text = r.getText(0).replace("Дата_зап", generalInfo[5] != null ? generalInfo[5] : "");
 										r.setText(text, 0);
 										break;
+									case "Программа":
+										text = r.getText(0).replace("Программа", program != null ? program : "");
+										r.setText(text, 0);
+										break;
 									case "Направление_подготовки":
 										text = r.getText(0).replace("Направление_подготовки", allCompetitiveGroups[0][0] != null ? allCompetitiveGroups[0][0] : "");
 										r.setText(text, 0);
@@ -778,7 +862,7 @@ public class OutputWord {
 			}
 		}
 
-		File file = new File(generalInfo[0] + "_titul.doc");
+		File file = new File(currentPath + "/files/" + generalInfo[0] + "_titul.doc");
 
 		if (file != null) {
 			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));

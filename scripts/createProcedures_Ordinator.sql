@@ -239,13 +239,14 @@ go
 alter procedure getAdmissionPlan
 as
 begin
-	select Speciality.name, EducationForm.name, CompetitiveGroup.name, TargetOrganisation.name, EducationStandard.name, AdmissionPlan.placeCount 
-		from ((((AdmissionPlan inner join Speciality on (specialtyCode = Speciality.id)) inner join 
-				EducationForm on (educationForm = EducationForm.id)) inner join 
-				CompetitiveGroup on (competitiveGroup = CompetitiveGroup.id)) inner join 
+	select Course.name, Speciality.name, EducationForm.name, CompetitiveGroup.name, TargetOrganisation.name, EducationStandard.name, AdmissionPlan.placeCount 
+		from (((((AdmissionPlan left outer join  Speciality on (specialtyCode = Speciality.id)) left outer join 
+				EducationForm on (educationForm = EducationForm.id)) left outer join 
+				CompetitiveGroup on (competitiveGroup = CompetitiveGroup.id)) left outer join 
 				EducationStandard on (educationStandard = EducationStandard.id)) left outer join 
-				TargetOrganisation on (targetOrganisation = TargetOrganisation.id)
-			order by specialtyCode, educationForm, competitiveGroup, targetOrganisation, educationStandard
+				TargetOrganisation on (targetOrganisation = TargetOrganisation.id)) left outer join 
+				Course on (course = Course.id)
+			order by course, specialtyCode, educationForm, competitiveGroup, targetOrganisation, educationStandard
 	return
 end;
 go

@@ -159,10 +159,10 @@ public class WatchConfirmingDoc extends JFrame {
 		data[0] = currentAbit;
 		data[1] = currentAchievmentId;
 		data[2] = score;
-		data[3] = nameDocText.getText();
-		data[4] = seriaText.getText();
-		data[5] = numText.getText();
-		data[6] = textIssuedBy.getText();
+		data[3] = !nameDocText.getText().equals("") ? nameDocText.getText() : null;
+		data[4] = !seriaText.getText().equals("") ? seriaText.getText() : null;
+		data[5] = !numText.getText().equals("") ? numText.getText() : null;
+		data[6] = !textIssuedBy.getText().equals("") ? textIssuedBy.getText() : null;
 		data[7] = dateText.getText().equals("__.__.____") ? null : dateText.getText();
 
 		return data;

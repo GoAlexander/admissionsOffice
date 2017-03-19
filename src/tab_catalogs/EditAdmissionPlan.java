@@ -30,7 +30,7 @@ public class EditAdmissionPlan extends JFrame {
 	private JTable dataTable;
 	private GUITableModel currentTM = new GUITableModel();
 
-	private String[] arrSpeciality, arrFormEduc, arrCompetGroup, arrOrg, arrStandard, columnNames = { "Специальность",
+	private String[] arrCouse, arrSpeciality, arrFormEduc, arrCompetGroup, arrOrg, arrStandard, columnNames = { "Направление", "Специальность",
 			"Форма обучения", "Конкурсная группа", "Целевая организация", "Стандарт", "План" };
 
 	private JButton addBtn, editBtn, saveBtn, deleteBtn;
@@ -54,24 +54,28 @@ public class EditAdmissionPlan extends JFrame {
 		dataTable.setMaximumSize(new Dimension(100, 100));
 		dataTable.setRowHeight(25);
 		dataTable.getColumnModel().getColumn(columnNames.length - 1).setMaxWidth(70);
+		dataTable.setEnabled(false);
 		mainPanel.add(scrPane, BorderLayout.CENTER);
 
 		currentTM.setDataVector(ModelDBConnection.getAdmissionPlan(), columnNames);
 
+		arrCouse = ModelDBConnection.getNamesFromTableOrderedById("Course");
+		createCheckboxTable(dataTable, 0, arrCouse);
+		
 		arrSpeciality = ModelDBConnection.getNamesFromTableOrderedById("Speciality");
-		createCheckboxTable(dataTable, 0, arrSpeciality);
+		createCheckboxTable(dataTable, 1, arrSpeciality);
 
 		arrFormEduc = ModelDBConnection.getNamesFromTableOrderedById("EducationForm");
-		createCheckboxTable(dataTable, 1, arrFormEduc);
+		createCheckboxTable(dataTable, 2, arrFormEduc);
 
 		arrCompetGroup = ModelDBConnection.getNamesFromTableOrderedById("CompetitiveGroup");
-		createCheckboxTable(dataTable, 2, arrCompetGroup);
+		createCheckboxTable(dataTable, 3, arrCompetGroup);
 
 		arrOrg = ModelDBConnection.getNamesFromTableOrderedById("TargetOrganisation");
-		createCheckboxTable(dataTable, 3, arrOrg);
+		createCheckboxTable(dataTable, 4, arrOrg);
 
 		arrStandard = ModelDBConnection.getNamesFromTableOrderedById("EducationStandard");
-		createCheckboxTable(dataTable, 4, arrStandard);
+		createCheckboxTable(dataTable, 5, arrStandard);
 
 		addBtn = new JButton("Добавить");
 		editBtn = new JButton("Редактировать");
@@ -147,27 +151,31 @@ public class EditAdmissionPlan extends JFrame {
 				tmpdata = data.elementAt(i).toArray();
 				if(tmpdata[0] != null) {
 					rowData[0] = "1";
-					for(int j = 0; !tmpdata[0].toString().equals(arrSpeciality[j]); j++, rowData[0] = String.valueOf(j+1));
+					for(int j = 0; !tmpdata[0].toString().equals(arrCouse[j]); j++, rowData[0] = String.valueOf(j+1));
 				}
 				if(tmpdata[1] != null) {
 					rowData[1] = "1";
-					for(int j = 0; !tmpdata[1].toString().equals(arrFormEduc[j]); j++, rowData[1] = String.valueOf(j+1));
+					for(int j = 0; !tmpdata[1].toString().equals(arrSpeciality[j]); j++, rowData[1] = String.valueOf(j+1));
 				}
 				if(tmpdata[2] != null) {
 					rowData[2] = "1";
-					for(int j = 0; !tmpdata[2].toString().equals(arrCompetGroup[j]); j++, rowData[2] = String.valueOf(j+1));
+					for(int j = 0; !tmpdata[2].toString().equals(arrFormEduc[j]); j++, rowData[2] = String.valueOf(j+1));
 				}
 				if(tmpdata[3] != null) {
 					rowData[3] = "1";
-					for(int j = 0; !tmpdata[3].toString().equals(arrOrg[j]); j++, rowData[3] = String.valueOf(j+1));
+					for(int j = 0; !tmpdata[3].toString().equals(arrCompetGroup[j]); j++, rowData[3] = String.valueOf(j+1));
 				}
 				if(tmpdata[4] != null) {
 					rowData[4] = "1";
-					for(int j = 0; !tmpdata[4].toString().equals(arrStandard[j]); j++, rowData[4] = String.valueOf(j+1));
+					for(int j = 0; !tmpdata[4].toString().equals(arrOrg[j]); j++, rowData[4] = String.valueOf(j+1));
 				}
-				if(tmpdata[5] != null) rowData[5] = tmpdata[5].toString();
+				if(tmpdata[5] != null) {
+					rowData[5] = "1";
+					for(int j = 0; !tmpdata[5].toString().equals(arrStandard[j]); j++, rowData[5] = String.valueOf(j+1));
+				}
+				if(tmpdata[6] != null) rowData[6] = tmpdata[6].toString();
 
-				ModelDBConnection.updateElementInTableByExpression("AdmissionPlan", rowData, 5);
+				ModelDBConnection.updateElementInTableByExpression("AdmissionPlan", rowData, 6);
 			}
 			MessageProcessing.displaySuccessMessage(this, 4);
 		} catch (SQLException e1) {

@@ -213,7 +213,7 @@ public class GeneralInfoInput extends JFrame {
 					String[] passportData = ((PassportPanel)passportPanel).getValues(true);
 					String[] addressContacts = ((AddressContactsPanel)contPanel).getValues(true);
 					String[] highEducation = ((EducationPanel)educPanel).getValues(0);
-
+					String[] postGraduateEducation = ModelDBConnection.getDBName().equals("Ordinator") ? null : ((EducationPanel)educPanel).getValues(1);
 					String needSpecialConditions = ((EntranceTestsPanel)entranceTestpPanel).getNeedSpecialConditions();
 					String[][] indAchievments = ((IndividualAchievementsPanel)indAchivPanel).getValues(true);
 					String[][] allCompetitiveGroups = ((CompetitiveGroupsPanel)compGroupPanel).getAllCompetitiveGroups();
@@ -221,7 +221,7 @@ public class GeneralInfoInput extends JFrame {
 					if (allCompetitiveGroups.length == 0)
 						MessageProcessing.displayErrorMessage(null, 5);
 					else
-						OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, needSpecialConditions, indAchievments);
+						OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, postGraduateEducation, needSpecialConditions, indAchievments);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -263,7 +263,7 @@ public class GeneralInfoInput extends JFrame {
 					else if (((EntranceTestsPanel)entranceTestpPanel).getExamsDates().size() == 0)
 						MessageProcessing.displayErrorMessage(null, 6);
 					else
-						OutputWord.writeExams(generalInfo, ((CompetitiveGroupsPanel)compGroupPanel).getSpecialities(), ((EntranceTestsPanel)entranceTestpPanel).getExamsDates());
+						OutputWord.writeExams(generalInfo, ((CompetitiveGroupsPanel)compGroupPanel).getSpecialities(), ((EntranceTestsPanel)entranceTestpPanel).getExamsNames(), ((EntranceTestsPanel)entranceTestpPanel).getExamsDates());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

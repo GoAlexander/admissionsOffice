@@ -8,7 +8,7 @@ public abstract class MessageProcessing {
 	public static void displaySuccessMessage(Component parent, int messageType) {
 		String message = null, titleMessage = null;
 
-		switch(messageType) {
+		switch (messageType) {
 		case 1:
 			titleMessage = "Результат добавления абитуриента";
 			message = "Абитуриент успешно добавлен!";
@@ -41,25 +41,23 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат редактирования информации по образованию";
 			message = "Данные успешно сохранены!";
 			break;
+		case 9:
+			titleMessage = "Результат редактирования вступительных испытаний";
+			message = "Данные успешно сохранены!";
+			break;
 		}
 
-        JOptionPane.showMessageDialog(parent,
-        		message,
-        		titleMessage, 
-                JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(parent, message, titleMessage, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void displayErrorMessage(Component parent, Exception e) {
-        JOptionPane.showMessageDialog(parent,
-        		e.toString(),
-        		"Ошибка", 
-                JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(parent, e.toString(), "Ошибка", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void displayErrorMessage(Component parent, int messageType) {
 		String message = null, titleMessage = null;
 
-		switch(messageType) {
+		switch (messageType) {
 		case 1:
 			titleMessage = "Результат добавления абитуриента";
 			message = "Абитуриент не может быть добавлен!";
@@ -96,30 +94,44 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат проверки данных";
 			message = "Некорректный формат данных! Исправьте поля, выделенные красным";
 			break;
+		case 10:
+			titleMessage = "Результат проверки данных";
+			message = "Не указан блок испытаний!";
+			break;
+		case 11:
+			titleMessage = "Результат проверки данных";
+			message = "Не указано количество набранных баллов!";
+			break;
+		case 12:
+			titleMessage = "Результат проверки данных";
+			message = "Группа не указана либо указана не верно!";
+			break;
+		case 13:
+			titleMessage = "Результат проверки данных";
+			message = "Неверно введена дата! Правильный формат: dd.mm.yyyy";
+			break;
+		case 14:
+			titleMessage = "Результат проверки данных";
+			message = "Невозможно сохранить несколько одинаковых типов вступительных испытаний!";
+			break;
 		default:
 			titleMessage = "Неизвестная ошибка";
 			message = "Произошла неизвестная ошибка. Обратитесь к администратору!";
 		}
 
-        JOptionPane.showMessageDialog(parent,
-        		message,
-        		titleMessage, 
-                JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(parent, message, titleMessage, JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static int displayDialogMessage(Component parent, int messageType) {
 		String message = null, titleMessage = null;
 
-		switch(messageType) {
+		switch (messageType) {
 		case 1:
 			titleMessage = "Удаление абитуриента";
 			message = "Вы действительно хотите удалить текущего абитуриента?";
 			break;
 		}
 
-        return JOptionPane.showConfirmDialog(parent,
-        		message,
-        		titleMessage, 
-        		JOptionPane.YES_NO_OPTION);
+		return JOptionPane.showConfirmDialog(parent, message, titleMessage, JOptionPane.YES_NO_OPTION);
 	}
 }
