@@ -962,40 +962,36 @@ public class ModelDBConnection {
 	}
 
 	public static String[] getAbiturientAddressAndContactsByID(String aid) throws SQLException {
-		String query = "select aid_abiturient, id_region, id_localityType, indexAddress, factAddress, email, phoneNumbers "
-				+ "from Abiturient, AbiturientAddress  where " + "Abiturient.aid = AbiturientAddress.aid_abiturient "
-				+ "and aid_abiturient = " + aid + ";";
-		String[] abiturientAddressAndContactsInfo = new String[7];
-		for (int i = 0; i < abiturientAddressAndContactsInfo.length; i++)
-			abiturientAddressAndContactsInfo[i] = "";
-		abiturientAddressAndContactsInfo[0] = aid;
+		try {
+			cstmt = con.prepareCall("{call getAbiturientAddressAndContactsByID(?)}", 1004, 1007);
+			cstmt.setString(1, aid);
+			rset = cstmt.executeQuery();
 
-		if (initConnection()) {
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(query);
+			ResultSetMetaData rsmd = rset.getMetaData();
+			int numberOfColumns = rsmd.getColumnCount();
+
+			String[] result = new String[numberOfColumns];
+			result[0] = aid;
 
 			while (rset.next()) {
-				abiturientAddressAndContactsInfo = new String[7];
-				abiturientAddressAndContactsInfo[0] = String.valueOf(rset.getInt(1));
-				abiturientAddressAndContactsInfo[1] = String.valueOf(rset.getInt(2));
-				abiturientAddressAndContactsInfo[2] = String.valueOf(rset.getInt(3));
-				abiturientAddressAndContactsInfo[3] = rset.getString(4);
-				abiturientAddressAndContactsInfo[4] = rset.getString(5);
-				abiturientAddressAndContactsInfo[5] = rset.getString(6);
-				abiturientAddressAndContactsInfo[6] = rset.getString(7);
-
-				if (DEBUG) {
-					System.out.println(abiturientAddressAndContactsInfo[0] + " " + abiturientAddressAndContactsInfo[1]
-							+ " " + abiturientAddressAndContactsInfo[2] + " " + abiturientAddressAndContactsInfo[3]
-							+ " " + abiturientAddressAndContactsInfo[4] + " " + abiturientAddressAndContactsInfo[5]
-							+ " " + abiturientAddressAndContactsInfo[6]);
+				for (int i = 0; i < numberOfColumns; i++) {
+					if (rset.getObject(i + 1) != null)
+						if (rset.getObject(i + 1) instanceof Date) {
+							SimpleDateFormat format = new SimpleDateFormat();
+							format.applyPattern("yyyy-MM-dd");
+							Date docDate = format.parse(rset.getObject(i + 1).toString());
+							format.applyPattern("dd.MM.yyyy");
+							result[i] = format.format(docDate);
+						} else
+							result[i] = rset.getObject(i + 1).toString();
 				}
 			}
-
-			stmt.close();
+			cstmt.close();
 			rset.close();
+			return result;
+		} catch (Exception e) {
+			return null;
 		}
-		return abiturientAddressAndContactsInfo;
 	}
 
 	public static void updateAbiturientAddressAndContactsByID(String aid, String[] data) throws SQLException {
