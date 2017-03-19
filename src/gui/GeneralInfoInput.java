@@ -830,6 +830,12 @@ public class GeneralInfoInput extends JFrame {
 					GeneralInfoInput window = new GeneralInfoInput();
 					window.setVisible(true);
 				} catch (Exception e) {
+				    String message =  "Невозможно запустить программу.\n" + 
+				    		"Проблемы с подключением к базе данных.\n" +
+				    		"Чтобы узнать подробности ошибки запустите приложение\n" +
+				    		"через консоль.";
+				    JOptionPane.showMessageDialog(new JFrame(), message, "Ошибка",
+				        JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
