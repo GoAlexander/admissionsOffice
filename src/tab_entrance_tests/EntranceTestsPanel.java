@@ -225,6 +225,22 @@ public class EntranceTestsPanel extends JPanel {
 		return examsDates;
 	}
 
+	public ArrayList<String> getExamsNames() {
+		ArrayList<String> examsNames = new ArrayList<String>();
+		Vector<Vector<Object>> data = entranceTestTM.getDataVector();
+
+		for (int i = 0; i < data.size(); i++) {
+			if (data.elementAt(i).toArray()[0] != null)
+				examsNames.add(data.elementAt(i).toArray()[0].toString());
+			else
+				examsNames.add("");
+		}
+
+		for (String examsName : examsNames)
+			System.out.println(examsName);
+		return examsNames;
+	}
+
 	private void createCheckboxTable(JTable table, int numColumn, String[] dataCheck) {
 		TableColumn tmpColumn = table.getColumnModel().getColumn(numColumn);
 		JComboBox<String> comboBox = new JComboBox<String>(dataCheck);

@@ -551,16 +551,18 @@ public class OutputWord {
 		java.awt.Desktop.getDesktop().open(file);
 	}
 
-	public static void writeExams(String[] generalInfo, ArrayList<String> specialities, ArrayList<String> examDates) throws Exception {
+	public static void writeExams(String[] generalInfo, ArrayList<String> specialities, ArrayList<String> examNames, ArrayList<String> examDates) throws Exception {
 		XWPFDocument doc_out = new XWPFDocument();
+
+		String moduleType = ModelDBConnection.getDBName().equals("Aspirant") ? "аспирантура" : "ординатура";
 		int i = 0;
 		File theDir = new File(currentPath + "/tmp_folder");
 		theDir.mkdir();
 
 		for (String speciality : specialities)
-			for (String examDate : examDates)
+			for (String examName : examNames)
 			{
-				XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Лист_вступительных_испытаний.dotm"));
+				XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Лист_вступительных_" + moduleType +".dotm"));
 				boolean start_replace = false;
 
 				for (XWPFParagraph p : doc.getParagraphs()) {
@@ -590,7 +592,11 @@ public class OutputWord {
 									r.setText(text, 0);
 									break;
 								case "Дата_проведения_теста":
-									text = r.getText(0).replace("Дата_проведения_теста", examDate);
+									text = r.getText(0).replace("Дата_проведения_теста", examDates.get(examNames.indexOf(examName)));
+									r.setText(text, 0);
+									break;
+								case "Дисциплина":
+									text = r.getText(0).replace("Дисциплина", (!examName.equals("Специальная дисциплина") ? examName : ""));
 									r.setText(text, 0);
 									break;
 								case "}":
@@ -611,7 +617,6 @@ public class OutputWord {
 						for (XWPFTableCell cell : row.getTableCells()) {
 							for (XWPFParagraph p : cell.getParagraphs()) {
 								for (XWPFRun r : p.getRuns()) {
-									System.out.println(r.getText(0));
 									if (r.getText(0) != null) {
 										if(start_replace) {
 											String text;
@@ -637,7 +642,11 @@ public class OutputWord {
 												r.setText(text, 0);
 												break;
 											case "Дата_проведения_теста":
-												text = r.getText(0).replace("Дата_проведения_теста", examDate);
+												text = r.getText(0).replace("Дата_проведения_теста", examDates.get(examNames.indexOf(examName)));
+												r.setText(text, 0);
+												break;
+											case "Дисциплина":
+												text = r.getText(0).replace("Дисциплина", (!examName.equals("Специальная дисциплина") ? examName : ""));
 												r.setText(text, 0);
 												break;
 											case "}":
@@ -657,7 +666,6 @@ public class OutputWord {
 									for (XWPFTableCell cell1 : row1.getTableCells()) {
 										for (XWPFParagraph p1 : cell1.getParagraphs()) {
 											for (XWPFRun r1 : p1.getRuns()) {
-												System.out.println(r1.getText(0));
 												if (r1.getText(0) != null) {
 													if(start_replace) {
 														String text;
@@ -683,7 +691,11 @@ public class OutputWord {
 															r1.setText(text, 0);
 															break;
 														case "Дата_проведения_теста":
-															text = r1.getText(0).replace("Дата_проведения_теста", examDate);
+															text = r1.getText(0).replace("Дата_проведения_теста", examDates.get(examNames.indexOf(examName)));
+															r1.setText(text, 0);
+															break;
+														case "Дисциплина":
+															text = r1.getText(0).replace("Дисциплина", (!examName.equals("Специальная дисциплина") ? examName : ""));
 															r1.setText(text, 0);
 															break;
 														case "}":

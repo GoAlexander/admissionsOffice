@@ -263,7 +263,7 @@ public class GeneralInfoInput extends JFrame {
 					else if (((EntranceTestsPanel)entranceTestpPanel).getExamsDates().size() == 0)
 						MessageProcessing.displayErrorMessage(null, 6);
 					else
-						OutputWord.writeExams(generalInfo, ((CompetitiveGroupsPanel)compGroupPanel).getSpecialities(), ((EntranceTestsPanel)entranceTestpPanel).getExamsDates());
+						OutputWord.writeExams(generalInfo, ((CompetitiveGroupsPanel)compGroupPanel).getSpecialities(), ((EntranceTestsPanel)entranceTestpPanel).getExamsNames(), ((EntranceTestsPanel)entranceTestpPanel).getExamsDates());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
