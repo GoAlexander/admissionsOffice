@@ -10,4 +10,4 @@ End With
 Set objFSO = CreateObject("Scripting.FileSystemObject")
 Set objFolder = objFSO.GetFolder(objArgs(0) + "\tmp_folder")
 objFolder.Delete
-objXL.Documents.Open (objArgs(0) + objArgs(1))
+objXL.Documents.Open (objArgs(0) + "\files\" + objArgs(1))

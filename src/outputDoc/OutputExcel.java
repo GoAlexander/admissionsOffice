@@ -12,13 +12,13 @@ import org.apache.poi.ss.usermodel.Row;
 import backend.ModelDBConnection;
 
 public class OutputExcel {
-	
+	private static String currentPath = new File("").getAbsolutePath();
+
 	private static String[] colNamesAdmissionPlan = {"Код специальности", "Форма обучения", "Конкурсная группа", "Целевая организация", "Стандарт образования", "Количество мест"};
 	private static String[] colNamesAbiturient = {"Идентификатор", "Фамилия", "Имя", "Отчество"};
 	private static String[] columnNames;
-	
-	public static void outExcel(String tableName) throws Exception {
 
+	public static void outExcel(String tableName) throws Exception {
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet(tableName);
 		
@@ -42,7 +42,7 @@ public class OutputExcel {
 		for (int i = 0; i < data.length; i++) 
 			writeToRow(sheet, ++rowNum, data[i]);
 
-		String path = "./files/" + tableName + "File.xls";
+		String path = currentPath + "/files/" + tableName + "File.xls";
 		File file = new File(path);
 		if (file.exists())
 			file.delete();
