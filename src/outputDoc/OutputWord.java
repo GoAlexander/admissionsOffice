@@ -16,12 +16,14 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 public class OutputWord {
+	private static String currentPath = new File("").getAbsolutePath();
+
 	public static void writeStatement(String[][] allCompetitiveGroups, String[] generalInfo, String[] passportData, String[] addressContacts, String[] highEducation, String needSpecialConditions, String[][] indAchievments) throws Exception {
 		XWPFDocument doc_out = new XWPFDocument();
 
 		for (int i = 0; i < allCompetitiveGroups.length; i++)
 		{
-			XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Заявление_ординатура.dotx"));
+			XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Заявление_ординатура.dotx"));
 			boolean start_replace = false;
 			for (XWPFParagraph p : doc.getParagraphs()) {
 				for (XWPFRun r : p.getRuns()) {
@@ -325,7 +327,7 @@ public class OutputWord {
 			copyElements(doc, doc_out);
 		}
 
-		File file = new File(generalInfo[0] + "_statement.doc");
+		File file = new File(currentPath + "/files/" + generalInfo[0] + "_statement.doc");
 
 		if (file != null) {
 			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));
@@ -337,7 +339,7 @@ public class OutputWord {
 	}
 
 	public static void writeInventory(String[] generalInfo, String[] highEducation, String[] postGraduateEducation) throws Exception {
-		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Опись-расписка.dotx"));
+		XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Опись-расписка.dotx"));
 		boolean start_replace = false;
 		for (XWPFParagraph p : doc.getParagraphs()) {
 			for (XWPFRun r : p.getRuns()) {
@@ -479,7 +481,7 @@ public class OutputWord {
 			}
 		}
 
-		File file = new File(generalInfo[0] + "_inventory.doc");
+		File file = new File(currentPath + "/files/" + generalInfo[0] + "_inventory.doc");
 
 		if (file != null) {
 			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));
@@ -493,13 +495,13 @@ public class OutputWord {
 	public static void writeExams(String[] generalInfo, ArrayList<String> specialities, ArrayList<String> examDates) throws Exception {
 		XWPFDocument doc_out = new XWPFDocument();
 		int i = 0;
-		File theDir = new File("tmp_folder");
+		File theDir = new File(currentPath + "/tmp_folder");
 		theDir.mkdir();
 
 		for (String speciality : specialities)
 			for (String examDate : examDates)
 			{
-				XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Лист_вступительных_испытаний.dotm"));
+				XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Лист_вступительных_испытаний.dotm"));
 				boolean start_replace = false;
 
 				for (XWPFParagraph p : doc.getParagraphs()) {
@@ -644,7 +646,7 @@ public class OutputWord {
 						}
 					}
 				}
-				File file = new File(theDir.getAbsolutePath() + "\\" + generalInfo[0] + "_exams" + (i == 0 ? "" : i) + ".doc");
+				File file = new File(theDir.getAbsolutePath() + "/" + generalInfo[0] + "_exams" + (i == 0 ? "" : i) + ".doc");
 				i++;
 
 				if (file != null) {
@@ -656,11 +658,11 @@ public class OutputWord {
 			}
 
 		if (i > 0)
-			Runtime.getRuntime().exec("cmd /c start script.vbs " + theDir.getAbsolutePath().substring(0, theDir.getAbsolutePath().lastIndexOf("tmp_folder")) + " " + generalInfo[0] + "_exams.doc");
+			Runtime.getRuntime().exec("cmd /c start script.vbs " + currentPath + "\\ " + generalInfo[0] + "_exams.doc");
 	}
 
 	public static void writeTitul(String[] generalInfo, String[][] allCompetitiveGroups) throws Exception {
-		XWPFDocument doc = new XWPFDocument(new FileInputStream("./Dots/Титульный_лист_дела.dotx"));
+		XWPFDocument doc = new XWPFDocument(new FileInputStream(currentPath + "/Dots/Титульный_лист_дела.dotx"));
 		boolean start_replace = false;
 		for (XWPFParagraph p : doc.getParagraphs()) {
 			for (XWPFRun r : p.getRuns()) {
@@ -778,7 +780,7 @@ public class OutputWord {
 			}
 		}
 
-		File file = new File(generalInfo[0] + "_titul.doc");
+		File file = new File(currentPath + "/files/" + generalInfo[0] + "_titul.doc");
 
 		if (file != null) {
 			OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()));
