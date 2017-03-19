@@ -213,7 +213,7 @@ public class GeneralInfoInput extends JFrame {
 					String[] passportData = ((PassportPanel)passportPanel).getValues(true);
 					String[] addressContacts = ((AddressContactsPanel)contPanel).getValues(true);
 					String[] highEducation = ((EducationPanel)educPanel).getValues(0);
-
+					String[] postGraduateEducation = ModelDBConnection.getDBName().equals("Ordinator") ? null : ((EducationPanel)educPanel).getValues(1);
 					String needSpecialConditions = ((EntranceTestsPanel)entranceTestpPanel).getNeedSpecialConditions();
 					String[][] indAchievments = ((IndividualAchievementsPanel)indAchivPanel).getValues(true);
 					String[][] allCompetitiveGroups = ((CompetitiveGroupsPanel)compGroupPanel).getAllCompetitiveGroups();
@@ -221,13 +221,7 @@ public class GeneralInfoInput extends JFrame {
 					if (allCompetitiveGroups.length == 0)
 						MessageProcessing.displayErrorMessage(null, 5);
 					else
-						if (ModelDBConnection.getDBName().equals("Ordinator"))
-							OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, needSpecialConditions, indAchievments);
-						else {
-							String[] postGraduateEducation = ((EducationPanel)educPanel).getValues(1);
-
-							OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, postGraduateEducation, needSpecialConditions, indAchievments);
-						}
+						OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, postGraduateEducation, needSpecialConditions, indAchievments);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
