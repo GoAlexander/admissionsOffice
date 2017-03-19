@@ -221,7 +221,13 @@ public class GeneralInfoInput extends JFrame {
 					if (allCompetitiveGroups.length == 0)
 						MessageProcessing.displayErrorMessage(null, 5);
 					else
-						OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, needSpecialConditions, indAchievments);
+						if (ModelDBConnection.getDBName().equals("Ordinator"))
+							OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, needSpecialConditions, indAchievments);
+						else {
+							String[] postGraduateEducation = ((EducationPanel)educPanel).getValues(1);
+
+							OutputWord.writeStatement(allCompetitiveGroups, generalInfo, passportData, addressContacts, highEducation, postGraduateEducation, needSpecialConditions, indAchievments);
+						}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

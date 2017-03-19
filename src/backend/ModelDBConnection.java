@@ -41,23 +41,23 @@ public class ModelDBConnection {
 		ModelDBConnection.con = null;
 	}
 
-	public String getLogin() {
+	public static String getLogin() {
 		return login;
 	}
 
-	public String getPassword() {
+	public static String getPassword() {
 		return password;
 	}
 
-	public String getServerAddress() {
+	public static String getServerAddress() {
 		return serverAddress;
 	}
 
-	public String getServerType() {
+	public static String getServerType() {
 		return serverType;
 	}
 
-	public String getDBName() {
+	public static String getDBName() {
 		return dbName;
 	}
 
