@@ -112,7 +112,7 @@ public abstract class MessageProcessing {
 			break;
 		case 14:
 			titleMessage = "Результат проверки данных";
-			message = "Невозможно сохранить несколько результатов одного вступительного испытания!";
+			message = "Невозможно сохранить несколько одинаковых типов вступительных испытаний!";
 			break;
 		default:
 			titleMessage = "Неизвестная ошибка";

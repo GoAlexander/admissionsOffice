@@ -168,7 +168,7 @@ public class EntranceTestsPanel extends JPanel {
 
 	private ArrayList<Integer> checkData(String[][] data) {
 		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
-		if (data.length > 1 && data[0][4].equals(data[1][4]))
+		if (data.length > 1 && data[0][1].equals(data[1][1]))
 			mistakesIndices.add(0);
 		for (int i = 0; i < data.length; i++) {
 			if (data[i][2] == null)
