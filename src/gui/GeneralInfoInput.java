@@ -1,7 +1,6 @@
 ﻿package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -40,8 +39,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 
@@ -626,7 +623,7 @@ public class GeneralInfoInput extends JFrame {
 
 	private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			AddGeneralInfo addGeneralInfoFrame = new AddGeneralInfo(currentTM);
+			AddGeneralInfo addGeneralInfoFrame = new AddGeneralInfo(dataTable);
 
 			addGeneralInfoFrame.setVisible(true);
 		} catch (Exception e) {

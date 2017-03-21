@@ -17,6 +17,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
@@ -27,7 +28,7 @@ import backend.ModelDBConnection;
 import general_classes.GUITableModel;
 
 public class AddGeneralInfo extends JFrame {
-	private GUITableModel currentTM;
+	private JTable dataTable;
 
 	private JPanel mainPanel, GIPanel, panelID, dateRecDocPanel, panelSurname, panelName, panelPatronymic, panelSex, panelDB,
 			panelNationality;
@@ -43,11 +44,11 @@ public class AddGeneralInfo extends JFrame {
 
 	private JDateChooser calendar;
 
-	public AddGeneralInfo(GUITableModel currentTM) {
+	public AddGeneralInfo(JTable dataTable) {
 		arrSex = ModelDBConnection.getNamesFromTableOrderedById("Gender");
 		arrNationality = ModelDBConnection.getNamesFromTableOrderedById("Nationality");
 
-		this.currentTM = currentTM;
+		this.dataTable = dataTable;
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
@@ -185,10 +186,11 @@ public class AddGeneralInfo extends JFrame {
 
     		//Обновление таблицы главного фрейма
     		String[] abit_ID_FIO = {abitBaseInfo[0], abitBaseInfo[1], abitBaseInfo[2], abitBaseInfo[3]};
-    		this.currentTM.addRow(abit_ID_FIO);
+    		((GUITableModel)(dataTable.getModel())).addRow(abit_ID_FIO);
 
     		this.setVisible(false);
     		MessageProcessing.displaySuccessMessage(this, 1);
+    		dataTable.setRowSelectionInterval(dataTable.getRowCount() - 1, dataTable.getRowCount() - 1);
     	} catch (Exception e) {
     		MessageProcessing.displayErrorMessage(this, e);
 		}
@@ -212,7 +214,7 @@ public class AddGeneralInfo extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AddGeneralInfo window = new AddGeneralInfo(new GUITableModel());
+					AddGeneralInfo window = new AddGeneralInfo(new JTable());
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
