@@ -219,7 +219,7 @@ public class ModelDBConnection {
 			phoneNumbers = "'" + info[9] + "'";
 			needHostel = info[10];
 			registrationDate = "'" + info[11] + "'";
-			returnDate = info[12] == null ? null : "'" + info[12] + "'";
+			returnDate = "'" + info[12] + "'";
 			id_returnReason = info[13];
 			needSpecConditions = info[14];
 			is_enrolled = info[15];

@@ -198,11 +198,17 @@ begin
 end;
 go
 
-alter procedure getAbiturientEducationByID(@aid varchar(max), @nameTable varchar(max))
+alter procedure getAbiturientEducationByID(@aid varchar(max), @tableName varchar(max))
 as
 begin
-	select aid_abiturient, diplomaSeries, diplomaNumber, diplomaSpeciality, instituteName, graduationYear
-				from @nameTable where aid_abiturient = @aid
+	if (object_id(@tableName) is null)
+	begin
+		  RAISERROR('Недопустимое имя таблицы', 16, 1)
+	end
+
+	execute('select aid_abiturient, diplomaSeries, diplomaNumber, diplomaSpeciality, instituteName, graduationYear
+				from ' + @tableName + ' where aid_abiturient = ' + @aid)
+	return
 end;
 go
 

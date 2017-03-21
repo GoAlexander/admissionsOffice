@@ -193,8 +193,8 @@ public class AddressContactsPanel extends JPanel {
 
 	public void setValues(String[] values) {
 		currentAbit = values[0];
-		comboRegionType.setSelectedIndex(values[1].equals("") ? -1 : Integer.valueOf(values[1]) - 1);
-		comboPunktType.setSelectedIndex(values[1].equals("") ? -1 : Integer.valueOf(values[2]) - 1);
+		comboRegionType.setSelectedIndex(values[1] != null ? Integer.valueOf(values[1]) - 1 : -1);
+		comboPunktType.setSelectedIndex(values[2] != null ? Integer.valueOf(values[2]) - 1 : -1);
 		textIndex.setText(values[3]);
 		textAdressLiving.setText(values[4]);
 		textEmail.setText(values[5]);
