@@ -819,7 +819,13 @@ public class GeneralInfoInput extends JFrame {
 		}
 		comboReturnReason.setEditable(true);
 		addButton.setEnabled(!status);
-		deleteButton.setEnabled(!status);
+		if (dataTable.getSelectedRow() < 0) {
+			editButton.setEnabled(false);
+			deleteButton.setEnabled(status);
+		} else {
+			editButton.setEnabled(true);
+			deleteButton.setEnabled(!status);
+		}
 		editButton.setText(status ? "    Сохранить     " : "Редактировать");
 	}
 

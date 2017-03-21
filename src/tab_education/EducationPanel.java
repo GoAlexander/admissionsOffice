@@ -72,8 +72,10 @@ public class EducationPanel extends JPanel{
 		saveEducationButton.setEnabled(state);
 		
 		editEducationButton.setEnabled(!state);
+		if (highEducPanel.getCurrentAbit() == null || highEducPanel.getCurrentAbit().equals("0"))
+			editEducationButton.setEnabled(state);
 	}
-	
+
 	public void setValues(String[] abiturientHigherEducationData, String[] abiturientPostgraduateEducationData){
 		highEducPanel.setValues(abiturientHigherEducationData);
 		afterDiplEducPanel.setValues(abiturientPostgraduateEducationData);

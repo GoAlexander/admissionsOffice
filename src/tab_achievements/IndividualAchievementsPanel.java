@@ -226,6 +226,8 @@ public class IndividualAchievementsPanel extends JPanel{
 		addNewAchievmentButton.setEnabled(state);
 
 		editAchievmentButton.setEnabled(!state);
+		if (currentAbit == null || currentAbit.equals("0"))
+			editAchievmentButton.setEnabled(state);
 	}
 
 	private void createCheckboxTable(JTable table, int numColumn, String[] dataCheck) {

@@ -198,5 +198,7 @@ public class PassportPanel extends JPanel{
 		savePassportButton.setEnabled(state);
 
 		editPassportButton.setEnabled(!state);
+		if (currentAbit == null || currentAbit.equals("0"))
+			editPassportButton.setEnabled(state);
 	}
 }

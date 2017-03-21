@@ -29,7 +29,6 @@ public class CompetitiveGroupsPanel extends JPanel {
 		compGroupsPanel.setLayout(new BoxLayout(compGroupsPanel, BoxLayout.PAGE_AXIS));
 
 		JScrollPane pane = new JScrollPane(compGroupsPanel);
-		setValues(currentAbit);
 
 		JPanel btnPanel = new JPanel();
 		btnPanel.setLayout(new GridLayout(0, 1));
@@ -46,6 +45,7 @@ public class CompetitiveGroupsPanel extends JPanel {
 
 		this.add(pane);
 		this.add(btnPanel);
+		setValues(currentAbit);
 	}
 
 	public void setValues(String aid) {
@@ -57,6 +57,7 @@ public class CompetitiveGroupsPanel extends JPanel {
 			compGroupsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		}
 		compGroupsPanel.updateUI();
+		setEditable();
 	}
 
 	private void addNewGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,5 +97,12 @@ public class CompetitiveGroupsPanel extends JPanel {
 		}
 
 		return allCompetitiveGroups;
+	}
+
+	public void setEditable() {
+		if (currentAbit == null || currentAbit.equals("0"))
+			addNewGroupButton.setEnabled(false);
+		else
+			addNewGroupButton.setEnabled(true);
 	}
 }

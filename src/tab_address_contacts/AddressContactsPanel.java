@@ -233,5 +233,7 @@ public class AddressContactsPanel extends JPanel {
 		textEmail.setEditable(state);
 		saveAddressContactsButton.setEnabled(state);
 		editAddressContactsButton.setEnabled(!state);
+		if (currentAbit == null || currentAbit.equals("0"))
+			editAddressContactsButton.setEnabled(state);
 	}
 }

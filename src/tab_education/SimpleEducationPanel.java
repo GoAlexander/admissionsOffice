@@ -116,4 +116,8 @@ public class SimpleEducationPanel extends JPanel{
 
 		return values;
 	}
+
+	public String getCurrentAbit() {
+		return currentAbit;
+	}
 }

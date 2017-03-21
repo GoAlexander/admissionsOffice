@@ -210,6 +210,8 @@ public class EntranceTestsPanel extends JPanel {
 		specialCond.setEnabled(state);
 
 		editTestResultButton.setEnabled(!state);
+		if (currentAbit == null || currentAbit.equals("0"))
+			editTestResultButton.setEnabled(state);
 	}
 
 	public ArrayList<String> getExamsDates() {
