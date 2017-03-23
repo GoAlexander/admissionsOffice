@@ -1,6 +1,8 @@
 ﻿package tab_education;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -57,10 +59,25 @@ public class EducationPanel extends JPanel{
 
 	private void saveEducationButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			this.setEditable(false);
-			ModelDBConnection.updateAbiturientEducationByID("AbiturientHigherEducation", highEducPanel.getValues());
-			ModelDBConnection.updateAbiturientEducationByID("AbiturientPostgraduateEducation", afterDiplEducPanel.getValues());
-			MessageProcessing.displaySuccessMessage(this, 8);
+			ArrayList<Integer> mistakesIndicesHighEdu = highEducPanel.checkData(highEducPanel.getValues());
+			ArrayList<Integer> mistakesIndicesPostGradEdu = afterDiplEducPanel.checkData(afterDiplEducPanel.getValues());
+
+			if (mistakesIndicesHighEdu.contains(5) || mistakesIndicesPostGradEdu.contains(5))
+				MessageProcessing.displayErrorMessage(null, 9);
+			else {
+				if (mistakesIndicesHighEdu.isEmpty())
+					ModelDBConnection.updateAbiturientEducationByID("AbiturientHigherEducation", highEducPanel.getValues());
+				else if (mistakesIndicesHighEdu.contains(-1))
+					ModelDBConnection.deleteElementInTableById("AbiturientHigherEducation", highEducPanel.getValues()[0]);
+
+				if (mistakesIndicesPostGradEdu.isEmpty())
+					ModelDBConnection.updateAbiturientEducationByID("AbiturientPostgraduateEducation", afterDiplEducPanel.getValues());
+				else if (mistakesIndicesPostGradEdu.contains(-1))
+					ModelDBConnection.deleteElementInTableById("AbiturientPostgraduateEducation", afterDiplEducPanel.getValues()[0]);
+
+				this.setEditable(false);
+				MessageProcessing.displaySuccessMessage(this, 8);
+			}
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}

@@ -3,6 +3,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -119,5 +120,26 @@ public class SimpleEducationPanel extends JPanel{
 
 	public String getCurrentAbit() {
 		return currentAbit;
+	}
+
+	public ArrayList<Integer> checkData(String[] data) {
+		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
+
+		boolean isEmpty = true;
+		for (int i = 1; i < data.length; i++)
+			if (data[i] != null) {
+				isEmpty = false;
+				break;
+			}
+
+		if (isEmpty)
+			mistakesIndices.add(-1);
+		if (data[5] != null && !data[5].matches("^[0-9]+$")) {
+			mistakesIndices.add(5);
+			textYear.setForeground(Color.RED);
+		} else
+			textYear.setForeground(Color.BLACK);
+
+		return mistakesIndices;
 	}
 }
