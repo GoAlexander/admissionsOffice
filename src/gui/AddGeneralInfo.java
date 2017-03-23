@@ -244,8 +244,10 @@ public class AddGeneralInfo extends JFrame {
 			}
     	} catch (Exception e) {
     		e.printStackTrace();
-    		if (e.getMessage().toString().indexOf("PRIMARY KEY") > 0)
+    		if (e.getMessage().toString().indexOf("PRIMARY KEY") > 0) {
     			MessageProcessing.displayErrorMessage(this, 22);
+    			textID.setText(String.valueOf(ModelDBConnection.getCount("Abiturient") + 1));
+    		}
     		else
     			MessageProcessing.displayErrorMessage(this, e);
 		}

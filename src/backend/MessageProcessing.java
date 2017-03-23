@@ -144,7 +144,7 @@ public abstract class MessageProcessing {
 			break;
 		case 22:
 			titleMessage = "Результат проверки данных";
-			message = "Абитуриент с таким идентификатором уже существует!";
+			message = "Абитуриент с таким идентификатором уже существует!\nПопробуйте еще раз";
 			break;
 		case 23:
 			titleMessage = "Результат проверки данных";
