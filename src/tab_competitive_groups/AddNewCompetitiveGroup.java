@@ -96,6 +96,8 @@ public class AddNewCompetitiveGroup extends JFrame{
 
 		educFormPanel = new JPanel();
 		educFormPanel = createCheckBoxPanel("Форма обучения", educFormType);
+		((JComboBox)educFormPanel.getComponent(1)).setSelectedItem("очная");
+		//educFormPanel.setVisible(false); // Временно
 		infoPanel.add(educFormPanel);
 
 		provisionPanel = new JPanel();
@@ -212,10 +214,44 @@ public class AddNewCompetitiveGroup extends JFrame{
 
 	private void saveCompetitiveGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			ModelDBConnection.updateAbiturientCompetitiveGroupByID(getValues(false));
-			this.setVisible(false);
-			((CompetitiveGroupsPanel)parentPanel).setValues(currentAbit);
+			String[] newCompetitiveGroup = getValues(false);
+
+			if (newCompetitiveGroup[1].equals("0"))
+				MessageProcessing.displayErrorMessage(null, 24);
+			else if (newCompetitiveGroup[2].equals("0"))
+				MessageProcessing.displayErrorMessage(null, 25);
+			else if (newCompetitiveGroup[3].equals("0"))
+				MessageProcessing.displayErrorMessage(null, 26);
+			else if (newCompetitiveGroup[4].equals("0"))
+				MessageProcessing.displayErrorMessage(null, 27);
+			else if (newCompetitiveGroup[5].equals("0"))
+				MessageProcessing.displayErrorMessage(null, 28);
+			else if (newCompetitiveGroup[7].equals("0"))
+				MessageProcessing.displayErrorMessage(null, 29);
+			else {
+				boolean isDuplicated = false;
+
+				String[] newCompetitiveGroupWithDetails = getValues(true);
+				String[][] allCompetitiveGroups = ((CompetitiveGroupsPanel)parentPanel).getAllCompetitiveGroups();
+
+				for (int i = 0; i < allCompetitiveGroups.length; i++)
+					if (allCompetitiveGroups[i][0].equals(newCompetitiveGroupWithDetails[1]) &&
+							allCompetitiveGroups[i][1].equals(newCompetitiveGroupWithDetails[2]) &&
+							allCompetitiveGroups[i][3].equals(newCompetitiveGroupWithDetails[5])) {
+						isDuplicated = true;
+						break;
+					}
+
+				if (isDuplicated)
+					MessageProcessing.displayErrorMessage(null, 30);
+				else {
+					ModelDBConnection.updateAbiturientCompetitiveGroupByID(newCompetitiveGroup);
+					this.setVisible(false);
+					((CompetitiveGroupsPanel)parentPanel).setValues(currentAbit);
+				}
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}

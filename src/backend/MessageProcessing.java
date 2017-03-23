@@ -150,6 +150,34 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат проверки данных";
 			message = "Не выбрана причина возврата документов!";
 			break;
+		case 24:
+			titleMessage = "Результат проверки данных";
+			message = "Не выбрано направление обучения!";
+			break;
+		case 25:
+			titleMessage = "Результат проверки данных";
+			message = "Не выбрана специальность!";
+			break;
+		case 26:
+			titleMessage = "Результат проверки данных";
+			message = "Не выбрана форма обучения!";
+			break;
+		case 27:
+			titleMessage = "Результат проверки данных";
+			message = "Не выбрана кафедра!";
+			break;
+		case 28:
+			titleMessage = "Результат проверки данных";
+			message = "Не выбрана конкурсная группа!";
+			break;
+		case 29:
+			titleMessage = "Результат проверки данных";
+			message = "Не выбран стандарт образования!";
+			break;
+		case 30:
+			titleMessage = "Результат проверки данных";
+			message = "Такая конкурсная группа уже была добавлена ранее!";
+			break;
 		default:
 			titleMessage = "Неизвестная ошибка";
 			message = "Произошла неизвестная ошибка. Обратитесь к администратору!";
