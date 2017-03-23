@@ -144,9 +144,13 @@ public class PassportPanel extends JPanel{
 
 	private void savePassportButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			ModelDBConnection.updateAbiturientPassportByID(currentAbit, getValues(false));
-			this.setEditable(false);
-			MessageProcessing.displaySuccessMessage(this, 6);
+			if (getValues(false)[0].equals("0")) {
+				MessageProcessing.displayErrorMessage(null, 15);
+			} else {
+				ModelDBConnection.updateAbiturientPassportByID(currentAbit, getValues(false));
+				this.setEditable(false);
+				MessageProcessing.displaySuccessMessage(this, 6);
+			}
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);
 		}
