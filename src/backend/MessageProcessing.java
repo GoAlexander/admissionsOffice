@@ -118,6 +118,38 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат проверки данных";
 			message = "Не указан тип документа, удостоверяющего личность!";
 			break;
+		case 16:
+			titleMessage = "Результат проверки данных";
+			message = "Не указан пол!";
+			break;
+		case 17:
+			titleMessage = "Результат проверки данных";
+			message = "Не указано гражданство!";
+			break;
+		case 18:
+			titleMessage = "Результат проверки данных";
+			message = "Не задан идентификатор!";
+			break;
+		case 19:
+			titleMessage = "Результат проверки данных";
+			message = "Не задана фамилия!";
+			break;
+		case 20:
+			titleMessage = "Результат проверки данных";
+			message = "Не задано имя!";
+			break;
+		case 21:
+			titleMessage = "Результат проверки данных";
+			message = "Не указана дата рождения!";
+			break;
+		case 22:
+			titleMessage = "Результат проверки данных";
+			message = "Абитуриент с таким идентификатором уже существует!";
+			break;
+		case 23:
+			titleMessage = "Результат проверки данных";
+			message = "Не выбрана причина возврата документов!";
+			break;
 		default:
 			titleMessage = "Неизвестная ошибка";
 			message = "Произошла неизвестная ошибка. Обратитесь к администратору!";

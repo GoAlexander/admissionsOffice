@@ -1,5 +1,6 @@
 ﻿package gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -7,19 +8,23 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.MaskFormatter;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -89,7 +94,14 @@ public class AddGeneralInfo extends JFrame {
 		dateRecDocPanel.setMaximumSize(dimPanel);
 		JLabel dateRecDocLabel = new JLabel("Дата приема документов ");
 		dateRecDocPanel.add(dateRecDocLabel);
-		textDateRecDoc = new JTextField();
+		try {
+			MaskFormatter mf;
+			mf = new MaskFormatter("##.##.####");
+			mf.setPlaceholderCharacter('_');
+			textDateRecDoc = new JFormattedTextField(mf);
+		} catch (ParseException e1) {
+			textDateRecDoc = new JTextField();
+		}
 		textDateRecDoc.setPreferredSize(dimText);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		textDateRecDoc.setText(sdf.format(new Date()));
@@ -173,26 +185,68 @@ public class AddGeneralInfo extends JFrame {
     	try {
     		//Запись в БД
     		String[] abitBaseInfo = new String[8];
-    		abitBaseInfo[0] = textID.getText();
-    		abitBaseInfo[1] = ((JTextField)panelSurname.getComponent(1)).getText();
-    		abitBaseInfo[2] = ((JTextField)panelName.getComponent(1)).getText();
-    		abitBaseInfo[3] = ((JTextField)panelPatronymic.getComponent(1)).getText();
-    		abitBaseInfo[4] = new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString();
+    		abitBaseInfo[0] = (!textID.getText().equals("") ? textID.getText() : null);
+    		abitBaseInfo[1] = (!((JTextField)panelSurname.getComponent(1)).getText().equals("") ? ((JTextField)panelSurname.getComponent(1)).getText() : null);
+    		abitBaseInfo[2] = (!((JTextField)panelName.getComponent(1)).getText().equals("") ? ((JTextField)panelName.getComponent(1)).getText() : null);
+    		abitBaseInfo[3] = (!((JTextField)panelPatronymic.getComponent(1)).getText().equals("") ? ((JTextField)panelPatronymic.getComponent(1)).getText() : null);
+    		abitBaseInfo[4] = (calendar.getDate() != null ? new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString() : null);
     		abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex()+1);
     		abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex()+1);
-    		abitBaseInfo[7] = textDateRecDoc.getText();
+    		abitBaseInfo[7] = (!textDateRecDoc.getText().equals("") ? textDateRecDoc.getText() : null);
 
-    		ModelDBConnection.insertAbiturient(abitBaseInfo);
+    		ArrayList<Integer> mistakesIndices = checkData(abitBaseInfo);
+			if (abitBaseInfo[0] == null) {
+				MessageProcessing.displayErrorMessage(null, 18);
+			} else if (abitBaseInfo[1] == null) {
+				MessageProcessing.displayErrorMessage(null, 19);
+			} else if (abitBaseInfo[2] == null) {
+				MessageProcessing.displayErrorMessage(null, 20);
+			} else if (abitBaseInfo[4] == null) {
+				MessageProcessing.displayErrorMessage(null, 21);
+			} else if (abitBaseInfo[5].equals("0")) {
+				abitBaseInfo[5] = null;
+				MessageProcessing.displayErrorMessage(null, 16);
+			} else if (abitBaseInfo[6].equals("0")) {
+				abitBaseInfo[6] = null;
+				MessageProcessing.displayErrorMessage(null, 17);
+			} else {
+				if (mistakesIndices.contains(0))
+					textID.setForeground(Color.RED);
+				else
+					textID.setForeground(Color.BLACK);
+				if (mistakesIndices.contains(1))
+					((JTextField)panelSurname.getComponent(1)).setForeground(Color.RED);
+				else
+					((JTextField)panelSurname.getComponent(1)).setForeground(Color.BLACK);
+				if (mistakesIndices.contains(2))
+					((JTextField)panelName.getComponent(1)).setForeground(Color.RED);
+				else
+					((JTextField)panelName.getComponent(1)).setForeground(Color.BLACK);
+				if (mistakesIndices.contains(3))
+					((JTextField)panelPatronymic.getComponent(1)).setForeground(Color.RED);
+				else
+					((JTextField)panelPatronymic.getComponent(1)).setForeground(Color.BLACK);
+				
+				if (mistakesIndices.isEmpty()) {
+					ModelDBConnection.insertAbiturient(abitBaseInfo);
 
-    		//Обновление таблицы главного фрейма
-    		String[] abit_ID_FIO = {abitBaseInfo[0], abitBaseInfo[1], abitBaseInfo[2], abitBaseInfo[3]};
-    		((GUITableModel)(dataTable.getModel())).addRow(abit_ID_FIO);
+					//Обновление таблицы главного фрейма
+					String[] abit_ID_FIO = {abitBaseInfo[0], abitBaseInfo[1], abitBaseInfo[2], abitBaseInfo[3]};
+					((GUITableModel)(dataTable.getModel())).addRow(abit_ID_FIO);
 
-    		this.setVisible(false);
-    		MessageProcessing.displaySuccessMessage(this, 1);
-    		dataTable.setRowSelectionInterval(dataTable.getRowCount() - 1, dataTable.getRowCount() - 1);
+					this.setVisible(false);
+					MessageProcessing.displaySuccessMessage(this, 1);
+					dataTable.setRowSelectionInterval(dataTable.getRowCount() - 1, dataTable.getRowCount() - 1);
+				} else {
+					MessageProcessing.displayErrorMessage(null, 9);
+				}
+			}
     	} catch (Exception e) {
-    		MessageProcessing.displayErrorMessage(this, e);
+    		e.printStackTrace();
+    		if (e.getMessage().toString().indexOf("PRIMARY KEY") > 0)
+    			MessageProcessing.displayErrorMessage(this, 22);
+    		else
+    			MessageProcessing.displayErrorMessage(this, e);
 		}
     }
 
@@ -210,10 +264,26 @@ public class AddGeneralInfo extends JFrame {
 		return panelFIO;
 	}
 
+	private ArrayList<Integer> checkData(String[] values) {
+		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
+		if (values[0] != null && !values[0].matches("^[0-9]+$"))
+			mistakesIndices.add(0);
+		if (values[1] != null && !values[1].matches("^[а-яА-Я]+[ -]?[а-яА-Я]*$"))
+			mistakesIndices.add(1);
+		if (values[2] != null && !values[2].matches("^[а-яА-Я]+[ -]?[а-яА-Я]*$"))
+			mistakesIndices.add(2);
+		if (values[3] != null && !values[3].matches("^[а-яА-Я]+[ -]?[а-яА-Я]*$"))
+			mistakesIndices.add(3);
+
+		return mistakesIndices;
+	}
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+					ModelDBConnection.initConnection();
 					AddGeneralInfo window = new AddGeneralInfo(new JTable());
 					window.setVisible(true);
 				} catch (Exception e) {

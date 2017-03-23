@@ -1,6 +1,7 @@
 ﻿package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -17,6 +18,7 @@ import java.awt.event.WindowListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -637,11 +639,11 @@ public class GeneralInfoInput extends JFrame {
 			if (((JTextField) panelSurname.getComponent(1)).isEnabled()) {
 				// Изменения в БД
 				String[] abitBaseInfo = new String[10];
-				abitBaseInfo[0] = ((JTextField) panelID.getComponent(1)).getText();
-				abitBaseInfo[1] = ((JTextField) panelSurname.getComponent(1)).getText();
-				abitBaseInfo[2] = ((JTextField) panelName.getComponent(1)).getText();
-				abitBaseInfo[3] = ((JTextField) panelPatronymic.getComponent(1)).getText();
-				abitBaseInfo[4] = new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString();
+				abitBaseInfo[0] = (!((JTextField)panelID.getComponent(1)).getText().equals("") ? ((JTextField)panelID.getComponent(1)).getText() : null);
+				abitBaseInfo[1] = (!((JTextField)panelSurname.getComponent(1)).getText().equals("") ? ((JTextField)panelSurname.getComponent(1)).getText() : null);
+				abitBaseInfo[2] = (!((JTextField)panelName.getComponent(1)).getText().equals("") ? ((JTextField)panelName.getComponent(1)).getText() : null);
+				abitBaseInfo[3] = (!((JTextField)panelPatronymic.getComponent(1)).getText().equals("") ? ((JTextField)panelPatronymic.getComponent(1)).getText() : null);
+				abitBaseInfo[4] = (calendar.getDate() != null ? new SimpleDateFormat("dd.MM.yyyy").format(calendar.getDate()).toString() : null);
 				abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex() + 1);
 				abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex() + 1);
 				abitBaseInfo[7] = ((JLabel) panelDateDoc.getComponent(1)).getText();
@@ -653,18 +655,59 @@ public class GeneralInfoInput extends JFrame {
 					abitBaseInfo[9] = null;
 				}
 
-				ModelDBConnection.editAbiturient(abitBaseInfo);
+	    		ArrayList<Integer> mistakesIndices = checkData(abitBaseInfo);
+				if (abitBaseInfo[0] == null) {
+					MessageProcessing.displayErrorMessage(null, 18);
+				} else if (abitBaseInfo[1] == null) {
+					MessageProcessing.displayErrorMessage(null, 19);
+				} else if (abitBaseInfo[2] == null) {
+					MessageProcessing.displayErrorMessage(null, 20);
+				} else if (abitBaseInfo[4] == null) {
+					MessageProcessing.displayErrorMessage(null, 21);
+				} else if (abitBaseInfo[5].equals("0")) {
+					abitBaseInfo[5] = null;
+					MessageProcessing.displayErrorMessage(null, 16);
+				} else if (abitBaseInfo[6].equals("0")) {
+					abitBaseInfo[6] = null;
+					MessageProcessing.displayErrorMessage(null, 17);
+				} else if (abitBaseInfo[9] != null && abitBaseInfo[9].equals("0")) {
+					abitBaseInfo[9] = null;
+					MessageProcessing.displayErrorMessage(null, 23);
+				} else {
+					if (mistakesIndices.contains(0))
+						textID.setForeground(Color.RED);
+					else
+						textID.setForeground(Color.BLACK);
+					if (mistakesIndices.contains(1))
+						((JTextField)panelSurname.getComponent(1)).setForeground(Color.RED);
+					else
+						((JTextField)panelSurname.getComponent(1)).setForeground(Color.BLACK);
+					if (mistakesIndices.contains(2))
+						((JTextField)panelName.getComponent(1)).setForeground(Color.RED);
+					else
+						((JTextField)panelName.getComponent(1)).setForeground(Color.BLACK);
+					if (mistakesIndices.contains(3))
+						((JTextField)panelPatronymic.getComponent(1)).setForeground(Color.RED);
+					else
+						((JTextField)panelPatronymic.getComponent(1)).setForeground(Color.BLACK);
+					
+					if (mistakesIndices.isEmpty()) {
+						ModelDBConnection.editAbiturient(abitBaseInfo);
 
-				int selectedRow = dataTable.getSelectedRow();
-				// Изменение таблицы
-				currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
-				dataTable.addRowSelectionInterval(selectedRow, selectedRow);
-				dataTable.getColumnModel().getColumn(0).setMaxWidth(40);
-				dataTable.updateUI();
+						int selectedRow = dataTable.getSelectedRow();
+						// Изменение таблицы
+						currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
+						dataTable.addRowSelectionInterval(selectedRow, selectedRow);
+						dataTable.getColumnModel().getColumn(0).setMaxWidth(40);
+						dataTable.updateUI();
 
-				MessageProcessing.displaySuccessMessage(this, 2);
+						MessageProcessing.displaySuccessMessage(this, 2);
 
-				setEditable(false);
+						setEditable(false);
+					} else {
+						MessageProcessing.displayErrorMessage(null, 9);
+					}
+				}
 			} else {
 				setEditable(true);
 			}
@@ -798,6 +841,7 @@ public class GeneralInfoInput extends JFrame {
 	}
 
 	public void setEditable(boolean status) {
+		((JTextField) panelID.getComponent(1)).setEnabled(status);
 		((JTextField) panelSurname.getComponent(1)).setEnabled(status);
 		((JTextField) panelName.getComponent(1)).setEnabled(status);
 		((JTextField) panelPatronymic.getComponent(1)).setEnabled(status);
@@ -824,6 +868,20 @@ public class GeneralInfoInput extends JFrame {
 			deleteButton.setEnabled(!status);
 		}
 		editButton.setText(status ? "    Сохранить     " : "Редактировать");
+	}
+
+	private ArrayList<Integer> checkData(String[] values) {
+		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
+		if (values[0] != null && !values[0].matches("^[0-9]+$"))
+			mistakesIndices.add(0);
+		if (values[1] != null && !values[1].matches("^[а-яА-Я]+[ -]?[а-яА-Я]*$"))
+			mistakesIndices.add(1);
+		if (values[2] != null && !values[2].matches("^[а-яА-Я]+[ -]?[а-яА-Я]*$"))
+			mistakesIndices.add(2);
+		if (values[3] != null && !values[3].matches("^[а-яА-Я]+[ -]?[а-яА-Я]*$"))
+			mistakesIndices.add(3);
+
+		return mistakesIndices;
 	}
 
 	public static void main(String[] args) {
