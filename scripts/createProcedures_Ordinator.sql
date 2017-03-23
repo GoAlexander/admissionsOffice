@@ -206,7 +206,7 @@ begin
 		  RAISERROR('Недопустимое имя таблицы', 16, 1)
 	end
 
-	execute('select aid_abiturient, diplomaSeries, diplomaNumber, diplomaSpeciality, instituteName, graduationYear
+	execute('select aid_abiturient, diplomaSeries, diplomaNumber, diplomaSpeciality, instituteName, graduationYear, avgBall
 				from ' + @tableName + ' where aid_abiturient = ' + @aid)
 	return
 end;

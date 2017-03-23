@@ -125,6 +125,7 @@ create table AbiturientPostgraduateEducation (
 	diplomaSpeciality text,				--специальность диплома
 	instituteName text,					--названиеВУЗа
 	graduationYear int,					--год окончания
+	avgBall float,						--средний балл
 	
 	--Внешние ключи
 	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade
@@ -139,7 +140,8 @@ create table AbiturientHigherEducation (
 	diplomaSpeciality text,				--специальность диплома
 	instituteName text,					--названиеВУЗа
 	graduationYear int,					--год окончания
-	
+	avgBall float,						--средний балл
+
 	--Внешние ключи
 	foreign key (aid_abiturient) references Abiturient(aid) on delete cascade on update cascade
 );

@@ -62,7 +62,7 @@ public class EducationPanel extends JPanel{
 			ArrayList<Integer> mistakesIndicesHighEdu = highEducPanel.checkData(highEducPanel.getValues());
 			ArrayList<Integer> mistakesIndicesPostGradEdu = afterDiplEducPanel.checkData(afterDiplEducPanel.getValues());
 
-			if (mistakesIndicesHighEdu.contains(5) || mistakesIndicesPostGradEdu.contains(5))
+			if (mistakesIndicesHighEdu.contains(5) || mistakesIndicesPostGradEdu.contains(5) || mistakesIndicesHighEdu.contains(6) || mistakesIndicesPostGradEdu.contains(6))
 				MessageProcessing.displayErrorMessage(null, 9);
 			else {
 				if (mistakesIndicesHighEdu.isEmpty())
