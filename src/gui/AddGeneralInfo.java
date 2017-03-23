@@ -85,6 +85,7 @@ public class AddGeneralInfo extends JFrame {
 		panelID.add(idLabel);
 		textID = new JTextField();
 		textID.setPreferredSize(new Dimension(60, 25));
+		textID.setText(String.valueOf(ModelDBConnection.getCount("Abiturient") + 1));
 		panelID.add(textID);
 		GIPanel.add(panelID, gbc);
 
