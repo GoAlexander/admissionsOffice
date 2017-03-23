@@ -697,6 +697,7 @@ public class ModelDBConnection {
 			id = "aid";
 			break;
 		case "AbiturientIndividualAchievement":
+		case "AbiturientHigherEducation":
 		case "AbiturientPostgraduateEducation":
 		case "AbiturientEntranceTests":
 		case "AbiturientPassport":

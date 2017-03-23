@@ -79,6 +79,7 @@ public class EducationPanel extends JPanel{
 				MessageProcessing.displaySuccessMessage(this, 8);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}

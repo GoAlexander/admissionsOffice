@@ -123,9 +123,9 @@ public class EntranceTestsPanel extends JPanel {
 					for (int j = 0; !tmpdata[2].toString().equals(blockEntranceTest[j]); j++, data_new[i][4] = String
 							.valueOf(j + 1));
 				}
-				if (tmpdata[3] != null)
+				if (tmpdata[3] != null && !tmpdata[3].equals(""))
 					data_new[i][5] = tmpdata[3].toString();
-				if (tmpdata[4] != null)
+				if (tmpdata[4] != null && !tmpdata[4].equals(""))
 					data_new[i][6] = tmpdata[4].toString();
 
 				data_new[i][7] = "1";

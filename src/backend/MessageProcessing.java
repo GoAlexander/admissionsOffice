@@ -100,7 +100,7 @@ public abstract class MessageProcessing {
 			break;
 		case 11:
 			titleMessage = "Результат проверки данных";
-			message = "Не указано количество набранных баллов!";
+			message = "Некорректный формат поля с баллами вступительных испытаний!";
 			break;
 		case 12:
 			titleMessage = "Результат проверки данных";
