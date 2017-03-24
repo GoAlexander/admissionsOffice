@@ -120,8 +120,6 @@ public class EditCatalogElem extends JFrame {
 		deleteBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteButtonActionPerformed(e, table);
-				currentTM.removeRow(dataTable.getSelectedRow());
-				currentTM.fireTableDataChanged();
 			}
 		});
 		buttonPanel.add(deleteBtn);
@@ -199,6 +197,8 @@ public class EditCatalogElem extends JFrame {
 			ModelDBConnection.deleteElementInTableById(table,
 					(String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
 			MessageProcessing.displaySuccessMessage(this, 5);
+			currentTM.removeRow(dataTable.getSelectedRow());
+			currentTM.fireTableDataChanged();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, 3);
