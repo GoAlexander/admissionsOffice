@@ -200,6 +200,7 @@ public class EditCatalogElem extends JFrame {
 					(String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
 			MessageProcessing.displaySuccessMessage(this, 5);
 		} catch (SQLException e1) {
+			e1.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, 3);
 		}
 	}

@@ -351,8 +351,8 @@ go
 
 --Пользователи
 create table Users (
-	userLogin text,			--логин
-	userPassword text,		--пароль
-	userSignature text,		--подпись (будет отражаться в ряде документов)
+	userLogin varchar(max),			--логин
+	userPassword varchar(max),		--пароль
+	userSignature varchar(max),		--подпись (будет отражаться в ряде документов)
 );
 go

@@ -496,7 +496,7 @@ public class ModelDBConnection {
 			id = "id";
 		}
 
-		String query = "select * from " + table + " where " + id + " = " + data[0] + ";";
+		String query = "select * from " + table + " where " + id + " = " + (!table.equals("Users") ? data[0] : "'" + data[0] + "'") + ";";
 		System.out.println(query);
 		int numberOfColumns = 0;
 		if (initConnection()) {
@@ -519,9 +519,9 @@ public class ModelDBConnection {
 					else
 						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'" + ", ";
 				}
-				query = query + " where " + id + " = " + data[0] + ";";
+				query = query + " where " + id + " = " + (!table.equals("Users") ? data[0] : "'" + data[0] + "'")  + ";";
 			} else {
-				query = "insert into " + table + " values (" + data[0] + ", ";
+				query = "insert into " + table + " values (" + (!table.equals("Users") ? data[0] : "'" + data[0] + "'")  + ", ";
 				for (int i = 1; i < numberOfColumns; i++) {
 					if (i == numberOfColumns - 1)
 						query = query + "'" + data[i] + "')";
@@ -719,7 +719,7 @@ public class ModelDBConnection {
 
 		cstmt.setString(1, table);
 		cstmt.setString(2, id);
-		cstmt.setString(3, data);
+		cstmt.setString(3, (!table.equals("Users") ? data : "'" + data + "'"));
 
 		cstmt.execute();
 
