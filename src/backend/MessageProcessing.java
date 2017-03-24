@@ -202,6 +202,18 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат проверки данных";
 			message = "Имя не может быть пустым!";
 			break;
+		case 37:
+			titleMessage = "Результат проверки данных";
+			message = "В плане приема не может быть одинаковых строк!";
+			break;
+		case 38:
+			titleMessage = "Результат проверки данных";
+			message = "Некорректный формат поля с количеством мест приема!";
+			break;
+		case 39:
+			titleMessage = "Результат проверки данных";
+			message = "Количеством мест приема не может быть пустым!";
+			break;
 		default:
 			titleMessage = "Неизвестная ошибка";
 			message = "Произошла неизвестная ошибка. Обратитесь к администратору!";

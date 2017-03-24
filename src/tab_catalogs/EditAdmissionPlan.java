@@ -111,14 +111,8 @@ public class EditAdmissionPlan extends JFrame {
 
 		saveBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataTable.setEnabled(false);
-				addBtn.setEnabled(true);
-				editBtn.setEnabled(true);
-				saveBtn.setEnabled(false);
-				deleteBtn.setEnabled(false);
 				if (dataTable.isEditing())
 					dataTable.getCellEditor().stopCellEditing();
-				dataTable.clearSelection();
 				currentTM.fireTableDataChanged();
 				saveButtonActionPerformed(e);
 			}
@@ -128,8 +122,6 @@ public class EditAdmissionPlan extends JFrame {
 		deleteBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteButtonActionPerformed(e);
-				currentTM.removeRow(dataTable.getSelectedRow());
-				currentTM.fireTableDataChanged();
 			}
 		});
 		buttonPanel.add(deleteBtn);
@@ -142,42 +134,82 @@ public class EditAdmissionPlan extends JFrame {
 
 	private void saveButtonActionPerformed(ActionEvent e) {
 		try {
-			ModelDBConnection.deleteElementInTableByExpression("AdmissionPlan", null, 0);
-
 			Vector<Vector<Object>> data = currentTM.getDataVector();
 			Object[] tmpdata;
+
+			String[][] admissionPlan = new String[data.size()][columnNames.length];
+			boolean formatError = false, isPlaceCountNull = false;
+
 			for (int i = 0; i < data.size(); i++) {
-				String[] rowData = new String[columnNames.length];
 				tmpdata = data.elementAt(i).toArray();
 				if(tmpdata[0] != null) {
-					rowData[0] = "1";
-					for(int j = 0; !tmpdata[0].toString().equals(arrCouse[j]); j++, rowData[0] = String.valueOf(j+1));
+					admissionPlan[i][0] = "1";
+					for(int j = 0; !tmpdata[0].toString().equals(arrCouse[j]); j++, admissionPlan[i][0] = String.valueOf(j+1));
 				}
 				if(tmpdata[1] != null) {
-					rowData[1] = "1";
-					for(int j = 0; !tmpdata[1].toString().equals(arrSpeciality[j]); j++, rowData[1] = String.valueOf(j+1));
+					admissionPlan[i][1] = "1";
+					for(int j = 0; !tmpdata[1].toString().equals(arrSpeciality[j]); j++, admissionPlan[i][1] = String.valueOf(j+1));
 				}
 				if(tmpdata[2] != null) {
-					rowData[2] = "1";
-					for(int j = 0; !tmpdata[2].toString().equals(arrFormEduc[j]); j++, rowData[2] = String.valueOf(j+1));
+					admissionPlan[i][2] = "1";
+					for(int j = 0; !tmpdata[2].toString().equals(arrFormEduc[j]); j++, admissionPlan[i][2] = String.valueOf(j+1));
 				}
 				if(tmpdata[3] != null) {
-					rowData[3] = "1";
-					for(int j = 0; !tmpdata[3].toString().equals(arrCompetGroup[j]); j++, rowData[3] = String.valueOf(j+1));
+					admissionPlan[i][3] = "1";
+					for(int j = 0; !tmpdata[3].toString().equals(arrCompetGroup[j]); j++, admissionPlan[i][3] = String.valueOf(j+1));
 				}
 				if(tmpdata[4] != null) {
-					rowData[4] = "1";
-					for(int j = 0; !tmpdata[4].toString().equals(arrOrg[j]); j++, rowData[4] = String.valueOf(j+1));
+					admissionPlan[i][4] = "1";
+					for(int j = 0; !tmpdata[4].toString().equals(arrOrg[j]); j++, admissionPlan[i][4] = String.valueOf(j+1));
 				}
 				if(tmpdata[5] != null) {
-					rowData[5] = "1";
-					for(int j = 0; !tmpdata[5].toString().equals(arrStandard[j]); j++, rowData[5] = String.valueOf(j+1));
+					admissionPlan[i][5] = "1";
+					for(int j = 0; !tmpdata[5].toString().equals(arrStandard[j]); j++, admissionPlan[i][5] = String.valueOf(j+1));
 				}
-				if(tmpdata[6] != null) rowData[6] = tmpdata[6].toString();
-
-				ModelDBConnection.updateElementInTableByExpression("AdmissionPlan", rowData, 6);
+				if(tmpdata[6] != null) {
+					admissionPlan[i][6] = tmpdata[6].toString().isEmpty() ? null : tmpdata[6].toString();
+					if (admissionPlan[i][6] != null && !admissionPlan[i][6].matches("^[0-9]+$"))
+						formatError = true;
+				}
+				if (admissionPlan[i][6] == null)
+					isPlaceCountNull = true;
 			}
-			MessageProcessing.displaySuccessMessage(this, 4);
+
+			boolean hasDublicates = false;
+			for (int i = 0; i < admissionPlan.length - 1; i++) {
+				for (int j = i+1; j < admissionPlan.length; j++) {
+					int similarColumns = 0;
+					for (int k = 0; k < admissionPlan[0].length - 1; k++) {
+						if ((admissionPlan[i][k] == admissionPlan[j][k]) || admissionPlan[i][k].equals(admissionPlan[j][k]))
+							similarColumns++;
+					}
+					if (similarColumns >= 6) {
+						hasDublicates = true;
+						break;
+					}
+				}
+			}
+
+			if (hasDublicates)
+				MessageProcessing.displayErrorMessage(this, 37);
+			else if (formatError)
+				MessageProcessing.displayErrorMessage(this, 38);
+			else if (isPlaceCountNull)
+				MessageProcessing.displayErrorMessage(this, 39);
+			else {
+				ModelDBConnection.deleteElementInTableByExpression("AdmissionPlan", null, 0);
+				for (int i = 0; i < admissionPlan.length; i++) {
+					ModelDBConnection.updateElementInTableByExpression("AdmissionPlan", admissionPlan[i], 6);
+				}
+
+				MessageProcessing.displaySuccessMessage(this, 4);
+				dataTable.setEnabled(false);
+				addBtn.setEnabled(true);
+				editBtn.setEnabled(true);
+				saveBtn.setEnabled(false);
+				deleteBtn.setEnabled(false);
+				dataTable.clearSelection();
+			}
 		} catch (SQLException e1) {
 			MessageProcessing.displayErrorMessage(this, 2);
 		}
@@ -191,29 +223,35 @@ public class EditAdmissionPlan extends JFrame {
 			tmpdata = data.elementAt(dataTable.getSelectedRow()).toArray();
 			if(tmpdata[0] != null) {
 				rowData[0] = "1";
-				for(int j = 0; !tmpdata[0].toString().equals(arrSpeciality[j]); j++, rowData[0] = String.valueOf(j+1));
+				for(int j = 0; !tmpdata[0].toString().equals(arrCouse[j]); j++, rowData[0] = String.valueOf(j+1));
 			}
 			if(tmpdata[1] != null) {
 				rowData[1] = "1";
-				for(int j = 0; !tmpdata[1].toString().equals(arrFormEduc[j]); j++, rowData[1] = String.valueOf(j+1));
+				for(int j = 0; !tmpdata[1].toString().equals(arrSpeciality[j]); j++, rowData[1] = String.valueOf(j+1));
 			}
 			if(tmpdata[2] != null) {
 				rowData[2] = "1";
-				for(int j = 0; !tmpdata[2].toString().equals(arrCompetGroup[j]); j++, rowData[2] = String.valueOf(j+1));
+				for(int j = 0; !tmpdata[2].toString().equals(arrFormEduc[j]); j++, rowData[2] = String.valueOf(j+1));
 			}
 			if(tmpdata[3] != null) {
 				rowData[3] = "1";
-				for(int j = 0; !tmpdata[3].toString().equals(arrOrg[j]); j++, rowData[3] = String.valueOf(j+1));
+				for(int j = 0; !tmpdata[3].toString().equals(arrCompetGroup[j]); j++, rowData[3] = String.valueOf(j+1));
 			}
 			if(tmpdata[4] != null) {
 				rowData[4] = "1";
-				for(int j = 0; !tmpdata[4].toString().equals(arrStandard[j]); j++, rowData[4] = String.valueOf(j+1));
+				for(int j = 0; !tmpdata[4].toString().equals(arrOrg[j]); j++, rowData[4] = String.valueOf(j+1));
 			}
-			if(tmpdata[5] != null) rowData[5] = tmpdata[5].toString();
+			if(tmpdata[5] != null) {
+				rowData[5] = "1";
+				for(int j = 0; !tmpdata[5].toString().equals(arrStandard[j]); j++, rowData[5] = String.valueOf(j+1));
+			}
+			if(tmpdata[6] != null) rowData[6] = tmpdata[6].toString();
 
-			ModelDBConnection.deleteElementInTableByExpression("AdmissionPlan", rowData, 5);
+			ModelDBConnection.deleteElementInTableByExpression("AdmissionPlan", rowData, 6);
 
 			MessageProcessing.displaySuccessMessage(this, 5);
+			currentTM.removeRow(dataTable.getSelectedRow());
+			currentTM.fireTableDataChanged();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, 3);
