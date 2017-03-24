@@ -103,14 +103,8 @@ public class EditCatalogElem extends JFrame {
 
 		saveBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataTable.setEnabled(false);
-				addBtn.setEnabled(true);
-				editBtn.setEnabled(true);
-				saveBtn.setEnabled(false);
-				deleteBtn.setEnabled(false);
 				if (dataTable.isEditing())
 					dataTable.getCellEditor().stopCellEditing();
-				dataTable.clearSelection();
 				currentTM.fireTableDataChanged();
 				saveButtonActionPerformed(e, table);
 			}
@@ -137,6 +131,8 @@ public class EditCatalogElem extends JFrame {
 			Object[] tmpdata;
 			ArrayList<Integer> mistakesIndices;
 			String[][] rowData = new String[data.size()][columnNames.length];
+			boolean hasNullID = false, hasNullNames = false;
+			
 			for (int i = 0; i < data.size(); i++) {
 				tmpdata = data.elementAt(i).toArray();
 				for (int j = 0; j < tmpdata.length; j++) {
@@ -146,10 +142,18 @@ public class EditCatalogElem extends JFrame {
 							rowData[i][j] = null;
 					}
 				}
+				if (rowData[i][0] == null)
+					hasNullID = true;
+				else if (rowData[i][1] == null)
+					hasNullNames = true;
 			}
 
 			mistakesIndices = checkData(table, rowData);
-			if (mistakesIndices.contains(0))
+			if (hasNullID) {
+				MessageProcessing.displayErrorMessage(null, 35);
+			} else if (hasNullNames) {
+				MessageProcessing.displayErrorMessage(null, 36);
+			} else if (mistakesIndices.contains(0))
 				MessageProcessing.displayErrorMessage(null, 31);
 			else if (mistakesIndices.contains(2)) {
 				if (table.equals("EntranceTest") || table.equals("IndividualAchievement"))
@@ -158,12 +162,19 @@ public class EditCatalogElem extends JFrame {
 					MessageProcessing.displayErrorMessage(null, 33);
 			} else if (mistakesIndices.contains(3)) {
 				MessageProcessing.displayErrorMessage(null, 33);
-			}
-			if (mistakesIndices.isEmpty()) {
+			} else if (mistakesIndices.contains(-1)) {
+				MessageProcessing.displayErrorMessage(null, 34);
+			} else if (mistakesIndices.isEmpty()) {
 				for (int i = 0; i < data.size(); i++) {
 					ModelDBConnection.updateElementInTableById(table, rowData[i]);
 				}
 				MessageProcessing.displaySuccessMessage(this, 4);
+				dataTable.setEnabled(false);
+				addBtn.setEnabled(true);
+				editBtn.setEnabled(true);
+				saveBtn.setEnabled(false);
+				deleteBtn.setEnabled(false);
+				dataTable.clearSelection();
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -173,6 +184,20 @@ public class EditCatalogElem extends JFrame {
 
 	private ArrayList<Integer> checkData(String table, String[][] rowData) {
 		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
+
+		ArrayList<String> allUniqueIDs = new ArrayList<String>();
+		ArrayList<String> allUniqueNames = new ArrayList<String>();
+
+		for (int i = 0; i < rowData.length; i++) {
+			if (!allUniqueIDs.contains(rowData[i][0]))
+				allUniqueIDs.add(rowData[i][0]);
+			if (!allUniqueNames.contains(rowData[i][1]))
+				allUniqueNames.add(rowData[i][1]);
+		}
+
+		if (rowData.length != allUniqueIDs.size() || rowData.length != allUniqueNames.size())
+			mistakesIndices.add(-1);
+
 		if (table.equals("EntranceTest") || table.equals("IndividualAchievement")) {
 			for (int i = 0; i < rowData.length; i++) {
 				if (rowData[i][3] != null && !rowData[i][3].isEmpty() && !rowData[i][3].matches("^[0-9]+$"))
