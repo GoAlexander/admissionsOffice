@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.Box;
@@ -29,7 +30,7 @@ import general_classes.GUITableModel;
 public class IndividualAchievementsPanel extends JPanel{
 	private String currentAbit;
 	private JTable indAchivTable;
-	private JButton addNewAchievmentButton, editAchievmentButton, saveAchievmentButton;
+	private JButton addNewAchievmentButton, editAchievmentButton, saveAchievmentButton, deleteAchievmentButton;
 	private GUITableModel individAchivTM = new GUITableModel();
 	private String[] nameIndAchivTest, individAchivColumnNames = { "Наименование", "Балл", "Подтверждающий документ" };
 
@@ -72,7 +73,7 @@ public class IndividualAchievementsPanel extends JPanel{
 		indAchivTable.getModel().addTableModelListener(new TableModelListener() {
 			public void tableChanged(TableModelEvent arg0) 
 			{
-				if(indAchivTable.getSelectedRow() > -1)
+				if(indAchivTable.getSelectedRow() > -1 && indAchivTable.getSelectedRow() < indAchivTable.getRowCount())
 					if(individAchivTM.getValueAt(indAchivTable.getSelectedRow(), 0) != null) {
 						String[] values = new String[3];
 						values[0] = currentAbit;
@@ -123,15 +124,29 @@ public class IndividualAchievementsPanel extends JPanel{
 		saveAchievmentButton = new JButton("Сохранить");
 		saveAchievmentButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				if (indAchivTable.isEditing())
+					indAchivTable.getCellEditor().stopCellEditing();
+
 				saveAchievmentButtonActionPerformed(evt);
 			}
 		});
 
 		buttonEditSavePanel.add(saveAchievmentButton);
+
+		deleteAchievmentButton = new JButton("Удалить");
+		deleteAchievmentButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				if (indAchivTable.isEditing())
+					indAchivTable.getCellEditor().stopCellEditing();
+				deleteAchievmentButtonActionPerformed(evt);
+			}
+		});
+		buttonEditSavePanel.add(deleteAchievmentButton);
+
 		buttonPanel.add(buttonEditSavePanel);
 
 		this.add(buttonPanel, BorderLayout.PAGE_END);
-		
+
 		this.setEditable(false);
 	}
 
@@ -151,11 +166,33 @@ public class IndividualAchievementsPanel extends JPanel{
 		}
 	}
 
+	private void deleteAchievmentButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		try {
+			if (indAchivTable.getSelectedRow() > -1) {
+				String[][]	data_old = ModelDBConnection.getAllAchievmentsByAbiturientId(currentAbit, true);
+
+				if (data_old.length > indAchivTable.getSelectedRow()) {
+					Vector<Vector<Object>> data = individAchivTM.getDataVector();
+
+					String currentIndAchievment = "1";
+					for(int j = 0; !data.elementAt(indAchivTable.getSelectedRow()).toArray()[0].toString().equals(nameIndAchivTest[j]); j++, currentIndAchievment = String.valueOf(j+1));
+
+					String[] data_delete = {currentAbit, currentIndAchievment};
+					ModelDBConnection.deleteElementInTableByIds("AbiturientIndividualAchievement", data_delete);
+
+					MessageProcessing.displaySuccessMessage(this, 5);
+				}
+				individAchivTM.removeRow(indAchivTable.getSelectedRow());
+				//individAchivTM.fireTableDataChanged();
+				indAchivTable.clearSelection();
+			}
+		} catch (Exception e) {
+			MessageProcessing.displayErrorMessage(this, e);
+		}
+	}
+
 	private void saveAchievmentButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			if (indAchivTable.isEditing())
-				indAchivTable.getCellEditor().stopCellEditing();
-
 			Vector<Vector<Object>> data = individAchivTM.getDataVector();
 			Object[] tmpdata;
 
@@ -164,41 +201,65 @@ public class IndividualAchievementsPanel extends JPanel{
 
 			int	data_old_length = data_old == null ? 0 : data_old.length;
 
+			ArrayList<String> allUniqueAchievments = new ArrayList<String>();
+			boolean isAcievmentNameNull = false, formatError = false;
+
 			for(int i = 0; i < data.size(); i++) {
 				tmpdata = data.elementAt(i).toArray();
+
+				if (tmpdata[0] == null) {
+					isAcievmentNameNull = true;
+				}
 				data_new[i][0] = currentAbit;
 				data_new[i][1] = "1";
 				for(int j = 0; !tmpdata[0].toString().equals(nameIndAchivTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
-				if (tmpdata[1] != null) data_new[i][2] = tmpdata[1].toString();
+
+				if (!allUniqueAchievments.contains(data_new[i][1]))
+					allUniqueAchievments.add(data_new[i][1]);
+
+				if (tmpdata[1] != null) {
+					data_new[i][2] = (tmpdata[1].toString().isEmpty() ? null : tmpdata[1].toString());
+					if (data_new[i][2] != null && !data_new[i][2].matches("^[0-9]+$"))
+						formatError = true;
+				}
+
 				for(int j = 3; j < data_new[i].length; j++)
 					data_new[i][j] = null;
 				data_new[i][7] = null;
 			}
 
-			for (int i = 0; i < ((data.size() <= data_old_length) ? data.size() : data_old_length); i++) {
-				tmpdata = data.elementAt(i).toArray();
-				data_new[i][0] = currentAbit;
-				data_new[i][1] = "1";
-				for(int j = 0; !tmpdata[0].toString().equals(nameIndAchivTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
-				if (tmpdata[1] != null) data_new[i][2] = tmpdata[1].toString();
-				for(int j = 3; j < data_new[i].length; j++)
-					data_new[i][j] = data_old[i][j];
+			if (isAcievmentNameNull) {
+				MessageProcessing.displayErrorMessage(null, 40);
+			} else if (formatError) {
+				MessageProcessing.displayErrorMessage(null, 32);
+			} else if (allUniqueAchievments.size() != data_new.length) {
+				MessageProcessing.displayErrorMessage(null, 41);
+			} else {
+				for (int i = 0; i < ((data.size() <= data_old_length) ? data.size() : data_old_length); i++) {
+					/*tmpdata = data.elementAt(i).toArray();
+					data_new[i][0] = currentAbit;
+					data_new[i][1] = "1";
+					for(int j = 0; !tmpdata[0].toString().equals(nameIndAchivTest[j]); j++, data_new[i][1] = String.valueOf(j+1));
+					if (tmpdata[1] != null) data_new[i][2] = (tmpdata[1].toString().isEmpty() ? null : tmpdata[1].toString());*/
+					for(int j = 3; j < data_new[i].length; j++)
+						data_new[i][j] = data_old[i][j];
+				}
+
+				for(int i = 0; i < data_old_length; i++) {
+					String[] data_delete = {data_old[i][0], data_old[i][1]};
+					ModelDBConnection.deleteElementInTableByIds("AbiturientIndividualAchievement", data_delete);
+				}
+
+				for(int i = 0; i < data.size(); i++) {
+					ModelDBConnection.updateAbiturientIndividualAchivementByID(data_new[i]);
+				}
+
+				MessageProcessing.displaySuccessMessage(this, 4);
+
+				indAchivTable.clearSelection();
+				this.setValues(currentAbit);
+				this.setEditable(false);
 			}
-
-			for(int i = 0; i < data_old_length; i++) {
-				String[] data_delete = {data_old[i][0], data_old[i][1]};
-				ModelDBConnection.deleteElementInTableByIds("AbiturientIndividualAchievement", data_delete);
-			}
-
-			for(int i = 0; i < data.size(); i++) {
-				ModelDBConnection.updateAbiturientIndividualAchivementByID(data_new[i]);
-			}
-
-			MessageProcessing.displaySuccessMessage(this, 4);
-
-			indAchivTable.clearSelection();
-			this.setValues(currentAbit);
-			this.setEditable(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
@@ -224,6 +285,7 @@ public class IndividualAchievementsPanel extends JPanel{
 		indAchivTable.setEnabled(state);
 		saveAchievmentButton.setEnabled(state);
 		addNewAchievmentButton.setEnabled(state);
+		deleteAchievmentButton.setEnabled(state);
 
 		editAchievmentButton.setEnabled(!state);
 		if (currentAbit == null || currentAbit.equals("0"))
@@ -240,7 +302,7 @@ public class IndividualAchievementsPanel extends JPanel{
 	}
 
 	public String[][] getValues(boolean forDocs) {
-		String[][] indAchievments = ModelDBConnection.getAllAchievmentsByAbiturientId(currentAbit, true);;
+		String[][] indAchievments = ModelDBConnection.getAllAchievmentsByAbiturientId(currentAbit, true);
 		if (forDocs) {
 			Vector<Vector<Object>> data = individAchivTM.getDataVector();
 			for(int i = 0; i < data.size(); i++) {

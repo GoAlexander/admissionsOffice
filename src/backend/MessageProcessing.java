@@ -45,6 +45,10 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат редактирования вступительных испытаний";
 			message = "Данные успешно сохранены!";
 			break;
+		case 10:
+			titleMessage = "Результат редактирования индивидуальных достижений";
+			message = "Данные успешно сохранены!";
+			break;
 		}
 
 		JOptionPane.showMessageDialog(parent, message, titleMessage, JOptionPane.INFORMATION_MESSAGE);
@@ -213,6 +217,14 @@ public abstract class MessageProcessing {
 		case 39:
 			titleMessage = "Результат проверки данных";
 			message = "Количеством мест приема не может быть пустым!";
+			break;
+		case 40:
+			titleMessage = "Результат проверки данных";
+			message = "Не выбрано наименование индивидуального достижения!";
+			break;
+		case 41:
+			titleMessage = "Результат проверки данных";
+			message = "Не может быть двух одинаковых индивидуальных достижений!";
 			break;
 		default:
 			titleMessage = "Неизвестная ошибка";

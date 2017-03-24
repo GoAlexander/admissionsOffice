@@ -1,6 +1,7 @@
 ﻿package tab_achievements;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -53,6 +54,7 @@ public class WatchConfirmingDoc extends JFrame {
 		nameDocPanel.add(nameDocLabel);
 		nameDocText = new JTextField();
 		nameDocText.setPreferredSize(dimTextDigitInfo);
+		nameDocText.setBackground(Color.WHITE);
 		nameDocPanel.add(nameDocText);
 		mainPanel.add(nameDocPanel);
 
@@ -63,6 +65,7 @@ public class WatchConfirmingDoc extends JFrame {
 		docDataPanel.add(seriaLabel);
 		seriaText = new JTextField();
 		seriaText.setPreferredSize(dimText);
+		seriaText.setBackground(Color.WHITE);
 		docDataPanel.add(seriaText);
 		docDataPanel.add(Box.createRigidArea(dimRigidArea));
 
@@ -70,6 +73,7 @@ public class WatchConfirmingDoc extends JFrame {
 		docDataPanel.add(numLabel);
 		numText = new JTextField();
 		numText.setPreferredSize(dimText);
+		numText.setBackground(Color.WHITE);
 		docDataPanel.add(numText);
 		docDataPanel.add(Box.createRigidArea(dimRigidArea));
 
@@ -84,6 +88,7 @@ public class WatchConfirmingDoc extends JFrame {
 			dateText = new JTextField();
 		}
 		dateText.setPreferredSize(dimText);
+		dateText.setBackground(Color.WHITE);
 		docDataPanel.add(dateText);
 		docDataPanel.add(Box.createRigidArea(dimRigidArea));
 
@@ -97,6 +102,7 @@ public class WatchConfirmingDoc extends JFrame {
 		textIssuedBy = new JTextArea(2, 41);
 		JScrollPane paneIssuedBy = new JScrollPane(textIssuedBy);
 		textIssuedBy.setLineWrap(true);
+		textIssuedBy.setBackground(Color.WHITE);
 		issuedByPanel.add(paneIssuedBy);
 		mainPanel.add(issuedByPanel);
 
