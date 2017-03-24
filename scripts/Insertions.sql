@@ -121,7 +121,7 @@ insert into [AbiturientPassport] values
 go
 
 insert into [AbiturientHigherEducation] values
-(2, '1234', '123456', 'HSE', 'Maths', 1);
+(2, '1234', '123456', 'HSE', 'Maths', 2014, 9.5);
 
 go
 
@@ -141,8 +141,8 @@ insert into [AssessmentBase] values
 go
 
 insert into [AdmissionPlan] values
-(1, 1, 1, 1, 1, 11),
-(2, 2, 2, 2, 2, 22);
+(1, 1, 1, 1, 1, 1, 11),
+(2, 2, 2, 2, 2, 2, 22);
 
 go
 

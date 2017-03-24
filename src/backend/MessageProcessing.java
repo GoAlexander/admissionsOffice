@@ -178,6 +178,18 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат проверки данных";
 			message = "Такая конкурсная группа уже была добавлена ранее!";
 			break;
+		case 31:
+			titleMessage = "Результат проверки данных";
+			message = "Некорректный формат поля id!";
+			break;
+		case 32:
+			titleMessage = "Результат проверки данных";
+			message = "Некорректный формат поля с баллом!";
+			break;
+		case 33:
+			titleMessage = "Результат проверки данных";
+			message = "Некорректный формат поля с кодом ФИС!";
+			break;
 		default:
 			titleMessage = "Неизвестная ошибка";
 			message = "Произошла неизвестная ошибка. Обратитесь к администратору!";

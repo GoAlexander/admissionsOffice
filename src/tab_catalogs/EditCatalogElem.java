@@ -2,7 +2,6 @@
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,6 +14,7 @@ import general_classes.GUITableModel;
 
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 
@@ -125,7 +125,7 @@ public class EditCatalogElem extends JFrame {
 			}
 		});
 		buttonPanel.add(deleteBtn);
-		
+
 		mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
 		setPreferredSize(new Dimension(850, 600));
@@ -137,41 +137,71 @@ public class EditCatalogElem extends JFrame {
 		try {
 			Vector<Vector<Object>> data = currentTM.getDataVector();
 			Object[] tmpdata;
+			ArrayList<Integer> mistakesIndices;
+			String[][] rowData = new String[data.size()][columnNames.length];
 			for (int i = 0; i < data.size(); i++) {
-				String[] rowData = new String[columnNames.length];
 				tmpdata = data.elementAt(i).toArray();
 				for (int j = 0; j < tmpdata.length; j++) {
-					if (tmpdata[j] != null)
-						rowData[j] = tmpdata[j].toString();
+					if (tmpdata[j] != null) {
+						rowData[i][j] = tmpdata[j].toString();
+						if (rowData[i][j].isEmpty())
+							rowData[i][j] = null;
+					}
 				}
-				ModelDBConnection.updateElementInTableById(table, rowData);
 			}
-			MessageProcessing.displaySuccessMessage(this, 4);
+
+			mistakesIndices = checkData(table, rowData);
+			if (mistakesIndices.contains(0))
+				MessageProcessing.displayErrorMessage(null, 31);
+			else if (mistakesIndices.contains(2)) {
+				if (table.equals("EntranceTest") || table.equals("IndividualAchievement"))
+					MessageProcessing.displayErrorMessage(null, 32);
+				else
+					MessageProcessing.displayErrorMessage(null, 33);
+			} else if (mistakesIndices.contains(3)) {
+				MessageProcessing.displayErrorMessage(null, 33);
+			}
+			if (mistakesIndices.isEmpty()) {
+				for (int i = 0; i < data.size(); i++) {
+					ModelDBConnection.updateElementInTableById(table, rowData[i]);
+				}
+				MessageProcessing.displaySuccessMessage(this, 4);
+			}
 		} catch (SQLException e1) {
-			MessageProcessing.displayErrorMessage(this, 2);
+			e1.printStackTrace();
+			MessageProcessing.displayErrorMessage(this, e1);
 		}
+	}
+
+	private ArrayList<Integer> checkData(String table, String[][] rowData) {
+		ArrayList<Integer> mistakesIndices = new ArrayList<Integer>();
+		if (table.equals("EntranceTest") || table.equals("IndividualAchievement")) {
+			for (int i = 0; i < rowData.length; i++) {
+				if (rowData[i][3] != null && !rowData[i][3].isEmpty() && !rowData[i][3].matches("^[0-9]+$"))
+					mistakesIndices.add(3);
+			}
+		}
+
+		if (!table.equals("Users")) {
+			for (int i = 0; i < rowData.length; i++) {
+				if (rowData[i][0] != null && !rowData[i][0].matches("^[0-9]+$"))
+					mistakesIndices.add(0);
+				if (rowData[i][2] != null && !rowData[i][2].matches("^[0-9]+$"))
+					mistakesIndices.add(2);
+			}
+		}
+
+		return mistakesIndices;
 	}
 
 	private void deleteButtonActionPerformed(ActionEvent e, String table) {
 		try {
-			ModelDBConnection.deleteElementInTableById(table, (String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
+			ModelDBConnection.deleteElementInTableById(table,
+					(String) currentTM.getValueAt(dataTable.getSelectedRow(), 0));
 			MessageProcessing.displaySuccessMessage(this, 5);
 		} catch (SQLException e1) {
 			MessageProcessing.displayErrorMessage(this, 3);
 		}
 	}
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
-					EditCatalogElem window = new EditCatalogElem("Gender", "Пол");
-					window.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 }
