@@ -456,13 +456,13 @@ public class ModelDBConnection {
 					for (int i = 0; i < numberOfColumns; i++) {
 						if (rset.getObject(i + 1) != null) {
 							data[curPos][i] = rset.getObject(i + 1).toString();
-							System.out.println(data[curPos][i]);
+							//System.out.println(data[curPos][i]);
 						}
 					}
 					curPos++;
 				}
 			}
-			stmt.close();
+			cstmt.close();
 			rset.close();
 		} catch (Exception e) {
 			e.printStackTrace();
