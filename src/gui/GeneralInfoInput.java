@@ -302,7 +302,7 @@ public class GeneralInfoInput extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					OutputExcel.outExcel("Abiturient");
+					OutputExcel.writeListOfSubmittedDocuments();
 					JOptionPane.showMessageDialog(null, "Success!", "", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();

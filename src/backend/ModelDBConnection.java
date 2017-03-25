@@ -57,6 +57,10 @@ public class ModelDBConnection {
 		return dbName;
 	}
 
+	public static Connection getConnection() {
+		return con;
+	}
+
 	public static boolean initConnection() {
 		if (con == null) {
 			try {
