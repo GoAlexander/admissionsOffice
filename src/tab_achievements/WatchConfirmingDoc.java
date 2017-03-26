@@ -133,6 +133,7 @@ public class WatchConfirmingDoc extends JFrame {
 	private void editConfirmingDocButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
 			ModelDBConnection.updateAbiturientIndividualAchivementByID(getValues());
+			ModelDBConnection.updateCompetitiveBallsByID(currentAbit);
 			this.setVisible(false);
 		} catch (Exception e) {
 			MessageProcessing.displayErrorMessage(this, e);

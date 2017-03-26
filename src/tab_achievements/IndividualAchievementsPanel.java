@@ -179,6 +179,7 @@ public class IndividualAchievementsPanel extends JPanel{
 
 					String[] data_delete = {currentAbit, currentIndAchievment};
 					ModelDBConnection.deleteElementInTableByIds("AbiturientIndividualAchievement", data_delete);
+					ModelDBConnection.updateCompetitiveBallsByID(currentAbit);
 
 					MessageProcessing.displaySuccessMessage(this, 5);
 				}
@@ -254,6 +255,7 @@ public class IndividualAchievementsPanel extends JPanel{
 					ModelDBConnection.updateAbiturientIndividualAchivementByID(data_new[i]);
 				}
 
+				ModelDBConnection.updateCompetitiveBallsByID(currentAbit);
 				MessageProcessing.displaySuccessMessage(this, 4);
 
 				indAchivTable.clearSelection();
