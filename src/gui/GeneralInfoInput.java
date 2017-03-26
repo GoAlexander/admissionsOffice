@@ -437,6 +437,7 @@ public class GeneralInfoInput extends JFrame {
 		panelID.add(idLabel);
 		textID = new JTextField();
 		textID.setPreferredSize(new Dimension(60, 25));
+		textID.setEnabled(false);
 		panelID.add(textID);
 		GIPanel.add(panelID, gbc);
 
@@ -841,7 +842,7 @@ public class GeneralInfoInput extends JFrame {
 	}
 
 	public void setEditable(boolean status) {
-		((JTextField) panelID.getComponent(1)).setEnabled(status);
+		//((JTextField) panelID.getComponent(1)).setEnabled(status);
 		((JTextField) panelSurname.getComponent(1)).setEnabled(status);
 		((JTextField) panelName.getComponent(1)).setEnabled(status);
 		((JTextField) panelPatronymic.getComponent(1)).setEnabled(status);
