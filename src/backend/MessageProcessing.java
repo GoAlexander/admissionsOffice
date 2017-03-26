@@ -57,6 +57,10 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат удаления конкурсной группы";
 			message = "Конкурсная группа успешно удалена!";
 			break;
+		case 13:
+			titleMessage = "Результат редактирования конкурсной группы";
+			message = "Изменения в конкурсной группе успешно сохранены!";
+			break;
 		}
 
 		JOptionPane.showMessageDialog(parent, message, titleMessage, JOptionPane.INFORMATION_MESSAGE);
@@ -233,6 +237,10 @@ public abstract class MessageProcessing {
 		case 41:
 			titleMessage = "Результат проверки данных";
 			message = "Не может быть двух одинаковых индивидуальных достижений!";
+			break;
+		case 42:
+			titleMessage = "Результат проверки данных";
+			message = "Оригинал не может быть предоставлен в рамках нескольких конкурсных групп одновременно!";
 			break;
 		default:
 			titleMessage = "Неизвестная ошибка";

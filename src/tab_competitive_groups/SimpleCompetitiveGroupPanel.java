@@ -115,4 +115,10 @@ public class SimpleCompetitiveGroupPanel extends JPanel {
 
 		return result;
 	}
+
+	public int getCompetitiveGroupOriginalBoxValue() {
+		String[] competitiveGroupWithDetails = ((CompetitiveGroupPanelListener)(showInfo.getActionListeners()[0])).getValues(true);
+
+		return competitiveGroupWithDetails[10] != null ? 1 : 0;
+	}
 }

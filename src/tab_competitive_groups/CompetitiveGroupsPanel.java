@@ -99,6 +99,16 @@ public class CompetitiveGroupsPanel extends JPanel {
 		return allCompetitiveGroups;
 	}
 
+	public int getCountOfSelectedOriginalBox() {
+		int countOfSelectedOriginalBox = 0;
+
+		for (int i = 0; i < compGroupsPanel.getComponents().length; i++)
+			if (compGroupsPanel.getComponent(i) instanceof SimpleCompetitiveGroupPanel)
+				countOfSelectedOriginalBox += ((SimpleCompetitiveGroupPanel)compGroupsPanel.getComponent(i)).getCompetitiveGroupOriginalBoxValue();
+
+		return countOfSelectedOriginalBox;
+	}
+
 	public void setEditable() {
 		if (currentAbit == null || currentAbit.equals("0"))
 			addNewGroupButton.setEnabled(false);

@@ -198,7 +198,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 			}
 		});
 
-		//buttonPanel.add(editCompetitiveGroupButton);
+		buttonPanel.add(editCompetitiveGroupButton);
 
 		deleteCompetitiveGroupButton = new JButton("Удалить");
 		deleteCompetitiveGroupButton.addActionListener(new java.awt.event.ActionListener() {
@@ -260,8 +260,25 @@ public class AddNewCompetitiveGroup extends JFrame{
 
 	private void editCompetitiveGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		try {
-			//Some actions
+			if (editCompetitiveGroupButton.getText().equals("Редактировать")) {
+				calendar.setEnabled(originalBox.isSelected() ? true : false);
+				originalBox.setEnabled(true);
+				deleteCompetitiveGroupButton.setEnabled(false);
+				editCompetitiveGroupButton.setText("    Сохранить     ");
+			} else {
+				if (((CompetitiveGroupsPanel)parentPanel).getCountOfSelectedOriginalBox() > 1) {
+					MessageProcessing.displayErrorMessage(this, 42);
+				} else {
+					ModelDBConnection.updateAbiturientCompetitiveGroupByID(getValues(false));
+					calendar.setEnabled(false);
+					originalBox.setEnabled(false);
+					deleteCompetitiveGroupButton.setEnabled(true);
+					editCompetitiveGroupButton.setText("Редактировать");
+					MessageProcessing.displaySuccessMessage(null, 13);
+				}
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			MessageProcessing.displayErrorMessage(this, e);
 		}
 	}
