@@ -151,6 +151,7 @@ public class EntranceTestsPanel extends JPanel {
 				for (int i = 0; i < data.size(); i++) {
 					ModelDBConnection.updateAbiturientEntranceTestsResultsByID(data_new[i]);
 				}
+				ModelDBConnection.updateCompetitiveBallsByID(currentAbit);
 				MessageProcessing.displaySuccessMessage(this, 9);
 				entranceTestTable.clearSelection();
 				this.setEditable(false);

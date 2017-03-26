@@ -49,6 +49,14 @@ public abstract class MessageProcessing {
 			titleMessage = "Результат редактирования индивидуальных достижений";
 			message = "Данные успешно сохранены!";
 			break;
+		case 11:
+			titleMessage = "Результат добавления конкурсной группы";
+			message = "Конкурсная группа успешно добавлена!";
+			break;
+		case 12:
+			titleMessage = "Результат удаления конкурсной группы";
+			message = "Конкурсная группа успешно удалена!";
+			break;
 		}
 
 		JOptionPane.showMessageDialog(parent, message, titleMessage, JOptionPane.INFORMATION_MESSAGE);

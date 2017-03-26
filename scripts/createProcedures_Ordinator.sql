@@ -291,3 +291,26 @@ as begin
 	return
 end;
 go
+
+alter procedure updateCompetitiveBallsByID(@aid varchar(max))
+as
+begin
+	if not exists(select * from AbiturientEntranceTests where aid_abiturient = @aid)
+		begin
+			update AbiturientCompetitiveGroup set competitiveBall = null where aid_abiturient = @aid
+		end
+	else
+		begin
+			update AbiturientCompetitiveGroup set competitiveBall = (select sum(score) from AbiturientEntranceTests  where aid_abiturient = @aid) where aid_abiturient = @aid
+		end
+
+	if not exists(select * from AbiturientIndividualAchievement where aid_abiturient = @aid)
+		begin
+			update AbiturientCompetitiveGroup set availabilityIndividualAchievements = null where aid_abiturient = @aid
+		end
+	else
+		begin
+			update AbiturientCompetitiveGroup set availabilityIndividualAchievements = 1 where aid_abiturient = @aid
+		end
+end;
+go

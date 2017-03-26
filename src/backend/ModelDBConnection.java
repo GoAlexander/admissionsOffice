@@ -1252,4 +1252,15 @@ public class ModelDBConnection {
 		}
 		return false;
 	}
+
+	public static void updateCompetitiveBallsByID(String aid) throws SQLException {
+		if (initConnection()) {
+			cstmt = con.prepareCall("{call updateCompetitiveBallsByID(?)}");
+
+			cstmt.setString(1, aid);
+			cstmt.execute();
+
+			cstmt.close();
+		}
+	}
 }
