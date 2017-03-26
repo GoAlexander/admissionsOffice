@@ -587,9 +587,9 @@ public class ModelDBConnection {
 			query = "select * from " + table + " where ";
 			for (int i = 0; i < countOfExprParams; i++)
 				if (i == countOfExprParams - 1)
-					query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
+					query = query + rsmd.getColumnLabel(i + 1) + (data[i] != null ? " = " + data[i] : " is " + data[i]) + ";";
 				else
-					query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
+					query = query + rsmd.getColumnLabel(i + 1) + (data[i] != null ? " = " + data[i] : " is " + data[i]) + " and ";
 			System.out.println(query);
 			stmt = con.createStatement();
 			rset = stmt.executeQuery(query);
@@ -609,9 +609,9 @@ public class ModelDBConnection {
 				query = query + " where ";
 				for (int i = 0; i < countOfExprParams; i++)
 					if (i == countOfExprParams - 1)
-						query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + ";";
+						query = query + rsmd.getColumnLabel(i + 1) + (data[i] != null ? " = " + data[i] : " is " + data[i]) + ";";
 					else
-						query = query + rsmd.getColumnLabel(i + 1) + " = " + data[i] + " and ";
+						query = query + rsmd.getColumnLabel(i + 1) + (data[i] != null ? " = " + data[i] : " is " + data[i]) + " and ";
 			} else {
 				query = "insert into " + table + " values (" + data[0] + ", ";
 				for (int i = 1; i < numberOfColumns; i++) {

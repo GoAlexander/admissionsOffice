@@ -247,8 +247,8 @@ public class AddNewCompetitiveGroup extends JFrame{
 				else {
 					ModelDBConnection.updateAbiturientCompetitiveGroupByID(newCompetitiveGroup);
 					this.setVisible(false);
-					((CompetitiveGroupsPanel)parentPanel).setValues(currentAbit);
 					ModelDBConnection.updateCompetitiveBallsByID(currentAbit);
+					((CompetitiveGroupsPanel)parentPanel).setValues(currentAbit);
 					MessageProcessing.displaySuccessMessage(null, 11);
 				}
 			}
@@ -270,6 +270,7 @@ public class AddNewCompetitiveGroup extends JFrame{
 					MessageProcessing.displayErrorMessage(this, 42);
 				} else {
 					ModelDBConnection.updateAbiturientCompetitiveGroupByID(getValues(false));
+					ModelDBConnection.updateCompetitiveBallsByID(currentAbit);
 					calendar.setEnabled(false);
 					originalBox.setEnabled(false);
 					deleteCompetitiveGroupButton.setEnabled(true);
