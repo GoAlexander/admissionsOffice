@@ -65,7 +65,7 @@ public class OutputExcel {
 		ResultSet rset = null;
 		CallableStatement cstmt = null;
 
-		XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream("Список_подавших_" + moduleType + ".xltx"));
+		XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(currentPath + "\\Dots\\Список_подавших_" + moduleType + ".xltx"));
 		XSSFSheet sheet = workbook.getSheetAt(0);
 
 		XSSFFont fontForCategories = workbook.createFont();
@@ -138,10 +138,20 @@ public class OutputExcel {
 				for (int cg_i = 0; cg_i < competitiveGroups.length; cg_i++) {
 					//Целевики
 					if (competitiveGroups[cg_i][0].equals("1")) {
-						row = sheet.createRow(rowNum++);
-						row.createCell(1).setCellValue("МЕСТА В РАМКАХ КЦП");
-						sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum-1,1,2));
-						row.getCell(1).setCellStyle(styleForCategories);
+						query = moduleType.equals("аспирантура") 
+								? "select * from AbiturientCompetitiveGroup where course = '" + specialities[s_i][0] + "' and competitiveGroup in (1,2)"
+								: "select * from AbiturientCompetitiveGroup where speciality = '" + specialities[s_i][0] + "' and competitiveGroup in (1,2)";
+						cstmt = con.prepareCall(query, 1004, 1007);
+						rset = cstmt.executeQuery();
+						int countAbitsOnCurSpecOnCurCompGr = rset.last() ? rset.getRow() : 0;
+						rset.close();
+
+						if (countAbitsOnCurSpecOnCurCompGr > 0) {
+							row = sheet.createRow(rowNum++);
+							row.createCell(1).setCellValue("МЕСТА В РАМКАХ КЦП");
+							sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum-1,1,2));
+							row.getCell(1).setCellStyle(styleForCategories);
+						}
 
 						query = moduleType.equals("аспирантура") 
 								? "select * from AbiturientCompetitiveGroup where course = '" + specialities[s_i][0] + "' and targetOrganisation is not null"
@@ -159,7 +169,7 @@ public class OutputExcel {
 							for (int j = 0; j < targetOrganisations.length; j++) {
 								numPP = 1;
 								query = moduleType.equals("аспирантура") 
-										? "select SName, Fname, MName, ReturnReasons.name from (AbiturientCompetitiveGroup join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where course = '" + specialities[s_i][0] + "' and targetOrganisation = '" + targetOrganisations[j][0] + "'"
+										? "select SName, Fname, MName, Speciality.name, ReturnReasons.name from (Speciality join AbiturientCompetitiveGroup on (AbiturientCompetitiveGroup.speciality = Speciality.id) join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where course = '" + specialities[s_i][0] + "' and targetOrganisation = '" + targetOrganisations[j][0] + "'"
 										: "select SName, Fname, MName, ReturnReasons.name from (AbiturientCompetitiveGroup join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where speciality = '" + specialities[s_i][0] + "' and targetOrganisation = '" + targetOrganisations[j][0] + "'";
 								cstmt = con.prepareCall(query, 1004, 1007);
 								rset = cstmt.executeQuery();
@@ -174,25 +184,51 @@ public class OutputExcel {
 									row.getCell(0).setCellStyle(styleForTargetOrgs);
 
 									row = sheet.createRow(rowNum++);
-									row.createCell(0).setCellValue("№п/п");
-									row.createCell(1).setCellValue("ФИО");
-									row.createCell(2).setCellValue("Статус документов");
-									row.createCell(3).setCellValue("Примечание");
-									row.getCell(0).setCellStyle(styleForNames);
-									row.getCell(1).setCellStyle(styleForNames);
-									row.getCell(2).setCellStyle(styleForNames);
-									row.getCell(3).setCellStyle(styleForNames);
+									if (moduleType.equals("аспирантура")) {
+										row.createCell(0).setCellValue("№п/п");
+										row.createCell(1).setCellValue("ФИО");
+										row.createCell(2).setCellValue("Специальность");
+										row.createCell(3).setCellValue("Статус документов");
+										row.createCell(4).setCellValue("Примечание");
+										row.getCell(0).setCellStyle(styleForNames);
+										row.getCell(1).setCellStyle(styleForNames);
+										row.getCell(2).setCellStyle(styleForNames);
+										row.getCell(3).setCellStyle(styleForNames);
+										row.getCell(4).setCellStyle(styleForNames);
+									} else {
+										row.createCell(0).setCellValue("№п/п");
+										row.createCell(1).setCellValue("ФИО");
+										row.createCell(2).setCellValue("Статус документов");
+										row.createCell(3).setCellValue("Примечание");
+										row.getCell(0).setCellStyle(styleForNames);
+										row.getCell(1).setCellStyle(styleForNames);
+										row.getCell(2).setCellStyle(styleForNames);
+										row.getCell(3).setCellStyle(styleForNames);
+									}
 
 									while (rset.next()) {
 										row = sheet.createRow(rowNum++);
-										row.createCell(0).setCellValue(numPP++);
-										row.createCell(1).setCellValue(rset.getString(1) + " " + rset.getString(2) + " " + rset.getString(3));
-										row.createCell(2).setCellValue(rset.getString(4) != null ? "Отозваны" : "Приняты");
-										row.createCell(3).setCellValue(rset.getString(4));
-										row.getCell(0).setCellStyle(styleForCells);
-										row.getCell(1).setCellStyle(styleForCells);
-										row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
-										row.getCell(3).setCellStyle(styleForCellsWithCenterAlg);
+										if (moduleType.equals("аспирантура")) {
+											row.createCell(0).setCellValue(numPP++);
+											row.createCell(1).setCellValue(rset.getString(1) + " " + rset.getString(2) + " " + rset.getString(3));
+											row.createCell(2).setCellValue(rset.getString(4));
+											row.createCell(3).setCellValue(rset.getString(5) != null ? "Отозваны" : "Приняты");
+											row.createCell(4).setCellValue(rset.getString(5));
+											row.getCell(0).setCellStyle(styleForCells);
+											row.getCell(1).setCellStyle(styleForCells);
+											row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
+											row.getCell(3).setCellStyle(styleForCellsWithCenterAlg);
+											row.getCell(4).setCellStyle(styleForCellsWithCenterAlg);
+										} else {
+											row.createCell(0).setCellValue(numPP++);
+											row.createCell(1).setCellValue(rset.getString(1) + " " + rset.getString(2) + " " + rset.getString(3));
+											row.createCell(2).setCellValue(rset.getString(4) != null ? "Отозваны" : "Приняты");
+											row.createCell(3).setCellValue(rset.getString(4));
+											row.getCell(0).setCellStyle(styleForCells);
+											row.getCell(1).setCellStyle(styleForCells);
+											row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
+											row.getCell(3).setCellStyle(styleForCellsWithCenterAlg);
+										}
 									}
 								}
 								rset.close();
@@ -200,7 +236,7 @@ public class OutputExcel {
 						}
 					} else {
 						query = moduleType.equals("аспирантура") 
-								? "select SName, Fname, MName, ReturnReasons.name, EducationForm.name from (AbiturientCompetitiveGroup join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid) join EducationForm on (AbiturientCompetitiveGroup.educationForm = EducationForm.id)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where course = '" + specialities[s_i][0] + "' and competitiveGroup = '" + competitiveGroups[cg_i][0] + "' and targetOrganisation is null"
+								? "select SName, Fname, MName, Speciality.name, ReturnReasons.name, EducationForm.name from (Speciality join AbiturientCompetitiveGroup on (AbiturientCompetitiveGroup.speciality = Speciality.id) join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid) join EducationForm on (AbiturientCompetitiveGroup.educationForm = EducationForm.id)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where course = '" + specialities[s_i][0] + "' and competitiveGroup = '" + competitiveGroups[cg_i][0] + "' and targetOrganisation is null"
 								: "select SName, Fname, MName, ReturnReasons.name, EducationStandard.name from (AbiturientCompetitiveGroup join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid) join EducationStandard on (AbiturientCompetitiveGroup.educationStandard = EducationStandard.id)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where speciality = '" + specialities[s_i][0] + "' and competitiveGroup = '" + competitiveGroups[cg_i][0] + "' and targetOrganisation is null";
 						cstmt = con.prepareCall(query, 1004, 1007);
 						rset = cstmt.executeQuery();
@@ -219,7 +255,7 @@ public class OutputExcel {
 
 						for (int es_i = 0; es_i < educationStandarts.length; es_i++) {
 							query = moduleType.equals("аспирантура") 
-									? "select SName, Fname, MName, ReturnReasons.name, EducationForm.name from (AbiturientCompetitiveGroup join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid) join EducationForm on (AbiturientCompetitiveGroup.educationForm = EducationForm.id)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where course = '" + specialities[s_i][0] + "' and competitiveGroup = '" + competitiveGroups[cg_i][0] + "' and educationForm = '" + educationStandarts[es_i][0] + "' and targetOrganisation is null"
+									? "select SName, Fname, MName, Speciality.name, ReturnReasons.name, EducationForm.name from (Speciality join AbiturientCompetitiveGroup on (AbiturientCompetitiveGroup.speciality = Speciality.id) join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid) join EducationForm on (AbiturientCompetitiveGroup.educationForm = EducationForm.id)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where course = '" + specialities[s_i][0] + "' and competitiveGroup = '" + competitiveGroups[cg_i][0] + "' and educationForm = '" + educationStandarts[es_i][0] + "' and targetOrganisation is null"
 									: "select SName, Fname, MName, ReturnReasons.name, EducationStandard.name from (AbiturientCompetitiveGroup join Abiturient on (AbiturientCompetitiveGroup.aid_abiturient = Abiturient.aid) join EducationStandard on (AbiturientCompetitiveGroup.educationStandard = EducationStandard.id)) left outer join ReturnReasons on (ReturnReasons.id = Abiturient.id_returnReason) where speciality = '" + specialities[s_i][0] + "' and competitiveGroup = '" + competitiveGroups[cg_i][0] + "' and educationStandard = '" + educationStandarts[es_i][0] + "' and targetOrganisation is null";
 							cstmt = con.prepareCall(query, 1004, 1007);
 							rset = cstmt.executeQuery();
@@ -242,25 +278,51 @@ public class OutputExcel {
 								rowNum++;
 
 								row = sheet.createRow(rowNum++);
-								row.createCell(0).setCellValue("№п/п");
-								row.createCell(1).setCellValue("ФИО");
-								row.createCell(2).setCellValue("Статус документов");
-								row.createCell(3).setCellValue("Примечание");
-								row.getCell(0).setCellStyle(styleForNames);
-								row.getCell(1).setCellStyle(styleForNames);
-								row.getCell(2).setCellStyle(styleForNames);
-								row.getCell(3).setCellStyle(styleForNames);
+								if (moduleType.equals("аспирантура")) {
+									row.createCell(0).setCellValue("№п/п");
+									row.createCell(1).setCellValue("ФИО");
+									row.createCell(2).setCellValue("Специальность");
+									row.createCell(3).setCellValue("Статус документов");
+									row.createCell(4).setCellValue("Примечание");
+									row.getCell(0).setCellStyle(styleForNames);
+									row.getCell(1).setCellStyle(styleForNames);
+									row.getCell(2).setCellStyle(styleForNames);
+									row.getCell(3).setCellStyle(styleForNames);
+									row.getCell(4).setCellStyle(styleForNames);
+								} else {
+									row.createCell(0).setCellValue("№п/п");
+									row.createCell(1).setCellValue("ФИО");
+									row.createCell(2).setCellValue("Статус документов");
+									row.createCell(3).setCellValue("Примечание");
+									row.getCell(0).setCellStyle(styleForNames);
+									row.getCell(1).setCellStyle(styleForNames);
+									row.getCell(2).setCellStyle(styleForNames);
+									row.getCell(3).setCellStyle(styleForNames);
+								}
 
 								while (rset.next()) {
 									row = sheet.createRow(rowNum++);
-									row.createCell(0).setCellValue(numPP++);
-									row.createCell(1).setCellValue(rset.getString(1) + " " + rset.getString(2) + " " + rset.getString(3));
-									row.createCell(2).setCellValue(rset.getString(4) != null ? "Отозваны" : "Приняты");
-									row.createCell(3).setCellValue(rset.getString(4));
-									row.getCell(0).setCellStyle(styleForCells);
-									row.getCell(1).setCellStyle(styleForCells);
-									row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
-									row.getCell(3).setCellStyle(styleForCellsWithCenterAlg);
+									if (moduleType.equals("аспирантура")) {
+										row.createCell(0).setCellValue(numPP++);
+										row.createCell(1).setCellValue(rset.getString(1) + " " + rset.getString(2) + " " + rset.getString(3));
+										row.createCell(2).setCellValue(rset.getString(4));
+										row.createCell(3).setCellValue(rset.getString(5) != null ? "Отозваны" : "Приняты");
+										row.createCell(4).setCellValue(rset.getString(5));
+										row.getCell(0).setCellStyle(styleForCells);
+										row.getCell(1).setCellStyle(styleForCells);
+										row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
+										row.getCell(3).setCellStyle(styleForCellsWithCenterAlg);
+										row.getCell(4).setCellStyle(styleForCellsWithCenterAlg);
+									} else {
+										row.createCell(0).setCellValue(numPP++);
+										row.createCell(1).setCellValue(rset.getString(1) + " " + rset.getString(2) + " " + rset.getString(3));
+										row.createCell(2).setCellValue(rset.getString(4) != null ? "Отозваны" : "Приняты");
+										row.createCell(3).setCellValue(rset.getString(4));
+										row.getCell(0).setCellStyle(styleForCells);
+										row.getCell(1).setCellStyle(styleForCells);
+										row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
+										row.getCell(3).setCellStyle(styleForCellsWithCenterAlg);
+									}
 								}
 							}
 							rset.close();
