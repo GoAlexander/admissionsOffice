@@ -90,9 +90,9 @@ insert into [ReturnReasons] values
 go
 
 insert into [Speciality] values
-(1,	'Специальность1',	null),
-(2,	'Специальность2',	null),
-(3,	'Специальность3',	null);
+(1,	'Специальность1', null, null,	null),
+(2,	'Специальность2', null, null,	null),
+(3,	'Специальность3', null, null,	null);
 
 go
 

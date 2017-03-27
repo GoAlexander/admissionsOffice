@@ -43,6 +43,9 @@ public class EditCatalogElem extends JFrame {
 		case "Users":
 			columnNames = new String[] { "Логин", "Пароль", "Подпись" };
 			break;
+		case "Speciality":
+			columnNames = new String[] { "id", "Наименование", "Код направления", "Код по стандарту", "Код ФИС" };
+			break;
 		}
 
 		setTitle("Редактирование элементов справочника: " + title);
@@ -158,10 +161,16 @@ public class EditCatalogElem extends JFrame {
 			else if (mistakesIndices.contains(2)) {
 				if (table.equals("EntranceTest") || table.equals("IndividualAchievement"))
 					MessageProcessing.displayErrorMessage(null, 32);
+				else if (table.equals("Speciality"))
+					MessageProcessing.displayErrorMessage(null, 43);
 				else
 					MessageProcessing.displayErrorMessage(null, 33);
 			} else if (mistakesIndices.contains(3)) {
 				MessageProcessing.displayErrorMessage(null, 33);
+			} else if (mistakesIndices.contains(4)) {
+				MessageProcessing.displayErrorMessage(null, 33);
+			} else if (mistakesIndices.contains(5)) {
+				MessageProcessing.displayErrorMessage(null, 44);
 			} else if (mistakesIndices.contains(-1)) {
 				MessageProcessing.displayErrorMessage(null, 34);
 			} else if (mistakesIndices.isEmpty()) {
@@ -202,6 +211,15 @@ public class EditCatalogElem extends JFrame {
 			for (int i = 0; i < rowData.length; i++) {
 				if (rowData[i][3] != null && !rowData[i][3].isEmpty() && !rowData[i][3].matches("^[0-9]+$"))
 					mistakesIndices.add(3);
+			}
+		}
+
+		if (table.equals("Speciality")) {
+			for (int i = 0; i < rowData.length; i++) {
+				if (rowData[i][4] != null && !rowData[i][4].isEmpty() && !rowData[i][4].matches("^[0-9]+$"))
+					mistakesIndices.add(4);
+				if (rowData[i][3] != null && !rowData[i][3].isEmpty() && !rowData[i][3].matches("^[0-9]+\\.[0-9]+\\.[0-9]+$"))
+					mistakesIndices.add(5);
 			}
 		}
 

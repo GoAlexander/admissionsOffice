@@ -258,6 +258,8 @@ go
 create table Speciality(
 	id int primary key, --код
 	name text,          --наименование
+	codeDirection text, --код направления специальности (по ФИС)
+	codeByStandart text,--код специальности по стандарту
 	codeFIS text		--код ФИС
 );
 go
