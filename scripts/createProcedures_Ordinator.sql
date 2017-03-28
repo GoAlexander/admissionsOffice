@@ -314,3 +314,29 @@ begin
 		end
 end;
 go
+
+alter procedure getAllEntranceTest
+as begin
+	select id from EntranceTest
+	return
+end;
+go
+
+alter procedure getAllGroupEntranceTest
+as begin
+	select distinct testGroup from AbiturientEntranceTests
+	return
+end;
+go
+
+alter procedure listSpecialityWithAbit(@idET varchar(max), @group varchar(max))
+as begin
+	select Abiturient.SName, Abiturient.FName, Abiturient.MName, AbiturientEntranceTests.score
+		from Abiturient  left outer join 
+			AbiturientEntranceTests on (AbiturientEntranceTests.aid_abiturient = Abiturient.aid) left outer join
+			EntranceTest on (AbiturientEntranceTests.id_entranceTest = EntranceTest.id)
+				where AbiturientEntranceTests.id_entranceTest = @idET and AbiturientEntranceTests.testGroup = @group
+			
+	return
+end;
+go

@@ -33,6 +33,23 @@ public class TestBackend {
 		
 		String [] c = ModelDBConnection.getAbiturientPassportByID("3");
 		
+		String[] h = ModelDBConnection.getAllEntranceTest();
+		for(int i = 0; i < h.length; i++){
+			System.out.println(h[i]);
+		}
+		
+		String[] k = ModelDBConnection.getAllGroupEntranceTest();
+		for(int i = 0; i < k.length; i++){
+			System.out.println(k[i]);
+		}
+		
+		String [][] a = ModelDBConnection.getListSpecialityWithAbit("1", "1c1");
+		for(int i = 0; i < a.length; i++){
+			for(int j = 0; j < a[i].length; j++){
+				System.out.print(a[i][j]+ " ");
+			}
+			System.out.println();
+		}
 		
 		//ModelDBConnection.deleteAbiturient("2");
 			

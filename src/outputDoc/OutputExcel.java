@@ -58,6 +58,90 @@ public class OutputExcel {
 		workbook.write(new FileOutputStream(file));
 	}
 
+	public static void writeResultsEntranceTest() throws Exception {
+		String query, moduleType = ModelDBConnection.getDBName().equals("Aspirant") ? "аспирантура" : "ординатура";
+		
+		Connection con = ModelDBConnection.getConnection();
+		ResultSet rset = null;
+		CallableStatement cstmt = null;
+		
+		XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(currentPath + "\\Dots\\Результаты_Вступительных" + ".xltx"));
+		
+		XSSFFont fontForEntranceTestName = workbook.createFont();
+        fontForEntranceTestName.setBold(true);
+        fontForEntranceTestName.setFontHeight(15);
+
+        XSSFCellStyle styleForCellsWithCenterAlg = workbook.createCellStyle();    
+		styleForCellsWithCenterAlg.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+		styleForCellsWithCenterAlg.setFont(fontForEntranceTestName);
+		
+		XSSFCellStyle styleForCellsWithLeftAlg = workbook.createCellStyle();    
+		styleForCellsWithLeftAlg.setAlignment(XSSFCellStyle.ALIGN_LEFT);
+		styleForCellsWithLeftAlg.setFont(fontForEntranceTestName);
+
+		XSSFFont fontForNames = workbook.createFont();
+		fontForNames.setFontHeight(13);
+		XSSFCellStyle styleForNames = workbook.createCellStyle();
+		styleForNames.setFont(fontForNames);
+		styleForNames.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+        styleForNames.setBorderRight(XSSFCellStyle.BORDER_THIN);
+        styleForNames.setBorderTop(XSSFCellStyle.BORDER_THIN);
+        styleForNames.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+
+		String[] entranceTest = ModelDBConnection.getAllEntranceTest();
+		String[] entranceTestGroups = ModelDBConnection.getAllGroupEntranceTest();
+     
+		int numSheet = 0;
+		
+		for(int et_i = 0; et_i < entranceTest.length; et_i ++) {
+			int rowNum = 0;
+			XSSFRow row;		
+			for(int etg_i = 0; etg_i < entranceTestGroups.length; etg_i ++) {
+				
+				String[][] studentsTest = ModelDBConnection.getListSpecialityWithAbit(entranceTest[et_i], entranceTestGroups[etg_i]);
+				if(studentsTest != null){
+					XSSFSheet sheet = workbook.cloneSheet(0);
+					workbook.setSheetName(++numSheet, entranceTest[et_i] + "_" + entranceTestGroups[etg_i]);
+					
+					row = sheet.createRow(++rowNum);
+					row.createCell(0).setCellValue("вступительного испытания " + entranceTest[et_i] + " по программам ординатуры");
+					row.getCell(0).setCellStyle(styleForCellsWithCenterAlg);
+				
+					rowNum++;
+					rowNum++;
+					row = sheet.getRow(++rowNum);
+					sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,2));
+					row.createCell(0).setCellValue("Дата проведения: " + studentsTest[0][4]);
+					row.getCell(0).setCellStyle(styleForCellsWithLeftAlg);
+					row.createCell(4).setCellValue(entranceTestGroups[etg_i]);
+					row.getCell(4).setCellStyle(styleForCellsWithCenterAlg);
+					
+					rowNum++;
+					rowNum++;
+					for(int i = 0; i < studentsTest.length; i++){
+						row = sheet.getRow(++rowNum);
+						row.getCell(2).setCellValue(studentsTest[i][0] + " " + studentsTest[i][1] + " " + studentsTest[i][2]);
+						row.getCell(2).setCellStyle(styleForNames);
+						row.getCell(3).setCellValue(studentsTest[i][3]);
+						row.getCell(3).setCellStyle(styleForNames);
+						
+					}
+				}	
+			}
+		}
+		
+		workbook.removeSheetAt(0);
+		
+		String path = currentPath + "\\files\\Результаты_Вступительных" + "_" + (new SimpleDateFormat("dd.MM.yyyy").format(new Date())) + ".xls";
+		File file = new File(path);
+		if (file.exists())
+			file.delete();
+		file.createNewFile();
+
+		workbook.write(new FileOutputStream(file));
+	}
+	
 	public static void writeListOfSubmittedDocuments() throws Exception {
 		String query, moduleType = ModelDBConnection.getDBName().equals("Aspirant") ? "аспирантура" : "ординатура";
 
@@ -353,6 +437,7 @@ public class OutputExcel {
 			ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
 			ModelDBConnection.initConnection();
 			writeListOfSubmittedDocuments();
+			writeResultsEntranceTest();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

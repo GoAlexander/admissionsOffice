@@ -1263,4 +1263,96 @@ public class ModelDBConnection {
 			cstmt.close();
 		}
 	}
+	
+	public static String[] getAllEntranceTest(){
+		String[] data = null;
+		try{
+			cstmt = con.prepareCall("{? = call getAllEntranceTest}", 1004, 1007);
+			cstmt.registerOutParameter(1, Types.INTEGER);
+			rset = cstmt.executeQuery();
+			
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				data = new String[countStrings];
+				int cursor = 0;
+				while(rset.next()){
+					data[cursor] = rset.getObject(1).toString();
+					cursor++;
+				}
+			}
+					
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return data;
+		
+	}
+	
+	public static String[] getAllGroupEntranceTest(){
+		String[] data = null;
+		try{
+			cstmt = con.prepareCall("{? = call getAllGroupEntranceTest}", 1004, 1007);
+			cstmt.registerOutParameter(1, Types.INTEGER);
+			rset = cstmt.executeQuery();
+			
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				data = new String[1];
+				int cursor = 0;
+				while(rset.next()){
+					data[cursor] = rset.getObject(1).toString();
+					cursor++;
+				}
+			}
+					
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return data;
+		
+	}
+	
+	public static String[][] getListSpecialityWithAbit(String idET, String group){		
+		String[][] data = null;
+		try {
+			cstmt = con.prepareCall("{? = call listSpecialityWithAbit(?, ?)}", 1004, 1007);
+			cstmt.registerOutParameter(1, Types.INTEGER);
+			cstmt.setString(2, idET);
+			cstmt.setString(3, group);
+			
+			rset = cstmt.executeQuery();
+			
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+			ResultSetMetaData rsmd = rset.getMetaData();
+			int numberOfColumns = rsmd.getColumnCount();
+			data = new String[countStrings][numberOfColumns];
+			int curPos = 0;
+			while (rset.next()) {
+				for (int i = 0; i < numberOfColumns; i++) {
+					if (rset.getObject(i + 1) != null)
+						data[curPos][i] = rset.getObject(i + 1).toString();
+				}
+				curPos++;
+			}
+			}
+			
+			cstmt.close();
+			rset.close();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return data;
+	}
 }

@@ -313,6 +313,17 @@ public class GeneralInfoInput extends JFrame {
 		reportMenu.add(reportMenuListGroups);
 		reportMenuResults = new JMenuItem("Результаты вступительных");
 		reportMenu.add(reportMenuResults);
+		reportMenuResults.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OutputExcel.writeResultsEntranceTest();
+					JOptionPane.showMessageDialog(null, "Success!", "", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
 		reportMenu.addSeparator();
 		reportMenuStatistics = new JMenuItem("Статистика");
 		reportMenu.add(reportMenuStatistics);
