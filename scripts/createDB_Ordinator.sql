@@ -68,9 +68,9 @@ go
 --Абитуриент
 create table Abiturient (
 	aid int primary key,	--код/номер личного дела абитуриента
-	SName text,				--Фамилия
-	Fname text,				--Имя
-	MName text,				--Отчество
+	SName varchar(200),				--Фамилия
+	Fname varchar(200),				--Имя
+	MName varchar(200),				--Отчество
 	Birthday Date,			--Дата рождения
 	Birthplace text,		--Место рождения
 	id_gender int,			--код пола
@@ -176,7 +176,7 @@ go
 create table AbiturientEntranceTests (
 	aid_abiturient int,					--код/номер личного дела абитуриента
 	id_entranceTest int,				--код вступительного испытания
-	testGroup text, 					--группа
+	testGroup varchar(50), 					--группа
 	indexNumber int, 					--порядковый номер в группе
 	id_testBox int,						--код блока испытаний
 	testDate Date,						--дата испытания
@@ -204,8 +204,8 @@ go
 create table AbiturientPassport (
 	aid_abiturient int,		--код/номер личного дела абитуриента
 	id_passportType int,	--тип паспорта
-	paspSeries text,		--серия паспорта
-	paspNumber text,		--номер паспорта
+	paspSeries varchar(4),		--серия паспорта
+	paspNumber varchar(6),		--номер паспорта
 	paspGivenBy text,		--кем выдан
 	paspGivenDate Date,		--дата выдачи
 

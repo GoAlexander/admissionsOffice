@@ -331,7 +331,7 @@ go
 
 alter procedure listSpecialityWithAbit(@idET varchar(max), @group varchar(max))
 as begin
-	select Abiturient.SName, Abiturient.FName, Abiturient.MName, AbiturientEntranceTests.score
+	select Abiturient.SName, Abiturient.FName, Abiturient.MName, AbiturientEntranceTests.score, AbiturientEntranceTests.testDate
 		from Abiturient  left outer join 
 			AbiturientEntranceTests on (AbiturientEntranceTests.aid_abiturient = Abiturient.aid) left outer join
 			EntranceTest on (AbiturientEntranceTests.id_entranceTest = EntranceTest.id)
@@ -340,3 +340,16 @@ as begin
 	return
 end;
 go
+
+alter procedure getEntranceTestGroupsAbit(@group varchar(max))
+as begin
+	select distinct Abiturient.SName, Abiturient.FName, Abiturient.MName, AbiturientPassport.paspSeries, AbiturientPassport.paspNumber  
+		from Abiturient  left outer join 
+			AbiturientEntranceTests on (AbiturientEntranceTests.aid_abiturient = Abiturient.aid) left outer join
+			AbiturientPassport on (Abiturient.aid = AbiturientPassport.aid_abiturient)
+				where AbiturientEntranceTests.testGroup = @group
+			
+	return
+end;
+go
+

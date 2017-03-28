@@ -152,17 +152,13 @@ insert into [Users] values
 go
 
 insert into [AbiturientEntranceTests] values
-(2, 1, '1c1', 1, 1, '2016-12-12', 25, 1, 1);
+(2, 1, '1c1', 1, 1, '2016-12-12', 25, 1, 1),
+(3, 1, '1c1', 1, 1, '2016-12-12', 45, 1, 1),
+(2, 2, '1c1', 1, 1, '2016-12-08', 30, 1, 1);
 
 go
 
 insert into [AbiturientCompetitiveGroup] values
 (2, 1, 1, 1, 1, 1, 1, 1, 50,NULL,NULL,NULL);
-
-go
-
-insert into [AbiturientEntranceTests] values
-(3, 1, '1c1', 1, 1, '2016-12-12', 45, 1, 1),
-(2, 2, '1c1', 1, 1, '2016-12-08', 30, 1, 1);
 
 go
