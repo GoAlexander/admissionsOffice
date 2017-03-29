@@ -427,7 +427,7 @@ public class GeneralInfoInput extends JFrame {
 		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
 
-        TableRowSorter sorter=new TableRowSorter(dataTable.getModel());
+        TableRowSorter sorter=new TableRowSorter(currentTM);
         sorter.setSortable(0, true);
         sorter.setSortable(1, true);
         sorter.setSortable(2, false);
@@ -754,7 +754,7 @@ public class GeneralInfoInput extends JFrame {
 					if (mistakesIndices.isEmpty()) {
 						ModelDBConnection.editAbiturient(abitBaseInfo);
 
-						int selectedRow = dataTable.getSelectedRow();
+						int selectedRow = dataTable.convertRowIndexToModel(dataTable.getSelectedRow());
 						// Изменение таблицы
 						currentTM.setDataVector(ModelDBConnection.getAllAbiturients(), columnNames);
 						dataTable.addRowSelectionInterval(selectedRow, selectedRow);
@@ -781,7 +781,7 @@ public class GeneralInfoInput extends JFrame {
 		try {
 			if (MessageProcessing.displayDialogMessage(this, 1) == 0) {
 				ModelDBConnection.deleteAbiturient(((JTextField) panelID.getComponent(1)).getText());
-				currentTM.removeRow(dataTable.getSelectedRow());
+				currentTM.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
 				dataTable.clearSelection();
 				dataTable.updateUI();
 				MessageProcessing.displaySuccessMessage(this, 3);
@@ -836,7 +836,7 @@ public class GeneralInfoInput extends JFrame {
 	public void updateTab(String tabName) {
 		try {
 			String[] data = null, data2 = null;
-			String aid = (dataTable.getSelectedRow() >= 0) ? (String) currentTM.getValueAt(dataTable.getSelectedRow(), 0) : "0";
+			String aid = (dataTable.getSelectedRow() >= 0) ? (String) currentTM.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0) : "0";
 
 			switch (tabName) {
 			case "GeneralInfo":
