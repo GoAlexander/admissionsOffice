@@ -204,8 +204,8 @@ go
 create table AbiturientPassport (
 	aid_abiturient int,		--код/номер личного дела абитуриента
 	id_passportType int,	--тип паспорта
-	paspSeries varchar(4),		--серия паспорта
-	paspNumber varchar(6),		--номер паспорта
+	paspSeries varchar(max),		--серия паспорта
+	paspNumber varchar(max),		--номер паспорта
 	paspGivenBy text,		--кем выдан
 	paspGivenDate Date,		--дата выдачи
 

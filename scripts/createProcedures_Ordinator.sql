@@ -315,21 +315,14 @@ begin
 end;
 go
 
-alter procedure getAllEntranceTest
-as begin
-	select id from EntranceTest
-	return
-end;
-go
-
-alter procedure getAllGroupEntranceTest
+alter procedure getAllGroupsNames
 as begin
 	select distinct testGroup from AbiturientEntranceTests
 	return
 end;
 go
 
-alter procedure listSpecialityWithAbit(@idET varchar(max), @group varchar(max))
+alter procedure getListAbiturientsByEntranceTestAndGroupIDs(@idET varchar(max), @group varchar(max))
 as begin
 	select Abiturient.SName, Abiturient.FName, Abiturient.MName, AbiturientEntranceTests.score, AbiturientEntranceTests.testDate
 		from Abiturient  left outer join 

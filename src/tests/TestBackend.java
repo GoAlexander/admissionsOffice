@@ -28,31 +28,25 @@ public class TestBackend {
 		ModelDBConnection.getElementFromTableByIDs("AbiturientIndividualAchievement", data);
 		ModelDBConnection.getNamesFromTableOrderedById("TestBox");*/
 		
-		//String [][] b = ModelDBConnection.getAllAbiturients();
-		//String [] a = ModelDBConnection.getAbiturientGeneralInfoByID("2");
-		
-		String [] c = ModelDBConnection.getAbiturientPassportByID("3");
-		
-		String[] h = ModelDBConnection.getAllEntranceTest();
-		for(int i = 0; i < h.length; i++){
-			System.out.println(h[i]);
-		}
-		
-		String[] k = ModelDBConnection.getAllGroupEntranceTest();
-		for(int i = 0; i < k.length; i++){
+		// String [][] b = ModelDBConnection.getAllAbiturients();
+		// String [] a = ModelDBConnection.getAbiturientGeneralInfoByID("2");
+
+		String[] c = ModelDBConnection.getAbiturientPassportByID("3");
+
+		String[] k = ModelDBConnection.getAllGroupsNames();
+		for (int i = 0; i < k.length; i++) {
 			System.out.println(k[i]);
 		}
-		
-		String [][] a = ModelDBConnection.getListSpecialityWithAbit("1", "1c1");
-		for(int i = 0; i < a.length; i++){
-			for(int j = 0; j < a[i].length; j++){
-				System.out.print(a[i][j]+ " ");
+
+		String[][] a = ModelDBConnection.getListAbiturientsByEntranceTestAndGroupIDs("1", "1c1");
+		for (int i = 0; i < a.length; i++) {
+			for (int j = 0; j < a[i].length; j++) {
+				System.out.print(a[i][j] + " ");
 			}
 			System.out.println();
 		}
-		
-		//ModelDBConnection.deleteAbiturient("2");
-			
+
+		// ModelDBConnection.deleteAbiturient("2");
 	}
 
 }

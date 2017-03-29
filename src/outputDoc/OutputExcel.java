@@ -85,7 +85,7 @@ public class OutputExcel {
 		styleForNames.setBorderTop(XSSFCellStyle.BORDER_THIN);
 		styleForNames.setAlignment(XSSFCellStyle.ALIGN_CENTER);
 
-		String[] entranceTestGroups = ModelDBConnection.getAllGroupEntranceTest();
+		String[] entranceTestGroups = ModelDBConnection.getAllGroupsNames();
 		int numSheet = 0;
 
 		for (int etg_i = 0; etg_i < entranceTestGroups.length; etg_i++) {
@@ -132,13 +132,13 @@ public class OutputExcel {
 	}
 
 	public static void writeResultsEntranceTest() throws Exception {
-
 		XSSFWorkbook workbook = new XSSFWorkbook(
 				new FileInputStream(currentPath + "\\Dots\\Результаты_Вступительных" + ".xltx"));
 
 		XSSFFont fontForEntranceTestName = workbook.createFont();
 		fontForEntranceTestName.setBold(true);
-		fontForEntranceTestName.setFontHeight(15);
+		fontForEntranceTestName.setFontHeight(12);
+		fontForEntranceTestName.setFontName("Arial Cyr");
 
 		XSSFCellStyle styleForCellsWithCenterAlg = workbook.createCellStyle();
 		styleForCellsWithCenterAlg.setAlignment(XSSFCellStyle.ALIGN_CENTER);
@@ -149,7 +149,8 @@ public class OutputExcel {
 		styleForCellsWithLeftAlg.setFont(fontForEntranceTestName);
 
 		XSSFFont fontForNames = workbook.createFont();
-		fontForNames.setFontHeight(13);
+		fontForNames.setFontHeight(11);
+		fontForNames.setFontName("Arial Cyr");
 		XSSFCellStyle styleForNames = workbook.createCellStyle();
 		styleForNames.setFont(fontForNames);
 		styleForNames.setBorderBottom(XSSFCellStyle.BORDER_THIN);
@@ -157,33 +158,35 @@ public class OutputExcel {
 		styleForNames.setBorderRight(XSSFCellStyle.BORDER_THIN);
 		styleForNames.setBorderTop(XSSFCellStyle.BORDER_THIN);
 		styleForNames.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+		styleForNames.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
 
-		String[] entranceTest = ModelDBConnection.getAllEntranceTest();
-		String[] entranceTestGroups = ModelDBConnection.getAllGroupEntranceTest();
+		String[][] entranceTests = ModelDBConnection.getAllFromTableOrderedById("EntranceTest");
+		String[] entranceTestGroups = ModelDBConnection.getAllGroupsNames();
 
 		int numSheet = 0;
 
-		for (int et_i = 0; et_i < entranceTest.length; et_i++) {
+		for (int et_i = 0; et_i < entranceTests.length; et_i++) {
 			int rowNum = 0;
 			XSSFRow row;
 			for (int etg_i = 0; etg_i < entranceTestGroups.length; etg_i++) {
+				rowNum = 0;
 
-				String[][] studentsTest = ModelDBConnection.getListSpecialityWithAbit(entranceTest[et_i],
+				String[][] studentsTest = ModelDBConnection.getListAbiturientsByEntranceTestAndGroupIDs(entranceTests[et_i][0],
 						entranceTestGroups[etg_i]);
 				if (studentsTest != null) {
 					XSSFSheet sheet = workbook.cloneSheet(0);
-					workbook.setSheetName(++numSheet, entranceTest[et_i] + "_" + entranceTestGroups[etg_i]);
+					workbook.setSheetName(++numSheet, entranceTests[et_i][1] + "_" + entranceTestGroups[etg_i]);
 
 					row = sheet.createRow(++rowNum);
 					row.createCell(0).setCellValue(
-							"вступительного испытания " + entranceTest[et_i] + " по программам ординатуры");
+							"вступительного испытания " + entranceTests[et_i][1] + " по программам ординатуры");
 					row.getCell(0).setCellStyle(styleForCellsWithCenterAlg);
 
 					rowNum++;
 					rowNum++;
 					row = sheet.getRow(++rowNum);
 					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 2));
-					row.createCell(0).setCellValue("Дата проведения: " + studentsTest[0][4]);
+					row.createCell(0).setCellValue("Дата проведения: " + (studentsTest[0][4] != null ? studentsTest[0][4] : ""));
 					row.getCell(0).setCellStyle(styleForCellsWithLeftAlg);
 					row.createCell(4).setCellValue(entranceTestGroups[etg_i]);
 					row.getCell(4).setCellStyle(styleForCellsWithCenterAlg);
@@ -197,7 +200,6 @@ public class OutputExcel {
 						row.getCell(2).setCellStyle(styleForNames);
 						row.getCell(3).setCellValue(studentsTest[i][3]);
 						row.getCell(3).setCellStyle(styleForNames);
-
 					}
 				}
 			}
