@@ -60,6 +60,7 @@ import tab_achievements.IndividualAchievementsPanel;
 
 import general_classes.GUITableModel;
 import outputDoc.OutputExcel;
+import outputDoc.OutputExportFiles;
 import outputDoc.OutputWord;
 
 public class GeneralInfoInput extends JFrame {
@@ -92,7 +93,7 @@ public class GeneralInfoInput extends JFrame {
 			directoryMenuIndividual, directoryMenuStudyFields, directoryMenuEducForm, directoryMenuSpeciality,
 			directoryMenuDepartments, directoryMenuCompetitiveGroup, directoryMenuOrganisations,
 			directoryMenuEducStandard, directoryMenuPlan, directoryMenuUsers, reportMenuListCandidates,
-			reportMenuListGroups, reportMenuResults, reportMenuStatistics, compMenuCalculation, compMenuPlayCompet,
+			reportMenuListGroups, reportMenuResults, reportMenuAdmissionPlan, reportMenuStatistics, compMenuCalculation, compMenuPlayCompet,
 			compMenuInternalRating, compMenuRankedList, compMenuCompetList, compMenuResetCompetResults,
 			expMenuOrganisations, expMenuCompetGroup, expMenuPlan, expMenuApplications, expMenuResults;
 
@@ -303,7 +304,7 @@ public class GeneralInfoInput extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					OutputExcel.writeListOfSubmittedDocuments();
-					JOptionPane.showMessageDialog(null, "Success!", "", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Список подавших документы успешно сформирован!", "Результат вывода списка подавших документы", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}		
@@ -311,6 +312,17 @@ public class GeneralInfoInput extends JFrame {
 		});
 		reportMenuListGroups = new JMenuItem("Списки групп на вступительные");
 		reportMenu.add(reportMenuListGroups);
+		reportMenuListGroups.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OutputExcel.writeListGroupsOnEntranceTests();
+					JOptionPane.showMessageDialog(null, "Списки групп вступительных испытаний успешно сформирован!", "Результат вывода списков групп вступительных испытаний", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
 		reportMenuResults = new JMenuItem("Результаты вступительных");
 		reportMenu.add(reportMenuResults);
 		reportMenuResults.addActionListener(new ActionListener(){
@@ -318,7 +330,21 @@ public class GeneralInfoInput extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					OutputExcel.writeResultsEntranceTest();
-					JOptionPane.showMessageDialog(null, "Success!", "", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Список результатов вступительных испытаний успешно сформирован!", "Результат вывода итогов вступительных испытаний", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
+		reportMenu.addSeparator();
+		reportMenuAdmissionPlan = new JMenuItem("План приема");
+		reportMenu.add(reportMenuAdmissionPlan);
+		reportMenuAdmissionPlan.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OutputExcel.outExcel("AdmissionPlan");
+					JOptionPane.showMessageDialog(null, "План приема успешно сформирован!", "Результат вывода плана приема", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}		
@@ -351,16 +377,38 @@ public class GeneralInfoInput extends JFrame {
 		menuBar.add(expMenu);
 		expMenuOrganisations = new JMenuItem("Целевые организации");
 		expMenu.add(expMenuOrganisations);
+		expMenuOrganisations.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OutputExportFiles.printTargetOrganisations();
+					JOptionPane.showMessageDialog(null, "Файл для выгрузки целевых организаций успешно сформирован!", "Результат экспорта целевых организаций", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
 		expMenuCompetGroup = new JMenuItem("Конкурсные группы");
 		expMenu.add(expMenuCompetGroup);
+		expMenuCompetGroup.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OutputExportFiles.printCompetitiveGroups();
+					JOptionPane.showMessageDialog(null, "Файл для выгрузки конкурсных групп успешно сформирован!", "Результат экспорта конкурсных групп", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
 		expMenuPlan = new JMenuItem("План приема");
 		expMenu.add(expMenuPlan);
 		expMenuPlan.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					OutputExcel.outExcel("AdmissionPlan");
-					JOptionPane.showMessageDialog(null, "Success!", "", JOptionPane.INFORMATION_MESSAGE);
+					OutputExportFiles.printAssesmentPlanGeneral();
+					JOptionPane.showMessageDialog(null, "Файл для выгрузки плана приема успешно сформирован!", "Результат экспорта плана приема", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}		

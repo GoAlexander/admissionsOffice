@@ -196,7 +196,7 @@ public class OutputExportFiles {
 					out.println("<Code>" + rset.getString(9) + "</Code>");
 					out.println("</EduProgram>");
 					out.println("</EduPrograms>");
-					
+
 					switch(rset.getString(4)) {
 					case "16":
 						out.println("<TargetOrganizations>");
