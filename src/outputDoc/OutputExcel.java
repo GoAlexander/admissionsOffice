@@ -59,13 +59,14 @@ public class OutputExcel {
 		workbook.write(new FileOutputStream(file));
 	}
 
-	public static void writeListGroupEntranceTest() throws Exception {
-
-		XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(currentPath + "\\Dots\\Списки_групп" + ".xltx"));
+	public static void writeListGroupsOnEntranceTests() throws Exception {
+		XSSFWorkbook workbook = new XSSFWorkbook(
+				new FileInputStream(currentPath + "\\Dots\\Списки_групп" + ".xltx"));
 
 		XSSFFont fontForEntranceTestName = workbook.createFont();
 		fontForEntranceTestName.setBold(true);
-		fontForEntranceTestName.setFontHeight(15);
+		fontForEntranceTestName.setFontHeight(12);
+		fontForEntranceTestName.setFontName("Arial Cyr");
 
 		XSSFCellStyle styleForCellsWithCenterAlg = workbook.createCellStyle();
 		styleForCellsWithCenterAlg.setAlignment(XSSFCellStyle.ALIGN_CENTER);
@@ -76,7 +77,8 @@ public class OutputExcel {
 		styleForCellsWithLeftAlg.setFont(fontForEntranceTestName);
 
 		XSSFFont fontForNames = workbook.createFont();
-		fontForNames.setFontHeight(13);
+		fontForNames.setFontHeight(11);
+		fontForNames.setFontName("Arial Cyr");
 		XSSFCellStyle styleForNames = workbook.createCellStyle();
 		styleForNames.setFont(fontForNames);
 		styleForNames.setBorderBottom(XSSFCellStyle.BORDER_THIN);
@@ -84,38 +86,43 @@ public class OutputExcel {
 		styleForNames.setBorderRight(XSSFCellStyle.BORDER_THIN);
 		styleForNames.setBorderTop(XSSFCellStyle.BORDER_THIN);
 		styleForNames.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+		styleForNames.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
 
+		String[][] entranceTests = ModelDBConnection.getAllFromTableOrderedById("EntranceTest");
 		String[] entranceTestGroups = ModelDBConnection.getAllGroupsNames();
+
 		int numSheet = 0;
 
-		for (int etg_i = 0; etg_i < entranceTestGroups.length; etg_i++) {
+		for (int et_i = 0; et_i < entranceTests.length; et_i++) {
 			int rowNum = 0;
 			XSSFRow row;
+			for (int etg_i = 0; etg_i < entranceTestGroups.length; etg_i++) {
+				rowNum = 0;
 
-			String[][] abitData = ModelDBConnection.getEntranceTestGroupsAbit(entranceTestGroups[etg_i]);
-			if (abitData != null) {
+				String[][] studentsList = ModelDBConnection.getListAbiturientsByEntranceTestAndGroupIDs(entranceTests[et_i][0],
+						entranceTestGroups[etg_i]);
+				if (studentsList != null) {
+					XSSFSheet sheet = workbook.cloneSheet(0);
+					workbook.setSheetName(++numSheet, entranceTests[et_i][1] + "_" + entranceTestGroups[etg_i]);
 
-				XSSFSheet sheet = workbook.cloneSheet(0);
-				workbook.setSheetName(++numSheet, entranceTestGroups[etg_i]);
+					row = sheet.createRow(rowNum++);
+					row.createCell(0).setCellValue("Список группы №" + entranceTestGroups[etg_i] +
+							" вступительного испытания " + entranceTests[et_i][1]);
+					row.getCell(0).setCellStyle(styleForCellsWithCenterAlg);
 
-				row = sheet.createRow(rowNum++);
-				row.createCell(0).setCellValue("Список группы № " + entranceTestGroups[etg_i]);
-				row.getCell(0).setCellStyle(styleForCellsWithCenterAlg);
+					rowNum++;
 
-				rowNum++;
-
-				for (int i = 0; i < abitData.length; i++) {
-					row = sheet.getRow(++rowNum);
-					row.getCell(2).setCellValue(abitData[i][0] + " " + abitData[i][1] + " " + abitData[i][2]);
-					row.getCell(2).setCellStyle(styleForNames);
-					row.getCell(3).setCellValue(row.getCell(1).getRawValue() + "ord" + entranceTestGroups[etg_i]);
-					row.getCell(3).setCellStyle(styleForNames);
-					row.getCell(4).setCellValue(abitData[i][3] + " " + abitData[i][4]);
-					row.getCell(4).setCellStyle(styleForNames);
-
+					for (int i = 0; i < studentsList.length; i++) {
+						row = sheet.getRow(++rowNum);
+						row.getCell(2).setCellValue(studentsList[i][0] + " " + studentsList[i][1] + " " + studentsList[i][2]);
+						row.getCell(2).setCellStyle(styleForNames);
+						row.getCell(3).setCellValue(entranceTestGroups[etg_i] + "ord" + studentsList[i][7]);
+						row.getCell(3).setCellStyle(styleForNames);
+						row.getCell(4).setCellValue(studentsList[i][5] + studentsList[i][6]);
+						row.getCell(4).setCellStyle(styleForNames);
+					}
 				}
 			}
-
 		}
 
 		workbook.removeSheetAt(0);
@@ -128,7 +135,6 @@ public class OutputExcel {
 		file.createNewFile();
 
 		workbook.write(new FileOutputStream(file));
-
 	}
 
 	public static void writeResultsEntranceTest() throws Exception {
@@ -198,7 +204,7 @@ public class OutputExcel {
 						row.getCell(2)
 								.setCellValue(studentsTest[i][0] + " " + studentsTest[i][1] + " " + studentsTest[i][2]);
 						row.getCell(2).setCellStyle(styleForNames);
-						row.getCell(3).setCellValue(studentsTest[i][3]);
+						row.getCell(3).setCellValue(studentsTest[i][3] != null ? studentsTest[i][3] : "неявка");
 						row.getCell(3).setCellStyle(styleForNames);
 					}
 				}
@@ -549,7 +555,7 @@ public class OutputExcel {
 			ModelDBConnection.initConnection();
 			writeListOfSubmittedDocuments();
 			writeResultsEntranceTest();
-			writeListGroupEntranceTest();
+			writeListGroupsOnEntranceTests();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

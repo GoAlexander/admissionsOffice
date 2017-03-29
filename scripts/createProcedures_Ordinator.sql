@@ -324,11 +324,12 @@ go
 
 alter procedure getListAbiturientsByEntranceTestAndGroupIDs(@idET varchar(max), @group varchar(max))
 as begin
-	select Abiturient.SName, Abiturient.FName, Abiturient.MName, AbiturientEntranceTests.score, AbiturientEntranceTests.testDate
-		from Abiturient  left outer join 
+	select Abiturient.SName, Abiturient.FName, Abiturient.MName, AbiturientEntranceTests.score, AbiturientEntranceTests.testDate, AbiturientPassport.paspSeries, AbiturientPassport.paspNumber, AbiturientEntranceTests.indexNumber
+		from (Abiturient join AbiturientPassport on (Abiturient.aid = AbiturientPassport.aid_abiturient)) left outer join 
 			AbiturientEntranceTests on (AbiturientEntranceTests.aid_abiturient = Abiturient.aid) left outer join
 			EntranceTest on (AbiturientEntranceTests.id_entranceTest = EntranceTest.id)
 				where AbiturientEntranceTests.id_entranceTest = @idET and AbiturientEntranceTests.testGroup = @group
+				order by AbiturientEntranceTests.indexNumber
 			
 	return
 end;

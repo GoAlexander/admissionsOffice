@@ -1276,11 +1276,11 @@ public class ModelDBConnection {
 
 			if (countOfStrings > 0) {
 				data = new String[countOfStrings];
-				int cursor = 0;
+				int curPos = 0;
 				while (rset.next()) {
 					if (rset.getObject(1) != null)
-						data[cursor] = rset.getObject(1).toString();
-					cursor++;
+						data[curPos] = rset.getObject(1).toString();
+					curPos++;
 				}
 			}
 
@@ -1325,43 +1325,6 @@ public class ModelDBConnection {
 			e.printStackTrace();
 		}
 
-		return data;
-	}
-
-	public static String[][] getEntranceTestGroupsAbit(String group){		
-		String[][] data = null;
-		try {
-			cstmt = con.prepareCall("{? = call getEntranceTestGroupsAbit(?)}", 1004, 1007);
-			cstmt.registerOutParameter(1, Types.INTEGER);
-			cstmt.setString(2, group);
-			
-			rset = cstmt.executeQuery();
-			
-			int countStrings = rset.last() ? rset.getRow() : 0;
-			rset.beforeFirst();
-
-			if (countStrings > 0) {
-			ResultSetMetaData rsmd = rset.getMetaData();
-			int numberOfColumns = rsmd.getColumnCount();
-			data = new String[countStrings][numberOfColumns];
-			int curPos = 0;
-			while (rset.next()) {
-				for (int i = 0; i < numberOfColumns; i++) {
-					if (rset.getObject(i + 1) != null)
-						data[curPos][i] = rset.getObject(i + 1).toString();
-				}
-				curPos++;
-			}
-			}
-			
-			cstmt.close();
-			rset.close();
-			
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
 		return data;
 	}
 }
