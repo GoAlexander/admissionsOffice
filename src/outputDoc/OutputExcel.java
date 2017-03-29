@@ -21,36 +21,38 @@ import backend.ModelDBConnection;
 public class OutputExcel {
 	private static String currentPath = new File("").getAbsolutePath();
 
-	private static String[] colNamesAdmissionPlan = { "Код специальности", "Форма обучения", "Конкурсная группа",
-			"Целевая организация", "Стандарт образования", "Количество мест" };
-	private static String[] colNamesAbiturient = { "Идентификатор", "Фамилия", "Имя", "Отчество" };
-	private static String[] columnNames;
+	public static void writeAdmissionPlan() throws Exception {
+		XSSFWorkbook workbook = new XSSFWorkbook(
+				new FileInputStream(currentPath + "\\Dots\\План_приема" + ".xltx"));
+		XSSFSheet sheet = workbook.getSheetAt(0);
 
-	public static void outExcel(String tableName) throws Exception {
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet(tableName);
-
-		int rowNum = 0;
-		XSSFRow row = sheet.createRow(rowNum);
-
-		switch (tableName) {
-		case "AdmissionPlan":
-			columnNames = colNamesAdmissionPlan;
-			break;
-		case "Abiturient":
-			columnNames = colNamesAbiturient;
-			break;
+		XSSFFont fontForNames = workbook.createFont();
+		fontForNames.setFontHeight(11);
+		fontForNames.setFontName("Arial Cyr");
+		XSSFCellStyle styleForNames = workbook.createCellStyle();
+		styleForNames.setFont(fontForNames);
+		styleForNames.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setBorderRight(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setBorderTop(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+		styleForNames.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+		
+		String[][] plan = ModelDBConnection.getAdmissionPlan();
+		
+		int rowNum = 2;
+		XSSFRow row;
+		
+		for(int i = 0; i < plan.length; i++){
+			row = sheet.createRow(++rowNum);
+			for(int j = 0; j < plan[i].length; j++){
+				row.createCell(j+1).setCellValue(plan[i][j]);
+				row.getCell(j+1).setCellStyle(styleForNames);
+			}
 		}
-
-		for (int i = 0; i < columnNames.length; i++)
-			row.createCell(i).setCellValue(columnNames[i]);
-
-		String[][] data = ModelDBConnection.getAllFromTable(tableName);
-
-		for (int i = 0; i < data.length; i++)
-			writeToRow(sheet, ++rowNum, data[i]);
-
-		String path = currentPath + "/files/" + tableName + "File.xls";
+		
+		String path = currentPath + "\\files\\План_приема" + "_"
+				+ (new SimpleDateFormat("dd.MM.yyyy").format(new Date())) + ".xls";
 		File file = new File(path);
 		if (file.exists())
 			file.delete();
@@ -542,13 +544,6 @@ public class OutputExcel {
 		workbook.write(new FileOutputStream(file));
 	}
 
-	private static void writeToRow(XSSFSheet sheet, int rowNum, String[] dataRow) {
-		XSSFRow row = sheet.createRow(rowNum);
-
-		for (int i = 0; i < columnNames.length; i++)
-			row.createCell(i).setCellValue(dataRow[i]);
-	}
-
 	public static void main(String[] args) {
 		try {
 			ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
@@ -556,6 +551,7 @@ public class OutputExcel {
 			writeListOfSubmittedDocuments();
 			writeResultsEntranceTest();
 			writeListGroupsOnEntranceTests();
+			writeAdmissionPlan();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

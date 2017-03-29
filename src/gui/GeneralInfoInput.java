@@ -343,7 +343,7 @@ public class GeneralInfoInput extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					OutputExcel.outExcel("AdmissionPlan");
+					OutputExcel.writeAdmissionPlan();
 					JOptionPane.showMessageDialog(null, "План приема успешно сформирован!", "Результат вывода плана приема", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
