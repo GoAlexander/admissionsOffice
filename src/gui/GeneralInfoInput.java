@@ -418,6 +418,17 @@ public class GeneralInfoInput extends JFrame {
 		});
 		expMenuApplications = new JMenuItem("Заявления абитуриентов");
 		expMenu.add(expMenuApplications);
+		expMenuApplications.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OutputExportFiles.printAbiturientsAssesments();
+					JOptionPane.showMessageDialog(null, "Файл для выгрузки заявлений успешно сформирован!", "Результат экспорта заявлений", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
 		expMenuResults = new JMenuItem("Результаты конкурса");
 		expMenu.add(expMenuResults);
 
