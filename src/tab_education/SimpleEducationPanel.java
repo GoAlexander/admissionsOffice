@@ -113,6 +113,9 @@ public class SimpleEducationPanel extends JPanel{
 		textSpeciality.setText(values[3]);
 		textIssuedBy.setText(values[4]);
 		textYear.setText(values[5]);
+		if (values[6] != null)
+			while (values[6].length() < 4)
+				values[6] += "0";
 		textAvgBall.setText(values[6]);
 	}
 
