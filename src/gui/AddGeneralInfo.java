@@ -1,6 +1,8 @@
 ﻿package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -15,6 +17,7 @@ import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -39,6 +42,7 @@ public class AddGeneralInfo extends JFrame {
 			panelNationality;
 	private JButton applyButton;
 	private JTextField textID, textDateRecDoc;
+	private JCheckBox needHostel;
 	private JComboBox comboSexList, comboNationality;
 	private GridBagConstraints gbc;
 
@@ -50,6 +54,7 @@ public class AddGeneralInfo extends JFrame {
 	private JDateChooser calendar;
 
 	public AddGeneralInfo(JTable dataTable) {
+		this.setTitle("Ввод нового " + (ModelDBConnection.getDBName().equals("Aspirant") ? "аспиранта" : "ординатора"));
 		arrSex = ModelDBConnection.getNamesFromTableOrderedById("Gender");
 		arrNationality = ModelDBConnection.getNamesFromTableOrderedById("Nationality");
 
@@ -164,6 +169,13 @@ public class AddGeneralInfo extends JFrame {
 		gbc.gridy = 3;
 		GIPanel.add(panelNationality, gbc);
 
+		JPanel butPanel = new JPanel();
+		butPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		needHostel = new JCheckBox("Нуждается в общежитии");
+		needHostel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		butPanel.add(needHostel);
+		GIPanelMain.add(butPanel);
+
 		JPanel btnPanel = new JPanel();
 		btnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
@@ -175,7 +187,8 @@ public class AddGeneralInfo extends JFrame {
         });
 
 		btnPanel.add(applyButton);
-		GIPanelMain.add(btnPanel);
+
+		mainPanel.add(btnPanel, BorderLayout.PAGE_END);
 
 		setPreferredSize(new Dimension(600, 300));
 		pack();
@@ -185,7 +198,7 @@ public class AddGeneralInfo extends JFrame {
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
     	try {
     		//Запись в БД
-    		String[] abitBaseInfo = new String[8];
+    		String[] abitBaseInfo = new String[9];
     		abitBaseInfo[0] = (!textID.getText().equals("") ? textID.getText() : null);
     		abitBaseInfo[1] = (!((JTextField)panelSurname.getComponent(1)).getText().equals("") ? ((JTextField)panelSurname.getComponent(1)).getText() : null);
     		abitBaseInfo[2] = (!((JTextField)panelName.getComponent(1)).getText().equals("") ? ((JTextField)panelName.getComponent(1)).getText() : null);
@@ -194,6 +207,7 @@ public class AddGeneralInfo extends JFrame {
     		abitBaseInfo[5] = String.valueOf(comboSexList.getSelectedIndex()+1);
     		abitBaseInfo[6] = String.valueOf(comboNationality.getSelectedIndex()+1);
     		abitBaseInfo[7] = (!textDateRecDoc.getText().equals("") ? textDateRecDoc.getText() : null);
+    		abitBaseInfo[8] = needHostel.isSelected() ? "1" : null;
 
     		ArrayList<Integer> mistakesIndices = checkData(abitBaseInfo);
 			if (abitBaseInfo[0] == null) {

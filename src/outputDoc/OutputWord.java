@@ -90,6 +90,10 @@ public class OutputWord {
 								text = r.getText(0).replace("Дата_зап", generalInfo[7] != null ? generalInfo[7] + " г." : "");
 								r.setText(text, 0);
 								break;
+							case "Общежитие":
+								text = r.getText(0).replace("Общежитие", generalInfo[8]);
+								r.setText(text, 0);
+								break;
 							case "паспорт":
 								text = r.getText(0).replace("паспорт", passportData[0] != null ? passportData[0] : "");
 								r.setText(text, 0);
@@ -261,6 +265,10 @@ public class OutputWord {
 											break;
 										case "Дата_зап":
 											text = r.getText(0).replace("Дата_зап", generalInfo[7] != null ? generalInfo[7] + " г." : "");
+											r.setText(text, 0);
+											break;
+										case "Общежитие":
+											text = r.getText(0).replace("Общежитие", generalInfo[8]);
 											r.setText(text, 0);
 											break;
 										case "паспорт":

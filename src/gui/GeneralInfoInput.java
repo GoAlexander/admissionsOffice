@@ -84,6 +84,7 @@ public class GeneralInfoInput extends JFrame {
 	private JDateChooser calendar;
 
 	private String[] arrSex, arrNationality, arrReturnReason;
+	private String needHostel;
 
 	private JMenuBar menuBar;
 	private JMenu directoryMenu, docMenu, reportMenu, compMenu, expMenu;
@@ -200,7 +201,7 @@ public class GeneralInfoInput extends JFrame {
 		docMenuApplication.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					String[] generalInfo = new String[8];
+					String[] generalInfo = new String[9];
 					generalInfo[0] = ((JTextField) panelID.getComponent(1)).getText();
 					generalInfo[1] = ((JTextField) panelSurname.getComponent(1)).getText();
 					generalInfo[2] = ((JTextField) panelName.getComponent(1)).getText();
@@ -209,6 +210,7 @@ public class GeneralInfoInput extends JFrame {
 					generalInfo[5] = String.valueOf(comboSexList.getSelectedItem().toString());
 					generalInfo[6] = String.valueOf(comboNationality.getSelectedItem().toString());
 					generalInfo[7] = ((JLabel) panelDateDoc.getComponent(1)).getText();
+					generalInfo[8] = needHostel;
 
 					String[] passportData = ((PassportPanel)passportPanel).getValues(true);
 					String[] addressContacts = ((AddressContactsPanel)contPanel).getValues(true);
@@ -888,6 +890,7 @@ public class GeneralInfoInput extends JFrame {
 				textDateReturn.setText(format.format(docDate));
 			} else
 				textDateReturn.setText(null);
+			needHostel = values[10].equals("") ? "не нуждается" : "нуждается";
 			if (values[8].equals(""))
 				checkBackDoc.setSelected(false);
 			else

@@ -173,7 +173,7 @@ go
 alter procedure getAbiturientGeneralInfoByID(@aid varchar(max))
 as
 begin
-	select aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate, id_returnReason, returnDate from Abiturient where aid = @aid
+	select aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate, id_returnReason, returnDate, needHostel from Abiturient where aid = @aid
 	return
 end;
 go

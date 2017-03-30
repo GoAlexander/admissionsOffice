@@ -248,7 +248,7 @@ public class ModelDBConnection {
 					+ id_returnReason + ", " + needSpecConditions + ", " + is_enrolled + ");";
 
 			break;
-		case 8:
+		case 9:
 			aid = info[0];
 			SName = "'" + info[1] + "'";
 			FName = "'" + info[2] + "'";
@@ -257,10 +257,11 @@ public class ModelDBConnection {
 			id_gender = info[5];
 			id_nationality = info[6];
 			registrationDate = "'" + info[7] + "'";
+			needHostel = "'" + info[8] + "'";
 
-			query = "insert into Abiturient (aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate) Values ("
+			query = "insert into Abiturient (aid, SName, FName, MName, Birthday, id_gender, id_nationality, registrationDate, needHostel) Values ("
 					+ aid + ", " + SName + ", " + FName + ", " + MName + ", " + birthday + ", " + id_gender + ", "
-					+ id_nationality + ", " + registrationDate + ");";
+					+ id_nationality + ", " + registrationDate + ", " + needHostel + ");";
 
 			break;
 		}
