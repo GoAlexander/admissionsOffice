@@ -311,6 +311,7 @@ begin
 	else
 		begin
 			update AbiturientCompetitiveGroup set availabilityIndividualAchievements = 1 where aid_abiturient = @aid
+			update AbiturientCompetitiveGroup set competitiveBall = competitiveBall + (select sum(score) from AbiturientIndividualAchievement  where aid_abiturient = @aid) where aid_abiturient = @aid
 		end
 end;
 go

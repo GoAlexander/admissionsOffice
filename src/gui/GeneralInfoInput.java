@@ -872,7 +872,7 @@ public class GeneralInfoInput extends JFrame {
 			((JTextField) panelName.getComponent(1)).setText(values[2]);
 			((JTextField) panelPatronymic.getComponent(1)).setText(values[3]);
 			SimpleDateFormat format = new SimpleDateFormat();
-			format.applyPattern("yyyy-MM-dd");
+			format.applyPattern("dd.MM.yyyy");
 			calendar.setDate(values[4].equals("") ? null
 					: format.parse(values[4]));
 			comboSexList.setSelectedIndex(values[5].equals("") ? -1

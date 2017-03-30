@@ -75,7 +75,7 @@ public class OutputWord {
 								r.setText(text, 0);
 								break;
 							case "Дата_рождения":
-								text = r.getText(0).replace("Дата_рождения", generalInfo[4] != null ? generalInfo[4] : "");
+								text = r.getText(0).replace("Дата_рождения", generalInfo[4] != null ? generalInfo[4] + " г." : "");
 								r.setText(text, 0);
 								break;
 							case "Пол":
@@ -87,7 +87,7 @@ public class OutputWord {
 								r.setText(text, 0);
 								break;
 							case "Дата_зап":
-								text = r.getText(0).replace("Дата_зап", generalInfo[7] != null ? generalInfo[7] : "");
+								text = r.getText(0).replace("Дата_зап", generalInfo[7] != null ? generalInfo[7] + " г." : "");
 								r.setText(text, 0);
 								break;
 							case "паспорт":
@@ -248,7 +248,7 @@ public class OutputWord {
 											r.setText(text, 0);
 											break;
 										case "Дата_рождения":
-											text = r.getText(0).replace("Дата_рождения", generalInfo[4] != null ? generalInfo[4] : "");
+											text = r.getText(0).replace("Дата_рождения", generalInfo[4] != null ? generalInfo[4] + " г." : "");
 											r.setText(text, 0);
 											break;
 										case "Пол":
@@ -260,7 +260,7 @@ public class OutputWord {
 											r.setText(text, 0);
 											break;
 										case "Дата_зап":
-											text = r.getText(0).replace("Дата_зап", generalInfo[7] != null ? generalInfo[7] : "");
+											text = r.getText(0).replace("Дата_зап", generalInfo[7] != null ? generalInfo[7] + " г." : "");
 											r.setText(text, 0);
 											break;
 										case "паспорт":
@@ -765,7 +765,7 @@ public class OutputWord {
 							r.setText(text, 0);
 							break;
 						case "Дата_зап":
-							text = r.getText(0).replace("Дата_зап", generalInfo[5] != null ? generalInfo[5] : "");
+							text = r.getText(0).replace("Дата_зап", generalInfo[5] != null ? generalInfo[5] + " г." : "");
 							r.setText(text, 0);
 							break;
 						case "Программа":
@@ -827,7 +827,7 @@ public class OutputWord {
 										r.setText(text, 0);
 										break;
 									case "Дата_зап":
-										text = r.getText(0).replace("Дата_зап", generalInfo[5] != null ? generalInfo[5] : "");
+										text = r.getText(0).replace("Дата_зап", generalInfo[5] != null ? generalInfo[5] + " г." : "");
 										r.setText(text, 0);
 										break;
 									case "Программа":
