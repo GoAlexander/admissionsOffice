@@ -173,7 +173,7 @@ public class OutputWord {
 							case "Инд_достижения":
 								String indAchivments = "";
 								for(int j = 0; j < (indAchievments != null ? indAchievments.length : 0); j++)
-									indAchivments += (indAchievments[j][1] + "; ");
+									indAchivments += (indAchievments[j][1] + (Integer.valueOf(indAchievments[j][2]) > 0 ? " - " + indAchievments[j][2] + " балл;" : "; "));
 								text = r.getText(0).replace("Инд_достижения", indAchivments);
 								r.setText(text, 0);
 								break;
@@ -190,7 +190,7 @@ public class OutputWord {
 													: "")
 											+ (indAchievments[j][6] != null ? indAchievments[j][6] + ", " : "")
 											+ (indAchievments[j][7] != null ? indAchievments[j][7] + " г.;" : ";"));
-								text = r.getText(0).replace("Док_подтв_инд_достиж", indAchivmentsDocs);
+								text = r.getText(0).replace("Док_подтв_инд_достиж", (!indAchivmentsDocs.equals(";") ? indAchivmentsDocs : ""));
 								r.setText(text, 0);
 								break;
 							case "}":
@@ -346,7 +346,7 @@ public class OutputWord {
 										case "Инд_достижения":
 											String indAchivments = "";
 											for(int j = 0; j < (indAchievments != null ? indAchievments.length : 0); j++)
-												indAchivments += (indAchievments[j][1] + "; ");
+												indAchivments += (indAchievments[j][1] + (Integer.valueOf((indAchievments[j][2] != null ? indAchievments[j][2] : "0")) > 0 ? " - " + indAchievments[j][2] + " баллов;" : "; "));
 											text = r.getText(0).replace("Инд_достижения", indAchivments);
 											r.setText(text, 0);
 											break;
@@ -365,7 +365,7 @@ public class OutputWord {
 																: "")
 														+ (indAchievments[j][7] != null ? indAchievments[j][7] + " г.;"
 																: ";"));
-											text = r.getText(0).replace("Док_подтв_инд_достиж", indAchivmentsDocs);
+											text = r.getText(0).replace("Док_подтв_инд_достиж", (!indAchivmentsDocs.equals(";") ? indAchivmentsDocs : ""));
 											r.setText(text, 0);
 											break;
 										case "}":
