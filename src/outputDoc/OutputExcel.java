@@ -22,8 +22,8 @@ public class OutputExcel {
 	private static String currentPath = new File("").getAbsolutePath();
 
 	public static void writeAdmissionPlan() throws Exception {
-		XSSFWorkbook workbook = new XSSFWorkbook(
-				new FileInputStream(currentPath + "\\Dots\\План_приема" + ".xltx"));
+		String moduleType = ModelDBConnection.getDBName().equals("Aspirant") ? "аспирантура" : "ординатура";
+		XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(currentPath + "\\Dots\\План_приема" + ".xltx"));
 		XSSFSheet sheet = workbook.getSheetAt(0);
 
 		XSSFFont fontForNames = workbook.createFont();
@@ -37,21 +37,21 @@ public class OutputExcel {
 		styleForNames.setBorderTop(XSSFCellStyle.BORDER_THIN);
 		styleForNames.setAlignment(XSSFCellStyle.ALIGN_CENTER);
 		styleForNames.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
-		
+
 		String[][] plan = ModelDBConnection.getAdmissionPlan();
-		
+
 		int rowNum = 2;
 		XSSFRow row;
-		
-		for(int i = 0; i < plan.length; i++){
+
+		for (int i = 0; i < plan.length; i++) {
 			row = sheet.createRow(++rowNum);
-			for(int j = 0; j < plan[i].length; j++){
-				row.createCell(j+1).setCellValue(plan[i][j]);
-				row.getCell(j+1).setCellStyle(styleForNames);
+			for (int j = 0; j < plan[i].length; j++) {
+				row.createCell(j + 1).setCellValue(plan[i][j]);
+				row.getCell(j + 1).setCellStyle(styleForNames);
 			}
 		}
-		
-		String path = currentPath + "\\files\\План_приема" + "_"
+
+		String path = currentPath + "\\files\\План_приема" + "_" + moduleType + "_"
 				+ (new SimpleDateFormat("dd.MM.yyyy").format(new Date())) + ".xls";
 		File file = new File(path);
 		if (file.exists())
