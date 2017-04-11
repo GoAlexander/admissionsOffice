@@ -64,7 +64,7 @@ go
 insert into [Nationality] values
 (1,	'РФ',	NULL),
 (2,	'Украина',	NULL),
-(3,	'Белорусь',	NULL),
+(3,	'Беларусь',	NULL),
 (4,	'Казахстан',	NULL);
 
 go
@@ -72,7 +72,7 @@ go
 insert into [PassportType] values
 (1,	'паспорт РФ', null),
 (2,	'паспорт Украины',	null),
-(3,	'паспорт Белорусии',	null);
+(3,	'паспорт Беларуси',	null);
 
 go
 
@@ -228,7 +228,7 @@ go
 insert into [Nationality] values
 (1,	'РФ',	NULL),
 (2,	'Украина',	NULL),
-(3,	'Белорусь',	NULL),
+(3,	'Беларусь',	NULL),
 (4,	'Казахстан',	NULL);
 
 go
@@ -236,7 +236,7 @@ go
 insert into [PassportType] values
 (1,	'паспорт РФ', null),
 (2,	'паспорт Украины',	null),
-(3,	'паспорт Белорусии',	null);
+(3,	'паспорт Беларуси',	null);
 
 go
 
