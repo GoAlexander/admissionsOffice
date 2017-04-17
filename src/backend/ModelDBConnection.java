@@ -1349,4 +1349,180 @@ public class ModelDBConnection {
 
 		return data;
 	}
+
+	public static String[][] getStatisticsGZGU(boolean count) {
+		String[][] data = null;
+		try {
+			cstmt = con.prepareCall("{call getStatisticsGZGU(?)}", 1004, 1007);
+			cstmt.setBoolean(1, count);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
+				}
+			}
+
+			cstmt.close();
+			rset.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return data;
+	}
+	
+	public static String[][] getStatisticsMinZdrav(boolean count) {
+		String[][] data = null;
+		try {
+			cstmt = con.prepareCall("{call getStatisticsMinZdrav(?)}", 1004, 1007);
+			cstmt.setBoolean(1, count);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
+				}
+			}
+
+			cstmt.close();
+			rset.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return data;
+	}
+	
+	public static String[][] getStatisticsRegionFull_SubmittedDocuments(boolean count) {
+		String[][] data = null;
+		try {
+			cstmt = con.prepareCall("{call getStatisticsRegionFull_SubmittedDocuments(?)}", 1004, 1007);
+			cstmt.setBoolean(1, count);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
+				}
+			}
+
+			cstmt.close();
+			rset.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return data;
+	}
+	
+	public static String[][] getStatisticsRegionFull_Enrolled(boolean count) {
+		String[][] data = null;
+		try {
+			cstmt = con.prepareCall("{call getStatisticsRegionFull_Enrolled(?)}", 1004, 1007);
+			cstmt.setBoolean(1, count);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
+				}
+			}
+
+			cstmt.close();
+			rset.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return data;
+	}
+	
+	public static String[][] getStatisticsRegionShort(boolean count) {
+		String[][] data = null;
+		try {
+			cstmt = con.prepareCall("{call getStatisticsRegionShort(?)}", 1004, 1007);
+			cstmt.setBoolean(1, count);
+
+			rset = cstmt.executeQuery();
+
+			int countStrings = rset.last() ? rset.getRow() : 0;
+			rset.beforeFirst();
+
+			if (countStrings > 0) {
+				ResultSetMetaData rsmd = rset.getMetaData();
+				int numberOfColumns = rsmd.getColumnCount();
+				data = new String[countStrings][numberOfColumns];
+				int curPos = 0;
+				while (rset.next()) {
+					for (int i = 0; i < numberOfColumns; i++) {
+						if (rset.getObject(i + 1) != null)
+							data[curPos][i] = rset.getObject(i + 1).toString();
+					}
+					curPos++;
+				}
+			}
+
+			cstmt.close();
+			rset.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return data;
+	}
+	
 }

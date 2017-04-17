@@ -353,64 +353,64 @@ as begin
 	if @count = 0
 		begin
 			select Speciality.name as 'Специальность', EducationForm.name as 'Форма обучения', 
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				 where competitiveGroup = 1 and targetOrganisation is not NULL and 
-				 AbiturientCompetitiveGroup.speciality = Speciality.id and 
-				 AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего целевиков', 
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				 where competitiveGroup = 2 and targetOrganisation is NULL and 
-				 AbiturientCompetitiveGroup.speciality = Speciality.id and 
-				 AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего бюджетников',
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				 where competitiveGroup = 3 and 
-				 AbiturientCompetitiveGroup.speciality = Speciality.id and 
-				 AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего коммерсантов',
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 2 and targetOrganisation is NULL and 
+			AbiturientCompetitiveGroup.speciality = Speciality.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего бюджетников',
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 1 and targetOrganisation is not NULL and 
+			AbiturientCompetitiveGroup.speciality = Speciality.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего целевиков', 
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 3 and 
+			AbiturientCompetitiveGroup.speciality = Speciality.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего коммерсантов',
  
-				 (select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				 where competitiveGroup = 1 and targetOrganisation is not NULL and markEnrollment > 0 and 
-				 AbiturientCompetitiveGroup.speciality = Speciality.id and 
-				 AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных целевиков', 
-				 (select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				 where competitiveGroup = 2 and targetOrganisation is NULL and markEnrollment > 0 and 
-				 AbiturientCompetitiveGroup.speciality = Speciality.id and 
-				 AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных бюджетников',
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				 where competitiveGroup = 3 and markEnrollment > 0 and  
-				 AbiturientCompetitiveGroup.speciality = Speciality.id and 
-				 AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего коммерсантов'
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 2 and targetOrganisation is NULL and markEnrollment > 0 and 
+			AbiturientCompetitiveGroup.speciality = Speciality.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных бюджетников',
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 1 and targetOrganisation is not NULL and markEnrollment > 0 and 
+			AbiturientCompetitiveGroup.speciality = Speciality.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных целевиков', 
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 3 and markEnrollment > 0 and  
+			AbiturientCompetitiveGroup.speciality = Speciality.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных коммерсантов'
 
-				from Speciality, EducationForm order by Speciality.id, EducationForm.id;
+			from Speciality, EducationForm order by Speciality.id, EducationForm.id;
 		end
 	else
 		begin
-			select Course.name as 'Направление', EducationForm.name as 'Форма обучения', 
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				where competitiveGroup = 1 and targetOrganisation is not NULL and 
-				AbiturientCompetitiveGroup.course = Course.id and 
-				AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего целевиков', 
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				where competitiveGroup = 2 and targetOrganisation is NULL and 
-				AbiturientCompetitiveGroup.course = Course.id and 
-				AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего бюджетников',
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				where competitiveGroup = 3 and 
-				AbiturientCompetitiveGroup.course = Course.id and 
-				AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего коммерсантов',
+			select Course.name as 'Направление', EducationForm.name as 'Форма обучения',
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 2 and targetOrganisation is NULL and 
+			AbiturientCompetitiveGroup.course = Course.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего бюджетников', 
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 1 and targetOrganisation is not NULL and 
+			AbiturientCompetitiveGroup.course = Course.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего целевиков', 
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 3 and 
+			AbiturientCompetitiveGroup.course = Course.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего коммерсантов',
  
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				where competitiveGroup = 1 and targetOrganisation is not NULL and markEnrollment > 0 and 
-				AbiturientCompetitiveGroup.course = Course.id and 
-				AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных целевиков', 
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				where competitiveGroup = 2 and targetOrganisation is NULL and markEnrollment > 0 and 
-				AbiturientCompetitiveGroup.course = Course.id and 
-				AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных бюджетников',
-				(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
-				where competitiveGroup = 3 and markEnrollment > 0 and  
-				AbiturientCompetitiveGroup.course = Course.id and 
-				AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего коммерсантов'
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 2 and targetOrganisation is NULL and markEnrollment > 0 and 
+			AbiturientCompetitiveGroup.course = Course.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных бюджетников', 
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 1 and targetOrganisation is not NULL and markEnrollment > 0 and 
+			AbiturientCompetitiveGroup.course = Course.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Кол-во зачисленных целевиков', 
+			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup
+			where competitiveGroup = 3 and markEnrollment > 0 and  
+			AbiturientCompetitiveGroup.course = Course.id and 
+			AbiturientCompetitiveGroup.educationForm=EducationForm.id) as 'Всего коммерсантов'
 
-				from Course, EducationForm order by Course.id, EducationForm.id;
+			from Course, EducationForm order by Course.id, EducationForm.id;
 		end
 			
 	return

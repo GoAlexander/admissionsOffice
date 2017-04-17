@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -544,6 +545,231 @@ public class OutputExcel {
 		workbook.write(new FileOutputStream(file));
 	}
 
+	public static void writeStatistics() throws Exception {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+
+		XSSFFont fontForEntranceTestName = workbook.createFont();
+		// fontForEntranceTestName.setBold(true);
+		fontForEntranceTestName.setFontHeight(12);
+		fontForEntranceTestName.setFontName("Arial Cyr");
+
+		XSSFCellStyle styleForCellsWithCenterAlg = workbook.createCellStyle();
+		styleForCellsWithCenterAlg.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+		styleForCellsWithCenterAlg.setFont(fontForEntranceTestName);
+
+		XSSFCellStyle styleForCellsWithLeftAlg = workbook.createCellStyle();
+		styleForCellsWithLeftAlg.setAlignment(XSSFCellStyle.ALIGN_LEFT);
+		styleForCellsWithLeftAlg.setFont(fontForEntranceTestName);
+
+		XSSFFont fontForNames = workbook.createFont();
+		fontForNames.setFontHeight(11);
+		fontForNames.setFontName("Arial Cyr");
+		XSSFCellStyle styleForNames = workbook.createCellStyle();
+		styleForNames.setFont(fontForNames);
+		styleForNames.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setBorderRight(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setBorderTop(XSSFCellStyle.BORDER_THIN);
+		styleForNames.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+		styleForNames.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+
+		// Лист 1
+		XSSFSheet sheetGZGU_sp = workbook.createSheet("ГЗГУ_Специальность");
+		XSSFRow row;
+
+		String[][] statisticsGZGU_speciality = ModelDBConnection.getStatisticsGZGU(false);
+
+		sheetGZGU_sp.addMergedRegion(new CellRangeAddress(0, 0, 2, 4));
+		sheetGZGU_sp.addMergedRegion(new CellRangeAddress(0, 0, 5, 7));
+
+		row = sheetGZGU_sp.createRow(0);
+		row.createCell(0).setCellValue("Специальноcть");
+		row.createCell(1).setCellValue("Форма обучения");
+		row.createCell(2).setCellValue("Количество поданных заявлений");
+		// row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
+		row.createCell(5).setCellValue("Количество зачисленных");
+		// row.getCell(5).setCellStyle(styleForCellsWithCenterAlg);
+
+		row = sheetGZGU_sp.createRow(1);
+		row.createCell(2).setCellValue("всего");
+		row.createCell(3).setCellValue("в т.ч. целевая квота");
+		row.createCell(4).setCellValue("на коммерческие места");
+		row.createCell(5).setCellValue("всего");
+		row.createCell(6).setCellValue("в т.ч. целевая квота");
+		row.createCell(7).setCellValue("на коммерческие места");
+
+		for (int i = 2; i < statisticsGZGU_speciality.length + 2; i++) {
+			row = sheetGZGU_sp.createRow(i);
+			row.createCell(0).setCellValue(statisticsGZGU_speciality[i - 2][0]);
+			row.createCell(1).setCellValue(statisticsGZGU_speciality[i - 2][1]);
+			row.createCell(2).setCellValue(Integer.valueOf(statisticsGZGU_speciality[i - 2][2])
+					+ Integer.valueOf(statisticsGZGU_speciality[i - 2][3]));
+			row.createCell(3).setCellValue(Integer.valueOf(statisticsGZGU_speciality[i - 2][3]));
+			row.createCell(4).setCellValue(Integer.valueOf(statisticsGZGU_speciality[i - 2][4]));
+			row.createCell(5).setCellValue(Integer.valueOf(statisticsGZGU_speciality[i - 2][5])
+					+ Integer.valueOf(statisticsGZGU_speciality[i - 2][6]));
+			row.createCell(6).setCellValue(Integer.valueOf(statisticsGZGU_speciality[i - 2][6]));
+			row.createCell(7).setCellValue(Integer.valueOf(statisticsGZGU_speciality[i - 2][7]));
+		}
+
+		for (int i = 0; i < statisticsGZGU_speciality[0].length; i++)
+			sheetGZGU_sp.autoSizeColumn(i);
+
+		// Лист 2
+		XSSFSheet sheetGZGU_crs = workbook.createSheet("ГЗГУ_Направление");
+
+		String[][] statisticsGZGU_course = ModelDBConnection.getStatisticsGZGU(true);
+
+		sheetGZGU_crs.addMergedRegion(new CellRangeAddress(0, 0, 2, 4));
+		sheetGZGU_crs.addMergedRegion(new CellRangeAddress(0, 0, 5, 7));
+
+		row = sheetGZGU_crs.createRow(0);
+		row.createCell(0).setCellValue("Направление");
+		row.createCell(1).setCellValue("Форма обучения");
+		row.createCell(2).setCellValue("Количество поданных заявлений");
+		// row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
+		row.createCell(5).setCellValue("Количество зачисленных");
+		// row.getCell(5).setCellStyle(styleForCellsWithCenterAlg);
+
+		row = sheetGZGU_crs.createRow(1);
+		row.createCell(2).setCellValue("всего");
+		row.createCell(3).setCellValue("в т.ч. целевая квота");
+		row.createCell(4).setCellValue("на коммерческие места");
+		row.createCell(5).setCellValue("всего");
+		row.createCell(6).setCellValue("в т.ч. целевая квота");
+		row.createCell(7).setCellValue("на коммерческие места");
+
+		for (int i = 2; i < statisticsGZGU_course.length + 2; i++) {
+			row = sheetGZGU_crs.createRow(i);
+			row.createCell(0).setCellValue(statisticsGZGU_course[i - 2][0]);
+			row.createCell(1).setCellValue(statisticsGZGU_course[i - 2][1]);
+			row.createCell(2).setCellValue(Integer.valueOf(statisticsGZGU_course[i - 2][2])
+					+ Integer.valueOf(statisticsGZGU_course[i - 2][3]));
+			row.createCell(3).setCellValue(Integer.valueOf(statisticsGZGU_course[i - 2][3]));
+			row.createCell(4).setCellValue(Integer.valueOf(statisticsGZGU_course[i - 2][4]));
+			row.createCell(5).setCellValue(Integer.valueOf(statisticsGZGU_course[i - 2][5])
+					+ Integer.valueOf(statisticsGZGU_course[i - 2][6]));
+			row.createCell(6).setCellValue(Integer.valueOf(statisticsGZGU_course[i - 2][6]));
+			row.createCell(7).setCellValue(Integer.valueOf(statisticsGZGU_course[i - 2][7]));
+		}
+
+		for (int i = 0; i < statisticsGZGU_speciality[0].length; i++)
+			sheetGZGU_crs.autoSizeColumn(i);
+
+		// Лист 3
+		XSSFSheet sheetMinZdrav_sp = workbook.createSheet("МинЗдрав_Специальность");
+		String[][] statisticsMinZdrav_speciality = ModelDBConnection.getStatisticsMinZdrav(false);
+
+		row = sheetMinZdrav_sp.createRow(0);
+		row.createCell(0).setCellValue("Специальноcть");
+		row.createCell(1).setCellValue("Форма обучения");
+		row.createCell(2).setCellValue("Наименование целевой организации");
+		row.createCell(3).setCellValue("План приема");
+		row.createCell(4).setCellValue("Количество поданных заявлений");
+		row.createCell(5).setCellValue("Количество зачисленных");
+
+		for (int i = 1; i < statisticsMinZdrav_speciality.length + 1; i++) {
+			row = sheetMinZdrav_sp.createRow(i);
+			row.createCell(0).setCellValue(statisticsMinZdrav_speciality[i - 1][0]);
+			row.createCell(1).setCellValue(statisticsMinZdrav_speciality[i - 1][1]);
+			row.createCell(2).setCellValue(statisticsMinZdrav_speciality[i - 1][2]);
+			row.createCell(3).setCellValue("terra incognita");
+			row.createCell(4).setCellValue(Integer.valueOf(statisticsMinZdrav_speciality[i - 1][3]));
+			row.createCell(5).setCellValue(Integer.valueOf(statisticsMinZdrav_speciality[i - 1][4]));
+		}
+
+		for (int i = 0; i <= statisticsMinZdrav_speciality[0].length; i++)
+			sheetMinZdrav_sp.autoSizeColumn(i);
+
+		// Лист 4
+		XSSFSheet sheetMinZdrav_crs = workbook.createSheet("МинЗдрав_Направление");
+		String[][] statisticsMinZdrav_cousre = ModelDBConnection.getStatisticsMinZdrav(true);
+
+		row = sheetMinZdrav_crs.createRow(0);
+		row.createCell(0).setCellValue("Специальноcть");
+		row.createCell(1).setCellValue("Форма обучения");
+		row.createCell(2).setCellValue("Наименование целевой организации");
+		row.createCell(3).setCellValue("План приема");
+		row.createCell(4).setCellValue("Количество поданных заявлений");
+		row.createCell(5).setCellValue("Количество зачисленных");
+
+		for (int i = 1; i < statisticsMinZdrav_cousre.length + 1; i++) {
+			row = sheetMinZdrav_crs.createRow(i);
+			row.createCell(0).setCellValue(statisticsMinZdrav_cousre[i - 1][0]);
+			row.createCell(1).setCellValue(statisticsMinZdrav_cousre[i - 1][1]);
+			row.createCell(2).setCellValue(statisticsMinZdrav_cousre[i - 1][2]);
+			row.createCell(3).setCellValue("terra incognita");
+			row.createCell(4).setCellValue(Integer.valueOf(statisticsMinZdrav_cousre[i - 1][3]));
+			row.createCell(5).setCellValue(Integer.valueOf(statisticsMinZdrav_cousre[i - 1][4]));
+		}
+
+		for (int i = 0; i <= statisticsMinZdrav_cousre[0].length; i++)
+			sheetMinZdrav_crs.autoSizeColumn(i);
+
+		// Лист 5
+		XSSFSheet sheetRegionFull_SubmittedDocuments_sp = workbook.createSheet("РC по регионам_Подано_Специальность");
+		// Лист 6
+		XSSFSheet sheetRegionFull_SubmittedDocuments_crs = workbook.createSheet("РC по регионам_Подано_Направление");
+		// Лист 7
+		XSSFSheet sheetRegionFull_Enrolled_sp = workbook.createSheet("РC по регионам_Зачислено_Специальность");
+		// Лист 8
+		XSSFSheet sheetRegionFull_Enrolled_crs = workbook.createSheet("РC по регионам_Зачислено_Направление");
+
+		// Лист 9
+		XSSFSheet sheetRegionShort_sp = workbook.createSheet("Сокращенная статистика по регионам_Специальность");
+		String[][] statisticsRegionShort_speciality = ModelDBConnection.getStatisticsRegionShort(false);
+		// String[][] tmp = new
+		// String[statisticsRegionShort_speciality.length][statisticsRegionShort_speciality[0].length];
+		// System.arraycopy(statisticsRegionShort_speciality, 1, tmp, 0,
+		// statisticsRegionShort_speciality.length-1);
+
+		sheetRegionShort_sp.addMergedRegion(new CellRangeAddress(0, 0, 4, 6));
+		sheetRegionShort_sp.addMergedRegion(new CellRangeAddress(0, 0, 7, 9));
+
+		row = sheetRegionShort_sp.createRow(0);
+		row.createCell(0).setCellValue("Специальноcть");
+		row.createCell(1).setCellValue("Форма обучения");
+		row.createCell(2).setCellValue("Источник финансирования");
+		row.createCell(3).setCellValue("Целевая организация");
+		row.createCell(4).setCellValue("Подано заявлений");
+		row.createCell(7).setCellValue("Зачислено");
+
+		row = sheetRegionShort_sp.createRow(1);
+		row.createCell(4).setCellValue("Из Н.Новгорода");
+		row.createCell(5).setCellValue("Из Нижегородской обл.");
+		row.createCell(6).setCellValue("За пределами Нижегородской обл.");
+		row.createCell(7).setCellValue("Из Н.Новгорода");
+		row.createCell(8).setCellValue("Из Нижегородской обл.");
+		row.createCell(9).setCellValue("За пределами Нижегородской обл.");
+
+		for (int i = 2; i < statisticsRegionShort_speciality.length + 2; i++) {
+			row = sheetRegionShort_sp.createRow(i);
+			row.createCell(0).setCellValue(statisticsRegionShort_speciality[i - 2][1]);
+			row.createCell(1).setCellValue(statisticsRegionShort_speciality[i - 2][3]);
+			row.createCell(2).setCellValue(statisticsRegionShort_speciality[i - 2][5]);
+			row.createCell(3).setCellValue(statisticsRegionShort_speciality[i - 2][7]);
+			row.createCell(4).setCellValue(Integer.valueOf(statisticsRegionShort_speciality[i - 2][8]));
+			row.createCell(5).setCellValue(Integer.valueOf(statisticsRegionShort_speciality[i - 2][9]));
+			row.createCell(6).setCellValue(Integer.valueOf(statisticsRegionShort_speciality[i - 2][10]));
+			row.createCell(7).setCellValue(Integer.valueOf(statisticsRegionShort_speciality[i - 2][11]));
+			row.createCell(8).setCellValue(Integer.valueOf(statisticsRegionShort_speciality[i - 2][12]));
+			row.createCell(9).setCellValue(Integer.valueOf(statisticsRegionShort_speciality[i - 2][13]));
+		}
+
+		for (int i = 0; i <= statisticsRegionShort_speciality[0].length; i++)
+			sheetRegionShort_sp.autoSizeColumn(i);
+
+		String path = currentPath + "\\files\\Статистика" + "_"
+				+ (new SimpleDateFormat("dd.MM.yyyy").format(new Date())) + ".xls";
+		File file = new File(path);
+		if (file.exists())
+			file.delete();
+		file.createNewFile();
+
+		workbook.write(new FileOutputStream(file));
+	}
+	
+	
 	public static void main(String[] args) {
 		try {
 			ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
@@ -552,6 +778,7 @@ public class OutputExcel {
 			writeResultsEntranceTest();
 			writeListGroupsOnEntranceTests();
 			writeAdmissionPlan();
+			writeStatistics();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

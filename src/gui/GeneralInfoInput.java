@@ -355,6 +355,17 @@ public class GeneralInfoInput extends JFrame {
 		reportMenu.addSeparator();
 		reportMenuStatistics = new JMenuItem("Статистика");
 		reportMenu.add(reportMenuStatistics);
+		reportMenuStatistics.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OutputExcel.writeStatistics();
+					JOptionPane.showMessageDialog(null, "Статистака успешно сформирована!", "Результат вывода статистики", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
 
 		compMenu = new JMenu("Конкурс");
 		menuBar.add(compMenu);
