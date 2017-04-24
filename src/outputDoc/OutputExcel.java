@@ -547,35 +547,10 @@ public class OutputExcel {
 
 	public static void writeStatistics() throws Exception {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-
-		XSSFFont fontForEntranceTestName = workbook.createFont();
-		// fontForEntranceTestName.setBold(true);
-		fontForEntranceTestName.setFontHeight(12);
-		fontForEntranceTestName.setFontName("Arial Cyr");
-
-		XSSFCellStyle styleForCellsWithCenterAlg = workbook.createCellStyle();
-		styleForCellsWithCenterAlg.setAlignment(XSSFCellStyle.ALIGN_CENTER);
-		styleForCellsWithCenterAlg.setFont(fontForEntranceTestName);
-
-		XSSFCellStyle styleForCellsWithLeftAlg = workbook.createCellStyle();
-		styleForCellsWithLeftAlg.setAlignment(XSSFCellStyle.ALIGN_LEFT);
-		styleForCellsWithLeftAlg.setFont(fontForEntranceTestName);
-
-		XSSFFont fontForNames = workbook.createFont();
-		fontForNames.setFontHeight(11);
-		fontForNames.setFontName("Arial Cyr");
-		XSSFCellStyle styleForNames = workbook.createCellStyle();
-		styleForNames.setFont(fontForNames);
-		styleForNames.setBorderBottom(XSSFCellStyle.BORDER_THIN);
-		styleForNames.setBorderLeft(XSSFCellStyle.BORDER_THIN);
-		styleForNames.setBorderRight(XSSFCellStyle.BORDER_THIN);
-		styleForNames.setBorderTop(XSSFCellStyle.BORDER_THIN);
-		styleForNames.setAlignment(XSSFCellStyle.ALIGN_CENTER);
-		styleForNames.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+		XSSFRow row;
 
 		// Лист 1
 		XSSFSheet sheetGZGU_sp = workbook.createSheet("ГЗГУ_Специальность");
-		XSSFRow row;
 
 		String[][] statisticsGZGU_speciality = ModelDBConnection.getStatisticsGZGU(false);
 
@@ -586,9 +561,7 @@ public class OutputExcel {
 		row.createCell(0).setCellValue("Специальноcть");
 		row.createCell(1).setCellValue("Форма обучения");
 		row.createCell(2).setCellValue("Количество поданных заявлений");
-		// row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
 		row.createCell(5).setCellValue("Количество зачисленных");
-		// row.getCell(5).setCellStyle(styleForCellsWithCenterAlg);
 
 		row = sheetGZGU_sp.createRow(1);
 		row.createCell(2).setCellValue("всего");
@@ -627,10 +600,8 @@ public class OutputExcel {
 		row.createCell(0).setCellValue("Направление");
 		row.createCell(1).setCellValue("Форма обучения");
 		row.createCell(2).setCellValue("Количество поданных заявлений");
-		// row.getCell(2).setCellStyle(styleForCellsWithCenterAlg);
 		row.createCell(5).setCellValue("Количество зачисленных");
-		// row.getCell(5).setCellStyle(styleForCellsWithCenterAlg);
-
+		
 		row = sheetGZGU_crs.createRow(1);
 		row.createCell(2).setCellValue("всего");
 		row.createCell(3).setCellValue("в т.ч. целевая квота");
@@ -707,21 +678,227 @@ public class OutputExcel {
 			sheetMinZdrav_crs.autoSizeColumn(i);
 
 		// Лист 5
+		
+		// ВСПОМОГАТЕЛЬНЫЕ ПЕРЕМЕННЫЕ ТОЛЬКО ДЛЯ ЛИСТОВ 5-8
+		XSSFRow row0;
+		XSSFRow row1;
+		// отступ слева
+		int pitch;
+		// промежутки между специальностями/направлениями
+		int gap;
+		int tmp;
+		
 		XSSFSheet sheetRegionFull_SubmittedDocuments_sp = workbook.createSheet("РC по регионам_Подано_Специальность");
+		String[][] statisticsRegionFull_SubmittedDocuments_speciality = ModelDBConnection
+				.getStatisticsRegionFull_SubmittedDocuments(false);
+
+		row0 = sheetRegionFull_SubmittedDocuments_sp.createRow(0);
+		row0.createCell(0).setCellValue("Специальноcть");
+		row0.createCell(1).setCellValue("Форма обучения");
+		row0.createCell(2).setCellValue("Источник финансирования");
+
+		row1 = sheetRegionFull_SubmittedDocuments_sp.createRow(1);
+
+
+		// кол-во регионов с 1 тк с собой не сравниваем, считаем один раз для всех листов с 5-8
+		int regionNumber = 1;
+		int jRow = 1;
+		while (!(statisticsRegionFull_SubmittedDocuments_speciality[0][3]
+				.equals(statisticsRegionFull_SubmittedDocuments_speciality[jRow][3]))) {
+			regionNumber++;
+			jRow++;
+		}
+
+		tmp = 0;
+		pitch = 3;
+		while (tmp != regionNumber) {
+			sheetRegionFull_SubmittedDocuments_sp.addMergedRegion(new CellRangeAddress(0, 0, pitch, pitch + 1));
+			row0.createCell(pitch).setCellValue(statisticsRegionFull_SubmittedDocuments_speciality[tmp][3]);
+			row1.createCell(pitch).setCellValue("Подано заявлений");
+			row1.createCell(pitch + 1).setCellValue("в т.ч. на целевые места");
+			tmp++;
+			pitch += 2;
+		}
+
+		gap = 0;
+		for (int i = 2; i < statisticsRegionFull_SubmittedDocuments_speciality.length + 2; i += regionNumber) {
+			if (i == 2)
+				row = sheetRegionFull_SubmittedDocuments_sp.createRow(i);
+			else
+				row = sheetRegionFull_SubmittedDocuments_sp.createRow(2 + gap);
+
+			row.createCell(0).setCellValue(statisticsRegionFull_SubmittedDocuments_speciality[i - 2][0]);
+			row.createCell(1).setCellValue(statisticsRegionFull_SubmittedDocuments_speciality[i - 2][1]);
+			row.createCell(2).setCellValue(statisticsRegionFull_SubmittedDocuments_speciality[i - 2][2]);
+
+			int bla = 0;
+			for (int k = 3; k < regionNumber * 2 + 3; k += 2) {
+				row.createCell(k).setCellValue(
+						Integer.valueOf(statisticsRegionFull_SubmittedDocuments_speciality[i - 2 + bla][4]));
+				row.createCell(k + 1).setCellValue(
+						Integer.valueOf(statisticsRegionFull_SubmittedDocuments_speciality[i - 2 + bla][5]));
+				bla++;
+
+			}
+			gap++;
+		}
+
+		for (int i = 0; i <= statisticsRegionFull_SubmittedDocuments_speciality[0].length + 1; i++)
+			sheetRegionFull_SubmittedDocuments_sp.autoSizeColumn(i);
+
 		// Лист 6
 		XSSFSheet sheetRegionFull_SubmittedDocuments_crs = workbook.createSheet("РC по регионам_Подано_Направление");
+		String[][] statisticsRegionFull_SubmittedDocuments_course = ModelDBConnection
+				.getStatisticsRegionFull_SubmittedDocuments(true);
+
+		row0 = sheetRegionFull_SubmittedDocuments_crs.createRow(0);
+		row0.createCell(0).setCellValue("Специальноcть");
+		row0.createCell(1).setCellValue("Форма обучения");
+		row0.createCell(2).setCellValue("Источник финансирования");
+
+		row1 = sheetRegionFull_SubmittedDocuments_crs.createRow(1);
+
+
+		tmp = 0;
+		pitch = 3;
+		while (tmp != regionNumber) {
+			sheetRegionFull_SubmittedDocuments_crs.addMergedRegion(new CellRangeAddress(0, 0, pitch, pitch + 1));
+			row0.createCell(pitch).setCellValue(statisticsRegionFull_SubmittedDocuments_course[tmp][3]);
+			row1.createCell(pitch).setCellValue("Подано заявлений");
+			row1.createCell(pitch + 1).setCellValue("в т.ч. на целевые места");
+			tmp++;
+			pitch += 2;
+		}
+
+		gap = 0;
+		for (int i = 2; i < statisticsRegionFull_SubmittedDocuments_course.length + 2; i += regionNumber) {
+			if (i == 2)
+				row = sheetRegionFull_SubmittedDocuments_crs.createRow(i);
+			else
+				row = sheetRegionFull_SubmittedDocuments_crs.createRow(2 + gap);
+
+			row.createCell(0).setCellValue(statisticsRegionFull_SubmittedDocuments_course[i - 2][0]);
+			row.createCell(1).setCellValue(statisticsRegionFull_SubmittedDocuments_course[i - 2][1]);
+			row.createCell(2).setCellValue(statisticsRegionFull_SubmittedDocuments_course[i - 2][2]);
+
+			tmp = 0;
+			for (int k = 3; k < regionNumber * 2 + 3; k += 2) {
+				row.createCell(k).setCellValue(
+						Integer.valueOf(statisticsRegionFull_SubmittedDocuments_course[i - 2 + tmp][4]));
+				row.createCell(k + 1).setCellValue(
+						Integer.valueOf(statisticsRegionFull_SubmittedDocuments_course[i - 2 + tmp][5]));
+				tmp++;
+
+			}
+			gap++;
+		}
+
+		for (int i = 0; i <= statisticsRegionFull_SubmittedDocuments_course[0].length + 1; i++)
+			sheetRegionFull_SubmittedDocuments_crs.autoSizeColumn(i);
+		
 		// Лист 7
 		XSSFSheet sheetRegionFull_Enrolled_sp = workbook.createSheet("РC по регионам_Зачислено_Специальность");
+		String[][] statisticsRegionFull_Enrolled_speciality = ModelDBConnection
+				.getStatisticsRegionFull_Enrolled(false);
+
+		row0 = sheetRegionFull_Enrolled_sp.createRow(0);
+		row0.createCell(0).setCellValue("Специальноcть");
+		row0.createCell(1).setCellValue("Форма обучения");
+		row0.createCell(2).setCellValue("Источник финансирования");
+
+		row1 = sheetRegionFull_Enrolled_sp.createRow(1);
+
+		tmp = 0;
+		pitch = 3;
+		while (tmp != regionNumber) {
+			sheetRegionFull_Enrolled_sp.addMergedRegion(new CellRangeAddress(0, 0, pitch, pitch + 1));
+			row0.createCell(pitch).setCellValue(statisticsRegionFull_Enrolled_speciality[tmp][3]);
+			row1.createCell(pitch).setCellValue("Подано заявлений");
+			row1.createCell(pitch + 1).setCellValue("в т.ч. на целевые места");
+			tmp++;
+			pitch += 2;
+		}
+
+		gap = 0;
+		for (int i = 2; i < statisticsRegionFull_Enrolled_speciality.length + 2; i += regionNumber) {
+			if (i == 2)
+				row = sheetRegionFull_Enrolled_sp.createRow(i);
+			else
+				row = sheetRegionFull_Enrolled_sp.createRow(2 + gap);
+
+			row.createCell(0).setCellValue(statisticsRegionFull_Enrolled_speciality[i - 2][0]);
+			row.createCell(1).setCellValue(statisticsRegionFull_Enrolled_speciality[i - 2][1]);
+			row.createCell(2).setCellValue(statisticsRegionFull_Enrolled_speciality[i - 2][2]);
+
+			int bla = 0;
+			for (int k = 3; k < regionNumber * 2 + 3; k += 2) {
+				row.createCell(k).setCellValue(
+						Integer.valueOf(statisticsRegionFull_Enrolled_speciality[i - 2 + bla][4]));
+				row.createCell(k + 1).setCellValue(
+						Integer.valueOf(statisticsRegionFull_Enrolled_speciality[i - 2 + bla][5]));
+				bla++;
+
+			}
+			gap++;
+		}
+
+		for (int i = 0; i <= statisticsRegionFull_Enrolled_speciality[0].length + 1; i++)
+			sheetRegionFull_Enrolled_sp.autoSizeColumn(i);
+
 		// Лист 8
 		XSSFSheet sheetRegionFull_Enrolled_crs = workbook.createSheet("РC по регионам_Зачислено_Направление");
+		String[][] statisticsRegionFull_Enrolled_course = ModelDBConnection
+				.getStatisticsRegionFull_Enrolled(true);
+
+		row0 = sheetRegionFull_Enrolled_crs.createRow(0);
+		row0.createCell(0).setCellValue("Специальноcть");
+		row0.createCell(1).setCellValue("Форма обучения");
+		row0.createCell(2).setCellValue("Источник финансирования");
+
+		row1 = sheetRegionFull_Enrolled_crs.createRow(1);
+
+
+		tmp = 0;
+		pitch = 3;
+		while (tmp != regionNumber) {
+			sheetRegionFull_Enrolled_crs.addMergedRegion(new CellRangeAddress(0, 0, pitch, pitch + 1));
+			row0.createCell(pitch).setCellValue(statisticsRegionFull_Enrolled_course[tmp][3]);
+			row1.createCell(pitch).setCellValue("Подано заявлений");
+			row1.createCell(pitch + 1).setCellValue("в т.ч. на целевые места");
+			tmp++;
+			pitch += 2;
+		}
+
+		gap = 0;
+		for (int i = 2; i < statisticsRegionFull_Enrolled_course.length + 2; i += regionNumber) {
+			if (i == 2)
+				row = sheetRegionFull_Enrolled_crs.createRow(i);
+			else
+				row = sheetRegionFull_Enrolled_crs.createRow(2 + gap);
+
+			row.createCell(0).setCellValue(statisticsRegionFull_Enrolled_course[i - 2][0]);
+			row.createCell(1).setCellValue(statisticsRegionFull_Enrolled_course[i - 2][1]);
+			row.createCell(2).setCellValue(statisticsRegionFull_Enrolled_course[i - 2][2]);
+
+			tmp = 0;
+			for (int k = 3; k < regionNumber * 2 + 3; k += 2) {
+				row.createCell(k).setCellValue(
+						Integer.valueOf(statisticsRegionFull_Enrolled_course[i - 2 + tmp][4]));
+				row.createCell(k + 1).setCellValue(
+						Integer.valueOf(statisticsRegionFull_Enrolled_course[i - 2 + tmp][5]));
+				tmp++;
+
+			}
+			gap++;
+		}
+
+		for (int i = 0; i <= statisticsRegionFull_Enrolled_course[0].length + 1; i++)
+			sheetRegionFull_Enrolled_crs.autoSizeColumn(i);
+		
 
 		// Лист 9
 		XSSFSheet sheetRegionShort_sp = workbook.createSheet("Сокращенная статистика по регионам_Специальность");
 		String[][] statisticsRegionShort_speciality = ModelDBConnection.getStatisticsRegionShort(false);
-		// String[][] tmp = new
-		// String[statisticsRegionShort_speciality.length][statisticsRegionShort_speciality[0].length];
-		// System.arraycopy(statisticsRegionShort_speciality, 1, tmp, 0,
-		// statisticsRegionShort_speciality.length-1);
 
 		sheetRegionShort_sp.addMergedRegion(new CellRangeAddress(0, 0, 4, 6));
 		sheetRegionShort_sp.addMergedRegion(new CellRangeAddress(0, 0, 7, 9));
@@ -759,6 +936,46 @@ public class OutputExcel {
 		for (int i = 0; i <= statisticsRegionShort_speciality[0].length; i++)
 			sheetRegionShort_sp.autoSizeColumn(i);
 
+		// Лист 10
+		XSSFSheet sheetRegionShort_crs = workbook.createSheet("Сокращ стат по регионам_Напр");
+		String[][] statisticsRegionShort_course = ModelDBConnection.getStatisticsRegionShort(true);
+
+		sheetRegionShort_crs.addMergedRegion(new CellRangeAddress(0, 0, 4, 6));
+		sheetRegionShort_crs.addMergedRegion(new CellRangeAddress(0, 0, 7, 9));
+
+		row = sheetRegionShort_crs.createRow(0);
+		row.createCell(0).setCellValue("Специальноcть");
+		row.createCell(1).setCellValue("Форма обучения");
+		row.createCell(2).setCellValue("Источник финансирования");
+		row.createCell(3).setCellValue("Целевая организация");
+		row.createCell(4).setCellValue("Подано заявлений");
+		row.createCell(7).setCellValue("Зачислено");
+
+		row = sheetRegionShort_crs.createRow(1);
+		row.createCell(4).setCellValue("Из Н.Новгорода");
+		row.createCell(5).setCellValue("Из Нижегородской обл.");
+		row.createCell(6).setCellValue("За пределами Нижегородской обл.");
+		row.createCell(7).setCellValue("Из Н.Новгорода");
+		row.createCell(8).setCellValue("Из Нижегородской обл.");
+		row.createCell(9).setCellValue("За пределами Нижегородской обл.");
+
+		for (int i = 2; i < statisticsRegionShort_course.length + 2; i++) {
+			row = sheetRegionShort_crs.createRow(i);
+			row.createCell(0).setCellValue(statisticsRegionShort_course[i - 2][1]);
+			row.createCell(1).setCellValue(statisticsRegionShort_course[i - 2][3]);
+			row.createCell(2).setCellValue(statisticsRegionShort_course[i - 2][5]);
+			row.createCell(3).setCellValue(statisticsRegionShort_course[i - 2][7]);
+			row.createCell(4).setCellValue(Integer.valueOf(statisticsRegionShort_course[i - 2][8]));
+			row.createCell(5).setCellValue(Integer.valueOf(statisticsRegionShort_course[i - 2][9]));
+			row.createCell(6).setCellValue(Integer.valueOf(statisticsRegionShort_course[i - 2][10]));
+			row.createCell(7).setCellValue(Integer.valueOf(statisticsRegionShort_course[i - 2][11]));
+			row.createCell(8).setCellValue(Integer.valueOf(statisticsRegionShort_course[i - 2][12]));
+			row.createCell(9).setCellValue(Integer.valueOf(statisticsRegionShort_course[i - 2][13]));
+		}
+
+		for (int i = 0; i <= statisticsRegionShort_course[0].length; i++)
+			sheetRegionShort_crs.autoSizeColumn(i);
+
 		String path = currentPath + "\\files\\Статистика" + "_"
 				+ (new SimpleDateFormat("dd.MM.yyyy").format(new Date())) + ".xls";
 		File file = new File(path);
@@ -768,8 +985,8 @@ public class OutputExcel {
 
 		workbook.write(new FileOutputStream(file));
 	}
-	
-	
+
+
 	public static void main(String[] args) {
 		try {
 			ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");

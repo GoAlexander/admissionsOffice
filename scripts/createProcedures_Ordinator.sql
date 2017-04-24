@@ -433,7 +433,12 @@ as begin
 			AbiturientCompetitiveGroup.speciality = Speciality.id and 
 			AbiturientCompetitiveGroup.educationForm=EducationForm.id and 
 			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id) as 'Кол-во зачисленных'
-			from Speciality, EducationForm, TargetOrganisation order by Speciality.id, EducationForm.id, TargetOrganisation.id;
+			from Speciality, EducationForm, TargetOrganisation 
+			where exists (select * from AdmissionPlan
+			where AdmissionPlan.specialtyCode = Speciality.id and 
+			AdmissionPlan.educationForm = EducationForm.id and 
+			AdmissionPlan.targetOrganisation = TargetOrganisation.id)
+			order by Speciality.id, EducationForm.id, TargetOrganisation.id;
 		end
 	else
 		begin
@@ -448,7 +453,12 @@ as begin
 			AbiturientCompetitiveGroup.course = Course.id and 
 			AbiturientCompetitiveGroup.educationForm=EducationForm.id and 
 			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id) as 'Кол-во зачисленных'
-			from Course, EducationForm, TargetOrganisation order by Course.id, EducationForm.id, TargetOrganisation.id;
+			from Course, EducationForm, TargetOrganisation 
+			where exists (select * from AdmissionPlan
+			where AdmissionPlan.specialtyCode = Course.id and 
+			AdmissionPlan.educationForm = EducationForm.id and 
+			AdmissionPlan.targetOrganisation = TargetOrganisation.id)
+			order by Course.id, EducationForm.id, TargetOrganisation.id;
 		end
 			
 	return
@@ -614,13 +624,14 @@ as begin
 
 			UNION ALL
 
-			select Speciality.id, Speciality.name as 'Специальность', EducationForm.id, EducationForm.name as 'Форма обучения', CompetitiveGroup.id, CompetitiveGroup.name as 'Источник', TargetOrganisation.id, TargetOrganisation = NULL,
+			select Speciality.id, Speciality.name as 'Специальность', EducationForm.id, EducationForm.name as 'Форма обучения', CompetitiveGroup.id, CompetitiveGroup.name as 'Источник', NULL, NULL,
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
 			where 
 			AbiturientCompetitiveGroup.speciality = Speciality.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region = 1 and AbiturientAddress.factAddress LIKE 'Н%Новгород') as 'Подано заявлений из НН',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -628,7 +639,7 @@ as begin
 			AbiturientCompetitiveGroup.speciality = Speciality.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = null and
 			AbiturientAddress.id_region = 1 and AbiturientAddress.factAddress NOT LIKE 'Н%Новгород') as 'Подано заявлений из Нижегородской обл',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -636,7 +647,7 @@ as begin
 			AbiturientCompetitiveGroup.speciality = Speciality.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region <> 1) as 'Подано заявлений не из НН',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -644,7 +655,7 @@ as begin
 			AbiturientCompetitiveGroup.speciality = Speciality.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region = 1 and AbiturientAddress.factAddress LIKE 'Н%Новгород' and markEnrollment>0) as 'Зачислено из НН',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -652,7 +663,7 @@ as begin
 			AbiturientCompetitiveGroup.speciality = Speciality.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region = 1 and AbiturientAddress.factAddress NOT LIKE 'Н%Новгород' and markEnrollment>0) as 'Зачислено из Нижегородской обл',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -660,14 +671,14 @@ as begin
 			AbiturientCompetitiveGroup.speciality = Speciality.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region <> 1 and markEnrollment>0) as 'Зачислено не из НН'
 
-			from Speciality, EducationForm, CompetitiveGroup, TargetOrganisation order by Speciality.id, EducationForm.id, CompetitiveGroup.id, TargetOrganisation.id ;
+			from Speciality, EducationForm, CompetitiveGroup order by Speciality.id, EducationForm.id, CompetitiveGroup.id, TargetOrganisation.id ;
 		end
 	else
 		begin
-			select Course.id, Course.name as 'Специальность', EducationForm.id, EducationForm.name as 'Форма обучения', CompetitiveGroup.id, CompetitiveGroup.name as 'Источник', TargetOrganisation.id, TargetOrganisation.name as 'Целевая организация', 
+			select Course.id, Course.name as 'Направление', EducationForm.id, EducationForm.name as 'Форма обучения', CompetitiveGroup.id, CompetitiveGroup.name as 'Источник', TargetOrganisation.id, TargetOrganisation.name as 'Целевая организация', 
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
 			where 
@@ -721,13 +732,14 @@ as begin
 
 			UNION ALL
 
-			select Course.id, Course.name as 'Специальность', EducationForm.id, EducationForm.name as 'Форма обучения', CompetitiveGroup.id, CompetitiveGroup.name as 'Источник', TargetOrganisation.id, TargetOrganisation = NULL,
+			select Course.id, Course.name as 'Направление', EducationForm.id, EducationForm.name as 'Форма обучения', CompetitiveGroup.id, CompetitiveGroup.name as 'Источник', NULL, NULL,
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
 			where 
 			AbiturientCompetitiveGroup.course = Course.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region = 1 and AbiturientAddress.factAddress LIKE 'Н%Новгород') as 'Подано заявлений из НН',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -735,7 +747,7 @@ as begin
 			AbiturientCompetitiveGroup.course = Course.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region = 1 and AbiturientAddress.factAddress NOT LIKE 'Н%Новгород') as 'Подано заявлений из Нижегородской обл',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -743,7 +755,7 @@ as begin
 			AbiturientCompetitiveGroup.course = Course.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region <> 1) as 'Подано заявлений не из НН',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -751,7 +763,7 @@ as begin
 			AbiturientCompetitiveGroup.course = Course.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region = 1 and AbiturientAddress.factAddress LIKE 'Н%Новгород' and markEnrollment>0) as 'Зачислено из НН',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -759,7 +771,7 @@ as begin
 			AbiturientCompetitiveGroup.course = Course.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region = 1 and AbiturientAddress.factAddress NOT LIKE 'Н%Новгород' and markEnrollment>0) as 'Зачислено из Нижегородской обл',
 
 			(select count (AbiturientCompetitiveGroup.aid_abiturient) from AbiturientCompetitiveGroup, AbiturientAddress
@@ -767,10 +779,10 @@ as begin
 			AbiturientCompetitiveGroup.course = Course.id and 
 			AbiturientCompetitiveGroup.educationForm = EducationForm.id and
 			(AbiturientCompetitiveGroup.competitiveGroup = 2 or AbiturientCompetitiveGroup.competitiveGroup = 3) and 
-			AbiturientCompetitiveGroup.targetOrganisation = TargetOrganisation.id and
+			AbiturientCompetitiveGroup.targetOrganisation = NULL and
 			AbiturientAddress.id_region <> 1 and markEnrollment>0) as 'Зачислено не из НН'
 
-			from Course, EducationForm, CompetitiveGroup, TargetOrganisation order by Course.id, EducationForm.id, CompetitiveGroup.id, TargetOrganisation.id ;
+			from Course, EducationForm, CompetitiveGroup order by Course.id, EducationForm.id, CompetitiveGroup.id, TargetOrganisation.id;
 
 		end
 			
