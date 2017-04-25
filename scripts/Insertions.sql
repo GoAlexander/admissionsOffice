@@ -147,7 +147,7 @@ insert into [AdmissionPlan] values
 go
 
 insert into [Users] values
-('user', 'password', null);
+('admin1', 'admin1', null);
 
 go
 
@@ -311,7 +311,7 @@ insert into [AdmissionPlan] values
 go
 
 insert into [Users] values
-('user', 'password', null);
+('admin1', 'admin1', null);
 
 go
 

@@ -539,6 +539,9 @@ public class ModelDBConnection {
 						query = query + rsmd.getColumnLabel(i + 1) + " = " + "'" + data[i] + "'" + ", ";
 				}
 				query = query + " where " + id + " = " + (!table.equals("Users") ? data[0] : "'" + data[0] + "'")  + ";";
+				if (table.equals("Users")) {
+					query += (" DROP LOGIN " + data[0] + "; CREATE LOGIN " + data[0] + " WITH PASSWORD = '" + data[1] + "'; ALTER SERVER ROLE sysadmin ADD MEMBER " + data[0]);
+				}
 			} else {
 				query = "insert into " + table + " values (" + (!table.equals("Users") ? data[0] : "'" + data[0] + "'")  + ", ";
 				for (int i = 1; i < numberOfColumns; i++) {
@@ -546,6 +549,9 @@ public class ModelDBConnection {
 						query = query + "'" + data[i] + "')";
 					else
 						query = query + "'" + data[i] + "'" + ", ";
+				}
+				if (table.equals("Users")) {
+					query += ("; CREATE LOGIN " + data[0] + " WITH PASSWORD = '" + data[1] + "'; ALTER SERVER ROLE sysadmin ADD MEMBER " + data[0]);
 				}
 			}
 			stmt.close();

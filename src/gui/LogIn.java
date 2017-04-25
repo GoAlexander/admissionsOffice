@@ -61,11 +61,11 @@ public class LogIn extends JFrame {
 		applyButton = new JButton("Подтвердить");
 		applyButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "admin1", "admin1");
 				ModelDBConnection.initConnection();
 				if(ModelDBConnection.checkUser(textLogin.getText(), textPassword.getText())) {
 					setVisible(false);
-					ModuleChoice window = new ModuleChoice();
+					ModuleChoice window = new ModuleChoice(textLogin.getText(), textPassword.getText());
 					window.setVisible(true);
 				} else {
 					MessageProcessing.displayErrorMessage(mainPanel, 4);

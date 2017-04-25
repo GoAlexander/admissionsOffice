@@ -17,11 +17,15 @@ import javax.swing.JOptionPane;
 import backend.ModelDBConnection;
 
 public class ModuleChoice extends JFrame {
+	private String login, password;
 	private Dimension dimBtn = new Dimension(200, 100);
 	private Font fontBtn = new Font("Tahoma", Font.BOLD, 18);
 	private GridBagConstraints gbc;
 
-	public ModuleChoice() {
+	public ModuleChoice(String login, String password) {
+		this.login = login;
+		this.password = password;
+
 		setTitle("Окно выбора модуля");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
@@ -37,7 +41,7 @@ public class ModuleChoice extends JFrame {
 		JButton ordinBtn = new JButton("Ординатура");
 		ordinBtn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
+				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", login, password);
 				ModelDBConnection.initConnection();
 				GeneralInfoInput window;
 				window = new GeneralInfoInput();
@@ -53,7 +57,7 @@ public class ModuleChoice extends JFrame {
 		JButton aspirBtn = new JButton("Аспирантура");
 		aspirBtn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Aspirant", "user", "password");
+				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Aspirant", login, password);
 				ModelDBConnection.initConnection();
 				GeneralInfoInput window = new GeneralInfoInput();
 				window.setVisible(true);
@@ -94,7 +98,7 @@ public class ModuleChoice extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ModuleChoice window = new ModuleChoice();
+					ModuleChoice window = new ModuleChoice("admin1", "admin1");
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

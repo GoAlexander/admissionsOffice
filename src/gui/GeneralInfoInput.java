@@ -103,8 +103,8 @@ public class GeneralInfoInput extends JFrame {
 	public GeneralInfoInput() {
 		// ----------------------
 		// Временно
-		ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "user", "password");
-		ModelDBConnection.initConnection();
+		//ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "admin1", "admin1");
+		//ModelDBConnection.initConnection();
 		// ----------------------
 
 		arrSex = ModelDBConnection.getNamesFromTableOrderedById("Gender");
@@ -688,7 +688,7 @@ public class GeneralInfoInput extends JFrame {
 			}
 		});
 
-		//this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowListener() {
 			public void windowActivated(WindowEvent event) {}
 			public void windowClosed(WindowEvent event) {}
@@ -698,7 +698,7 @@ public class GeneralInfoInput extends JFrame {
 			public void windowOpened(WindowEvent event) {}
 
 			public void windowClosing(WindowEvent event) {
-				ModuleChoice window = new ModuleChoice();
+				ModuleChoice window = new ModuleChoice(ModelDBConnection.getLogin(), ModelDBConnection.getPassword());
 				window.setVisible(true);
 				setVisible(false);
 			}
