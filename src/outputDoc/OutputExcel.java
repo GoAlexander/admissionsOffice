@@ -656,7 +656,7 @@ public class OutputExcel {
 		String[][] statisticsMinZdrav_cousre = ModelDBConnection.getStatisticsMinZdrav(true);
 
 		row = sheetMinZdrav_crs.createRow(0);
-		row.createCell(0).setCellValue("Специальноcть");
+		row.createCell(0).setCellValue("Направление");
 		row.createCell(1).setCellValue("Форма обучения");
 		row.createCell(2).setCellValue("Наименование целевой организации");
 		row.createCell(3).setCellValue("План приема");
@@ -751,7 +751,7 @@ public class OutputExcel {
 				.getStatisticsRegionFull_SubmittedDocuments(true);
 
 		row0 = sheetRegionFull_SubmittedDocuments_crs.createRow(0);
-		row0.createCell(0).setCellValue("Специальноcть");
+		row0.createCell(0).setCellValue("Направление");
 		row0.createCell(1).setCellValue("Форма обучения");
 		row0.createCell(2).setCellValue("Источник финансирования");
 
@@ -850,7 +850,7 @@ public class OutputExcel {
 				.getStatisticsRegionFull_Enrolled(true);
 
 		row0 = sheetRegionFull_Enrolled_crs.createRow(0);
-		row0.createCell(0).setCellValue("Специальноcть");
+		row0.createCell(0).setCellValue("Направление");
 		row0.createCell(1).setCellValue("Форма обучения");
 		row0.createCell(2).setCellValue("Источник финансирования");
 
@@ -943,7 +943,7 @@ public class OutputExcel {
 		sheetRegionShort_crs.addMergedRegion(new CellRangeAddress(0, 0, 7, 9));
 
 		row = sheetRegionShort_crs.createRow(0);
-		row.createCell(0).setCellValue("Специальноcть");
+		row.createCell(0).setCellValue("Направление");
 		row.createCell(1).setCellValue("Форма обучения");
 		row.createCell(2).setCellValue("Источник финансирования");
 		row.createCell(3).setCellValue("Целевая организация");
