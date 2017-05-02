@@ -4,6 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -12,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import java.util.Properties;
 
 import backend.MessageProcessing;
 import backend.ModelDBConnection;
@@ -61,14 +68,25 @@ public class LogIn extends JFrame {
 		applyButton = new JButton("Подтвердить");
 		applyButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", "admin1", "admin1");
-				ModelDBConnection.initConnection();
-				if(ModelDBConnection.checkUser(textLogin.getText(), textPassword.getText())) {
-					setVisible(false);
-					ModuleChoice window = new ModuleChoice(textLogin.getText(), textPassword.getText());
-					window.setVisible(true);
-				} else {
-					MessageProcessing.displayErrorMessage(mainPanel, 4);
+				try {
+					Properties property = new Properties();
+					property.load(new FileInputStream(new File("").getAbsolutePath() + "/.conf"));
+		            String serverType = property.getProperty("db.serverType");
+		            String serverAddress = property.getProperty("db.serverAddress");
+		            String login = property.getProperty("db.login");
+		            String password = property.getProperty("db.password");
+
+					ModelDBConnection.setConnectionParameters(serverType, serverAddress, "Ordinator", login, password);
+					ModelDBConnection.initConnection();
+					if(ModelDBConnection.checkUser(textLogin.getText(), textPassword.getText())) {
+						setVisible(false);
+						ModuleChoice window = new ModuleChoice(serverType, serverAddress, textLogin.getText(), textPassword.getText());
+						window.setVisible(true);
+					} else {
+						MessageProcessing.displayErrorMessage(mainPanel, 4);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});

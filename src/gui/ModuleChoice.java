@@ -8,8 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.text.ParseException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -22,7 +20,7 @@ public class ModuleChoice extends JFrame {
 	private Font fontBtn = new Font("Tahoma", Font.BOLD, 18);
 	private GridBagConstraints gbc;
 
-	public ModuleChoice(String login, String password) {
+	public ModuleChoice(String serverType, String serverAddress, String login, String password) {
 		this.login = login;
 		this.password = password;
 
@@ -41,7 +39,7 @@ public class ModuleChoice extends JFrame {
 		JButton ordinBtn = new JButton("Ординатура");
 		ordinBtn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Ordinator", login, password);
+				ModelDBConnection.setConnectionParameters(serverType, serverAddress, "Ordinator", login, password);
 				ModelDBConnection.initConnection();
 				GeneralInfoInput window;
 				window = new GeneralInfoInput();
@@ -57,7 +55,7 @@ public class ModuleChoice extends JFrame {
 		JButton aspirBtn = new JButton("Аспирантура");
 		aspirBtn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				ModelDBConnection.setConnectionParameters("MSServer", "localhost", "Aspirant", login, password);
+				ModelDBConnection.setConnectionParameters(serverType, serverAddress, "Aspirant", login, password);
 				ModelDBConnection.initConnection();
 				GeneralInfoInput window = new GeneralInfoInput();
 				window.setVisible(true);
@@ -98,7 +96,7 @@ public class ModuleChoice extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ModuleChoice window = new ModuleChoice("admin1", "admin1");
+					ModuleChoice window = new ModuleChoice("MSServer", "localhost", "admin1", "admin1");
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

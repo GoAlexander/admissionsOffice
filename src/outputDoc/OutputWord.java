@@ -737,7 +737,7 @@ public class OutputWord {
 			}
 
 		if (i > 0)
-			Runtime.getRuntime().exec("cmd /c start script.vbs " + currentPath + "\\ " + generalInfo[0] + "_exams.doc");
+			Runtime.getRuntime().exec("cmd /c start " + currentPath + "\\script.vbs " + currentPath + "\\ " + generalInfo[0] + "_exams.doc");
 	}
 
 	public static void writeTitul(String[] generalInfo, String[][] allCompetitiveGroups) throws Exception {

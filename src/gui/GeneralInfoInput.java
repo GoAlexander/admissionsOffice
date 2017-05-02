@@ -698,7 +698,7 @@ public class GeneralInfoInput extends JFrame {
 			public void windowOpened(WindowEvent event) {}
 
 			public void windowClosing(WindowEvent event) {
-				ModuleChoice window = new ModuleChoice(ModelDBConnection.getLogin(), ModelDBConnection.getPassword());
+				ModuleChoice window = new ModuleChoice(ModelDBConnection.getServerType(), ModelDBConnection.getServerAddress(), ModelDBConnection.getLogin(), ModelDBConnection.getPassword());
 				window.setVisible(true);
 				setVisible(false);
 			}
